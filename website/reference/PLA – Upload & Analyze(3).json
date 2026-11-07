@@ -1,0 +1,2877 @@
+{
+  "name": "PLA – Upload & Analyze",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Profit Leak Analyzer — Analyze CSV Files",
+        "formDescription": "=Upload your order, shipment, and courier settlement CSV files to identify outstanding receivables, reconciliation discrepancies, and settlement exceptions.\n\n<b>How it works:</b> Upload your CSV files, provide the analysis date, and select Analyze CSV Files. Your reconciliation summary and detailed financial dashboard will be available after processing.\n\n<b>Demo safety:</b> Use synthetic demonstration data only. Do not upload real customer, merchant, or banking information. This demo is not authenticated.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Seller ID",
+              "fieldName": "seller_id",
+              "placeholder": "SELLER-DEMO",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "As-of date",
+              "fieldType": "date",
+              "fieldName": "as_of_date",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Orders CSV",
+              "fieldType": "file",
+              "fieldName": "orders_file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Shipments CSV",
+              "fieldType": "file",
+              "fieldName": "shipments_file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Settlements CSV",
+              "fieldType": "file",
+              "fieldName": "settlements_file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Settlement allocations CSV (optional)",
+              "fieldType": "file",
+              "fieldName": "allocations_file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".csv"
+            },
+            {
+              "fieldLabel": "Courier settlement deadlines (one per line, COURIER=DAYS, e.g. TCS=7)",
+              "fieldType": "textarea",
+              "fieldName": "courier_rules"
+            },
+            {
+              "fieldLabel": "Settlement files cover payments through (one per line, COURIER=YYYY-MM-DD). This is your declaration, not verified coverage.",
+              "fieldType": "textarea",
+              "fieldName": "settlement_coverage"
+            },
+            {
+              "fieldLabel": "Data confirmation",
+              "fieldType": "checkbox",
+              "fieldName": "synthetic_confirmation",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "These files contain synthetic demo data only"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Analyze",
+          "path": "pla-demo-7f3k9q2m-upload",
+          "ignoreBots": true,
+          "customCss": "\n/* Profit Leak Analyzer — Upload Form Theme */\n\n:root {\n  --pla-navy: #14283f;\n  --pla-teal: #087f62;\n  --pla-bg: #f3f6fb;\n  --pla-text: #263b53;\n  --pla-muted: #64748b;\n  --pla-border: #dfe6ef;\n}\n\n/* Page */\nbody {\n  background: var(--pla-bg) !important;\n  color: var(--pla-text);\n  font-family: Inter, system-ui, -apple-system,\n    \"Segoe UI\", Arial, sans-serif !important;\n  line-height: 1.6;\n}\n\n/* Main form panel */\nform {\n  background: #ffffff;\n  border: 1px solid var(--pla-border);\n  border-radius: 18px;\n  padding: 28px;\n  box-shadow: 0 12px 36px rgba(20, 40, 63, 0.06);\n}\n\n/* Headings */\nh1, h2, h3 {\n  color: var(--pla-navy);\n  font-weight: 750;\n  letter-spacing: -0.4px;\n}\n\nh1 {\n  font-size: clamp(25px, 3vw, 32px);\n}\n\n/* Supporting text */\np {\n  color: var(--pla-muted);\n  line-height: 1.7;\n}\n\nlabel {\n  color: var(--pla-text);\n  font-weight: 600;\n  font-size: 13px;\n}\n\n/* Form controls */\ninput:not([type=\"checkbox\"]),\ntextarea,\nselect {\n  background: #ffffff;\n  color: var(--pla-text);\n  border: 1px solid #cbd5e1;\n  border-radius: 9px;\n  padding: 12px 14px;\n  font-family: inherit;\n  font-size: 14px;\n  transition: border-color 0.2s,\n    box-shadow 0.2s;\n}\n\ninput:focus,\ntextarea:focus,\nselect:focus {\n  outline: 2px solid transparent;\n  border-color: var(--pla-teal);\n  box-shadow: 0 0 0 3px\n    rgba(8, 127, 98, 0.13);\n}\n\n/* File upload controls */\ninput[type=\"file\"] {\n  border: 1px dashed #b7c7d7;\n  background: #f8fafc;\n  border-radius: 10px;\n  padding: 16px;\n  width: 100%;\n}\n\ninput[type=\"file\"]::file-selector-button {\n  background: #e8f3ee;\n  color: #086c50;\n  border: 0;\n  border-radius: 7px;\n  padding: 9px 13px;\n  margin-right: 12px;\n  font-weight: 650;\n  cursor: pointer;\n}\n\n/* Confirmation checkbox */\ninput[type=\"checkbox\"] {\n  accent-color: var(--pla-teal);\n  width: 17px;\n  height: 17px;\n}\n\n/* Primary submit action */\nbutton[type=\"submit\"] {\n  background: var(--pla-navy) !important;\n  color: #ffffff !important;\n  border: 0;\n  border-radius: 10px;\n  padding: 15px 24px;\n  font-weight: 700;\n  font-size: 15px;\n  cursor: pointer;\n  transition: background 0.2s,\n    transform 0.2s;\n}\n\nbutton[type=\"submit\"]:hover {\n  background: #244867 !important;\n  transform: translateY(-1px);\n}\n\nbutton[type=\"submit\"]:focus-visible {\n  outline: 3px solid #087f62;\n  outline-offset: 3px;\n}\n\n/* Links */\na {\n  color: var(--pla-teal);\n  font-weight: 600;\n}\n\na:hover {\n  color: #075b49;\n}\n\n/* Mobile */\n@media (max-width: 640px) {\n  body {\n    padding: 12px;\n  }\n\n  form {\n    padding: 20px 16px;\n    border-radius: 14px;\n  }\n\n  input[type=\"file\"] {\n    padding: 12px;\n  }\n\n  button[type=\"submit\"] {\n    width: 100%;\n  }\n}\n"
+        }
+      },
+      "id": "c8ac3a96-5a77-4b1b-b7aa-75eaad17e653",
+      "name": "Upload Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "d70ee73c-14a6-4813-9ba4-55d20e676ab1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- shared helpers (inlined into several Code nodes) ----\nconst SCHEMA_VERSION = 'pla-schema-1';\nconst MAPPING_VERSION = 'pla-map-1';\nconst ENGINE_VERSION_EXPECTED = 'pla-engine-1.2.0';\nconst SOURCES = ['orders', 'shipments', 'settlements', 'allocations'];\nconst CANON = {\n  orders: {\n    seller_id: 'Seller account identifier', order_id: 'Unique order identifier (mandatory)', order_date: 'Date the order was placed (mandatory)',\n    cod_amount_pkr: 'Cash-on-delivery amount of the order in PKR (mandatory)', order_status: 'Order status text (mandatory)', customer_ref: 'Customer reference (optional)', notes: 'Free-text notes (optional)',\n  },\n  shipments: {\n    seller_id: 'Seller account identifier', shipment_id: 'Unique shipment identifier (mandatory)', order_id: 'Order the shipment belongs to (mandatory)', tracking_number: 'Courier tracking / consignment number (mandatory)',\n    courier: 'Courier company name (mandatory)', booked_date: 'Date the shipment was booked (mandatory)', status: 'Courier delivery status (mandatory)', status_date: 'Date of the latest status, e.g. delivery date',\n    cod_collected_pkr: 'COD amount collected from customer in PKR', contracted_delivery_fee_pkr: 'Contracted delivery fee in PKR', contracted_rto_fee_pkr: 'Contracted return-to-origin fee in PKR',\n  },\n  settlements: {\n    seller_id: 'Seller account identifier', settlement_id: 'Unique settlement / payment batch identifier (mandatory)', courier: 'Courier company name (mandatory)', settlement_date: 'Date of the settlement (mandatory)',\n    entry_type: 'PAYMENT, REVERSAL or ADJUSTMENT (mandatory)', gross_cod_pkr: 'Gross COD in the batch in PKR (mandatory)', delivery_fees_pkr: 'Delivery fees deducted in PKR (mandatory)', rto_fees_pkr: 'RTO fees deducted in PKR (mandatory)',\n    other_deductions_pkr: 'Other deductions in PKR (mandatory)', net_paid_pkr: 'Net amount paid to seller in PKR (mandatory)', payment_reference: 'Bank / payment reference (optional)',\n  },\n  allocations: {\n    seller_id: 'Seller account identifier', allocation_id: 'Unique allocation line identifier (mandatory)', settlement_id: 'Settlement the line belongs to (mandatory)', tracking_number: 'Tracking number the line pays (mandatory)',\n    allocated_net_pkr: 'Net amount allocated to this shipment in PKR (mandatory)', allocated_cod_pkr: 'COD amount allocated in PKR', allocated_delivery_fee_pkr: 'Delivery fee attributed to this shipment in PKR', allocated_rto_fee_pkr: 'RTO fee attributed to this shipment in PKR',\n  },\n};\nconst SYNONYMS = {\n  seller_id: ['seller', 'seller_id', 'merchant_id', 'account_id'],\n  order_id: ['order_id', 'order_no', 'order_number', 'order', 'order_ref'],\n  order_date: ['order_date', 'date', 'created_at', 'order_created'],\n  cod_amount_pkr: ['cod_amount_pkr', 'cod_amount', 'cod', 'amount', 'order_amount'],\n  order_status: ['order_status'],\n  customer_ref: ['customer_ref', 'customer', 'customer_id'],\n  notes: ['notes', 'note', 'remarks'],\n  shipment_id: ['shipment_id', 'shipment_no', 'shipment'],\n  tracking_number: ['tracking_number', 'tracking_no', 'tracking', 'cn', 'cn_number', 'consignment_no', 'consignment_number', 'awb'],\n  courier: ['courier', 'courier_name', 'carrier'],\n  booked_date: ['booked_date', 'booking_date', 'booked_on'],\n  status: ['status', 'delivery_status', 'shipment_status'],\n  status_date: ['status_date', 'delivered_date', 'delivery_date'],\n  cod_collected_pkr: ['cod_collected_pkr', 'cod_collected', 'collected_amount'],\n  contracted_delivery_fee_pkr: ['contracted_delivery_fee_pkr', 'contracted_delivery_fee', 'delivery_fee_contract'],\n  contracted_rto_fee_pkr: ['contracted_rto_fee_pkr', 'contracted_rto_fee', 'rto_fee_contract'],\n  settlement_id: ['settlement_id', 'settlement_no', 'batch_id', 'payment_batch'],\n  settlement_date: ['settlement_date', 'payment_date', 'paid_on'],\n  entry_type: ['entry_type', 'type', 'transaction_type'],\n  gross_cod_pkr: ['gross_cod_pkr', 'gross_cod', 'gross_amount'],\n  delivery_fees_pkr: ['delivery_fees_pkr', 'delivery_fees', 'delivery_charges'],\n  rto_fees_pkr: ['rto_fees_pkr', 'rto_fees', 'rto_charges'],\n  other_deductions_pkr: ['other_deductions_pkr', 'other_deductions', 'deductions'],\n  net_paid_pkr: ['net_paid_pkr', 'net_paid', 'net_amount', 'amount_paid'],\n  payment_reference: ['payment_reference', 'payment_ref', 'bank_ref', 'reference'],\n  allocation_id: ['allocation_id', 'line_id', 'allocation_line'],\n  allocated_net_pkr: ['allocated_net_pkr', 'allocated_net', 'net_allocated'],\n  allocated_cod_pkr: ['allocated_cod_pkr', 'allocated_cod'],\n  allocated_delivery_fee_pkr: ['allocated_delivery_fee_pkr', 'allocated_delivery_fee'],\n  allocated_rto_fee_pkr: ['allocated_rto_fee_pkr', 'allocated_rto_fee'],\n};\nfunction normHeader(h) { return String(h).trim().toLowerCase().replace(/\\(.*?\\)/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }\nfunction sha256(ascii) {\n  function rr(v, a) { return (v >>> a) | (v << (32 - a)); }\n  const utf8 = unescape(encodeURIComponent(ascii));\n  const words = []; const bitLen = utf8.length * 8; const K = []; const H = []; let primeCount = 0; const isComposite = {};\n  for (let c = 2; primeCount < 64; c++) {\n    if (!isComposite[c]) {\n      for (let i = 0; i < 313; i += c) isComposite[i] = c;\n      if (primeCount < 8) H[primeCount] = (Math.pow(c, 0.5) * 4294967296) | 0;\n      K[primeCount++] = (Math.pow(c, 1 / 3) * 4294967296) | 0;\n    }\n  }\n  let str = utf8 + '\\x80';\n  while (str.length % 64 - 56) str += '\\x00';\n  for (let i = 0; i < str.length; i++) { const j = str.charCodeAt(i); words[i >> 2] |= j << ((3 - i) % 4) * 8; }\n  words[words.length] = (bitLen / 4294967296) | 0; words[words.length] = bitLen | 0;\n  let hash = H.slice(0, 8);\n  for (let j = 0; j < words.length;) {\n    const w = words.slice(j, j += 16); const oldHash = hash; hash = hash.slice(0, 8);\n    for (let i = 0; i < 64; i++) {\n      const w15 = w[i - 15], w2 = w[i - 2]; const a = hash[0], e = hash[4];\n      const temp1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + K[i] +\n        (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);\n      const temp2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      hash = [(temp1 + temp2) | 0].concat(hash); hash[4] = (hash[4] + temp1) | 0; hash.length = 8;\n    }\n    for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;\n  }\n  let result = '';\n  for (let i = 0; i < 8; i++) for (let j = 3; j + 1; j--) { const b = (hash[i] >> (j * 8)) & 255; result += (b < 16 ? '0' : '') + b.toString(16); }\n  return result;\n}\nfunction canon(v) {\n  if (v === null || v === undefined) return 'null';\n  if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';\n  if (typeof v === 'object') return '{' + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ':' + canon(v[k]); }).join(',') + '}';\n  return JSON.stringify(v);\n}\nfunction cacheKeyFor(source, fingerprint) { return [source, SCHEMA_VERSION, MAPPING_VERSION, fingerprint].join('|'); }\n// Validate a proposed header->field mapping for one source. Returns {pairs, rejected}.\nfunction validatePairs(source, pairs, headers, alreadyTaken) {\n  const fields = CANON[source]; const taken = Object.assign({}, alreadyTaken || {}); const usedHeaders = {}; const ok = []; const rejected = [];\n  (Array.isArray(pairs) ? pairs : []).forEach(function (p) {\n    const h = p && typeof p.header === 'string' ? p.header : null; const f = p && typeof p.canonical_field === 'string' ? p.canonical_field : null;\n    if (!h || !f || f === 'UNMAPPED') return;\n    if (headers.indexOf(h) < 0) { rejected.push({ header: h, canonical_field: f, reason: 'header_not_in_file' }); return; }\n    if (!Object.prototype.hasOwnProperty.call(fields, f)) { rejected.push({ header: h, canonical_field: f, reason: 'unknown_canonical_field' }); return; }\n    if (taken[f]) { rejected.push({ header: h, canonical_field: f, reason: 'field_already_mapped' }); return; }\n    if (usedHeaders[h]) { rejected.push({ header: h, canonical_field: f, reason: 'header_already_mapped' }); return; }\n    taken[f] = h; usedHeaders[h] = true; ok.push({ header: h, canonical_field: f });\n  });\n  return { pairs: ok, rejected: rejected };\n}\n\n// ---- Parse & fingerprint uploaded CSV files ----\nconst MAX_BYTES = 2 * 1024 * 1024;\nconst MAX_ROWS = 5000;\nconst item = $input.first();\nconst form = item.json || {};\nconst binary = item.binary || {};\nconst importErrors = [];\nconst notes = [];\n\nfunction fail(source, code, message) { importErrors.push({ source: source, code: code, message: message }); }\n\n// Strict RFC 4180 parser. Returns {rows} or {error}. Values are kept as exact strings.\nfunction parseCsv(text) {\n  const rows = []; let row = []; let field = ''; let i = 0; let inQuotes = false; let fieldQuoted = false; let line = 1;\n  const n = text.length;\n  while (i < n) {\n    const ch = text[i];\n    if (inQuotes) {\n      if (ch === '\"') {\n        if (text[i + 1] === '\"') { field += '\"'; i += 2; continue; }\n        inQuotes = false; i++;\n        const nx = text[i];\n        if (i < n && nx !== ',' && nx !== '\\n' && nx !== '\\r') return { error: 'Unexpected character after closing quote on line ' + line };\n        continue;\n      }\n      if (ch === '\\n') line++;\n      field += ch; i++; continue;\n    }\n    if (ch === '\"') {\n      if (field !== '' || fieldQuoted) return { error: 'Quote inside unquoted field on line ' + line };\n      inQuotes = true; fieldQuoted = true; i++; continue;\n    }\n    if (ch === ',') { row.push(field); field = ''; fieldQuoted = false; i++; continue; }\n    if (ch === '\\r' || ch === '\\n') {\n      row.push(field); rows.push({ cells: row, line: line }); row = []; field = ''; fieldQuoted = false;\n      if (ch === '\\r' && text[i + 1] === '\\n') i++;\n      i++; line++; continue;\n    }\n    field += ch; i++;\n  }\n  if (inQuotes) return { error: 'Unterminated quoted field starting before end of file' };\n  if (field !== '' || fieldQuoted || row.length > 0) { row.push(field); rows.push({ cells: row, line: line }); }\n  return { rows: rows };\n}\n\nfunction decode(buf) {\n  if (typeof TextDecoder !== 'undefined') {\n    try { return { text: new TextDecoder('utf-8', { fatal: true }).decode(buf) }; } catch (e) { return { error: 'File is not valid UTF-8 text' }; }\n  }\n  const t = buf.toString('utf8');\n  if (t.indexOf('\\uFFFD') >= 0) return { error: 'File is not valid UTF-8 text' };\n  return { text: t };\n}\n\nfunction findBinaryKey(field) {\n  const keys = Object.keys(binary);\n  if (keys.indexOf(field) >= 0) return field;\n  const pref = keys.filter(function (k) { return k.indexOf(field) === 0; }).sort();\n  return pref.length ? pref[0] : null;\n}\n\nconst sellerRaw = String(form.seller_id || '').trim();\nif (!/^[A-Za-z0-9_-]{1,40}$/.test(sellerRaw)) fail('form', 'INVALID_SELLER_ID', 'Seller ID must be 1-40 letters, digits, - or _');\nconst seller = sellerRaw.toUpperCase();\nconst asOf = String(form.as_of_date || '').trim().slice(0, 10);\nif (!/^\\d{4}-\\d{2}-\\d{2}$/.test(asOf)) fail('form', 'INVALID_AS_OF_DATE', 'As-of date must be YYYY-MM-DD');\nconst confirm = form.synthetic_confirmation;\nconst confirmed = Array.isArray(confirm) ? confirm.length > 0 : !!confirm;\nif (!confirmed) fail('form', 'SYNTHETIC_CONFIRMATION_REQUIRED', 'Confirm that the files contain synthetic demo data only');\n\nfunction parseLines(text, kind) {\n  const out = [];\n  String(text || '').split(/\\r?\\n/).forEach(function (l, idx) {\n    const s = l.trim(); if (!s) return;\n    const m = /^([A-Za-z0-9 _.-]+?)\\s*[=:]\\s*(\\S+)$/.exec(s);\n    if (!m) { fail('form', kind === 'rules' ? 'INVALID_COURIER_RULE' : 'INVALID_COVERAGE', 'Line ' + (idx + 1) + ' must look like COURIER=' + (kind === 'rules' ? 'DAYS' : 'YYYY-MM-DD')); return; }\n    out.push({ courier: m[1].trim().toUpperCase(), value: m[2] });\n  });\n  return out;\n}\nconst courierRules = parseLines(form.courier_rules, 'rules').map(function (r) {\n  if (!/^\\d{1,3}$/.test(r.value)) fail('form', 'INVALID_COURIER_RULE', 'Settlement days for ' + r.courier + ' must be a whole number');\n  return { courier: r.courier, settlement_days: r.value };\n});\nconst submittedAt = String(form.submittedAt || new Date().toISOString());\nconst coverage = parseLines(form.settlement_coverage, 'coverage').map(function (c) {\n  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(c.value)) fail('form', 'INVALID_COVERAGE', 'Coverage date for ' + c.courier + ' must be YYYY-MM-DD');\n  return { courier: c.courier === '*' ? '*' : c.courier, covered_through: c.value, source: 'user_declaration', declared_by: 'upload-form:' + seller, declared_at: submittedAt };\n});\n\n// Text fallback is only for injected/manual test runs. It grants no capability beyond uploading the same CSV as a file.\nconst testMode = $execution.mode !== 'production' || form.formMode === 'instanceAi';\nconst files = {};\nconst required = { orders: true, shipments: true, settlements: true, allocations: false };\nfor (const source of SOURCES) {\n  const field = source + '_file';\n  let text = null; let fileName = null; let byteLen = 0;\n  const key = findBinaryKey(field);\n  if (key) {\n    const buf = await this.helpers.getBinaryDataBuffer(0, key);\n    byteLen = buf.length; fileName = binary[key].fileName || key;\n    if (byteLen > MAX_BYTES) { fail(source, 'FILE_TOO_LARGE', 'File exceeds 2 MB demo limit'); continue; }\n    if (buf.indexOf(0) >= 0) { fail(source, 'UNREADABLE_FILE', 'File contains binary (NUL) bytes; not a CSV text file'); continue; }\n    const d = decode(buf);\n    if (d.error) { fail(source, 'UNREADABLE_FILE', d.error); continue; }\n    text = d.text;\n  } else if (testMode && typeof form[source + '_csv_text'] === 'string') {\n    // Non-production executions only: allows automated tests to supply CSV text instead of an uploaded binary.\n    text = form[source + '_csv_text']; fileName = source + '.csv (test text)'; byteLen = text.length;\n  }\n  if (text === null) {\n    if (required[source]) fail(source, 'FILE_MISSING', 'Required file was not uploaded');\n    else notes.push(source + ' file not provided; treated as no allocations');\n    continue;\n  }\n  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);\n  if (text.trim() === '') { fail(source, 'EMPTY_FILE', 'File is empty (no header row); a headers-only file is required at minimum'); continue; }\n  const p = parseCsv(text);\n  if (p.error) { fail(source, 'MALFORMED_CSV', p.error); continue; }\n  const all = p.rows.filter(function (r) { return !(r.cells.length === 1 && r.cells[0].trim() === ''); });\n  if (all.length === 0) { fail(source, 'EMPTY_FILE', 'No header row'); continue; }\n  const headers = all[0].cells.map(function (h) { return h.trim(); });\n  if (headers.some(function (h) { return h === ''; })) { fail(source, 'MALFORMED_CSV', 'Header row contains a blank column name'); continue; }\n  const dupH = headers.filter(function (h, i) { return headers.indexOf(h) !== i; });\n  if (dupH.length) { fail(source, 'MALFORMED_CSV', 'Duplicate column names: ' + dupH.join(', ')); continue; }\n  const data = all.slice(1);\n  if (data.length > MAX_ROWS) { fail(source, 'TOO_MANY_ROWS', 'More than ' + MAX_ROWS + ' data rows (demo limit)'); continue; }\n  const bad = data.find(function (r) { return r.cells.length !== headers.length; });\n  if (bad) { fail(source, 'MALFORMED_CSV', 'Line ' + bad.line + ' has ' + bad.cells.length + ' columns; header has ' + headers.length); continue; }\n  const rows = data.map(function (r) {\n    const raw = {}; headers.forEach(function (h, i) { raw[h] = r.cells[i]; });\n    return { line: r.line, raw: raw };\n  });\n  files[source] = {\n    file_name: fileName, bytes: byteLen, headers: headers,\n    header_fingerprint: sha256(JSON.stringify(headers)), content_hash: sha256(text), row_count: rows.length, rows: rows,\n  };\n}\n\nconst importFailed = importErrors.length > 0;\nconst now = new Date();\nconst stamp = now.toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);\nconst runId = 'RUN-' + stamp + '-' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0').toUpperCase();\nconst runKey = sha256(canon({\n  engine: ENGINE_VERSION_EXPECTED, schema: SCHEMA_VERSION, mapping: MAPPING_VERSION, seller: seller, as_of: asOf,\n  rules: courierRules, coverage: coverage.map(function (c) { return { courier: c.courier, covered_through: c.covered_through, source: c.source }; }),\n  files: SOURCES.map(function (s) { return files[s] ? files[s].content_hash : null; }),\n}));\n\nreturn [{ json: {\n  run_id: runId, run_key: runKey, seller_id: seller, as_of_date: asOf, submitted_at: submittedAt,\n  courier_rules: courierRules, settlement_coverage: coverage, files: files, import_failed: importFailed,\n  import_errors: importErrors, notes: notes, test_mode: testMode,\n  file_summary: SOURCES.map(function (s) { return files[s] ? s + ': ' + files[s].row_count + ' rows' : s + ': not loaded'; }).join('; '),\n} }];\n"
+      },
+      "id": "67e0dd44-d162-4a53-855f-c91dfdb6be62",
+      "name": "Parse Uploaded Files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ImportOK",
+              "leftValue": "={{ $json.import_failed === false }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "12e4c0da-ce2f-4683-beea-c84dc867c008",
+      "name": "Import OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $json.run_id }}",
+            "run_key": "={{ $json.run_key }}",
+            "seller_id": "={{ $json.seller_id }}",
+            "as_of_date": "={{ $json.as_of_date }}",
+            "status": "RUNNING",
+            "submitted_at": "={{ $json.submitted_at }}",
+            "coverage_json": "={{ JSON.stringify($json.settlement_coverage) }}",
+            "rules_json": "={{ JSON.stringify($json.courier_rules) }}",
+            "import_errors_json": "[]",
+            "execution_id": "={{ $execution.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "run_key",
+              "displayName": "run_key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "seller_id",
+              "displayName": "seller_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "as_of_date",
+              "displayName": "as_of_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "engine_version",
+              "displayName": "engine_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "completed_at",
+              "displayName": "completed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "coverage_json",
+              "displayName": "coverage_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "rules_json",
+              "displayName": "rules_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "mapping_json",
+              "displayName": "mapping_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "import_errors_json",
+              "displayName": "import_errors_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "input_counts_json",
+              "displayName": "input_counts_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "valid_counts_json",
+              "displayName": "valid_counts_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "warnings_json",
+              "displayName": "warnings_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "kpis_json",
+              "displayName": "kpis_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "kpis_pkr_json",
+              "displayName": "kpis_pkr_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "output_hash",
+              "displayName": "output_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "results_count",
+              "displayName": "results_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "exceptions_count",
+              "displayName": "exceptions_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "validation_errors_count",
+              "displayName": "validation_errors_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "settlement_summary_count",
+              "displayName": "settlement_summary_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_error",
+              "displayName": "last_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "211c5b07-1525-4ec8-b126-8a6b58220552",
+      "name": "Record Run Started",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "SaHKBmoHI7tJyvSH",
+          "cachedResultName": "pla_header_mappings"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "mapping_valid",
+              "condition": "isTrue"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "4f1f1a18-f721-4f81-90f6-35fc7077afc1",
+      "name": "Read Header Cache",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        80
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- shared helpers (inlined into several Code nodes) ----\nconst SCHEMA_VERSION = 'pla-schema-1';\nconst MAPPING_VERSION = 'pla-map-1';\nconst ENGINE_VERSION_EXPECTED = 'pla-engine-1.2.0';\nconst SOURCES = ['orders', 'shipments', 'settlements', 'allocations'];\nconst CANON = {\n  orders: {\n    seller_id: 'Seller account identifier', order_id: 'Unique order identifier (mandatory)', order_date: 'Date the order was placed (mandatory)',\n    cod_amount_pkr: 'Cash-on-delivery amount of the order in PKR (mandatory)', order_status: 'Order status text (mandatory)', customer_ref: 'Customer reference (optional)', notes: 'Free-text notes (optional)',\n  },\n  shipments: {\n    seller_id: 'Seller account identifier', shipment_id: 'Unique shipment identifier (mandatory)', order_id: 'Order the shipment belongs to (mandatory)', tracking_number: 'Courier tracking / consignment number (mandatory)',\n    courier: 'Courier company name (mandatory)', booked_date: 'Date the shipment was booked (mandatory)', status: 'Courier delivery status (mandatory)', status_date: 'Date of the latest status, e.g. delivery date',\n    cod_collected_pkr: 'COD amount collected from customer in PKR', contracted_delivery_fee_pkr: 'Contracted delivery fee in PKR', contracted_rto_fee_pkr: 'Contracted return-to-origin fee in PKR',\n  },\n  settlements: {\n    seller_id: 'Seller account identifier', settlement_id: 'Unique settlement / payment batch identifier (mandatory)', courier: 'Courier company name (mandatory)', settlement_date: 'Date of the settlement (mandatory)',\n    entry_type: 'PAYMENT, REVERSAL or ADJUSTMENT (mandatory)', gross_cod_pkr: 'Gross COD in the batch in PKR (mandatory)', delivery_fees_pkr: 'Delivery fees deducted in PKR (mandatory)', rto_fees_pkr: 'RTO fees deducted in PKR (mandatory)',\n    other_deductions_pkr: 'Other deductions in PKR (mandatory)', net_paid_pkr: 'Net amount paid to seller in PKR (mandatory)', payment_reference: 'Bank / payment reference (optional)',\n  },\n  allocations: {\n    seller_id: 'Seller account identifier', allocation_id: 'Unique allocation line identifier (mandatory)', settlement_id: 'Settlement the line belongs to (mandatory)', tracking_number: 'Tracking number the line pays (mandatory)',\n    allocated_net_pkr: 'Net amount allocated to this shipment in PKR (mandatory)', allocated_cod_pkr: 'COD amount allocated in PKR', allocated_delivery_fee_pkr: 'Delivery fee attributed to this shipment in PKR', allocated_rto_fee_pkr: 'RTO fee attributed to this shipment in PKR',\n  },\n};\nconst SYNONYMS = {\n  seller_id: ['seller', 'seller_id', 'merchant_id', 'account_id'],\n  order_id: ['order_id', 'order_no', 'order_number', 'order', 'order_ref'],\n  order_date: ['order_date', 'date', 'created_at', 'order_created'],\n  cod_amount_pkr: ['cod_amount_pkr', 'cod_amount', 'cod', 'amount', 'order_amount'],\n  order_status: ['order_status'],\n  customer_ref: ['customer_ref', 'customer', 'customer_id'],\n  notes: ['notes', 'note', 'remarks'],\n  shipment_id: ['shipment_id', 'shipment_no', 'shipment'],\n  tracking_number: ['tracking_number', 'tracking_no', 'tracking', 'cn', 'cn_number', 'consignment_no', 'consignment_number', 'awb'],\n  courier: ['courier', 'courier_name', 'carrier'],\n  booked_date: ['booked_date', 'booking_date', 'booked_on'],\n  status: ['status', 'delivery_status', 'shipment_status'],\n  status_date: ['status_date', 'delivered_date', 'delivery_date'],\n  cod_collected_pkr: ['cod_collected_pkr', 'cod_collected', 'collected_amount'],\n  contracted_delivery_fee_pkr: ['contracted_delivery_fee_pkr', 'contracted_delivery_fee', 'delivery_fee_contract'],\n  contracted_rto_fee_pkr: ['contracted_rto_fee_pkr', 'contracted_rto_fee', 'rto_fee_contract'],\n  settlement_id: ['settlement_id', 'settlement_no', 'batch_id', 'payment_batch'],\n  settlement_date: ['settlement_date', 'payment_date', 'paid_on'],\n  entry_type: ['entry_type', 'type', 'transaction_type'],\n  gross_cod_pkr: ['gross_cod_pkr', 'gross_cod', 'gross_amount'],\n  delivery_fees_pkr: ['delivery_fees_pkr', 'delivery_fees', 'delivery_charges'],\n  rto_fees_pkr: ['rto_fees_pkr', 'rto_fees', 'rto_charges'],\n  other_deductions_pkr: ['other_deductions_pkr', 'other_deductions', 'deductions'],\n  net_paid_pkr: ['net_paid_pkr', 'net_paid', 'net_amount', 'amount_paid'],\n  payment_reference: ['payment_reference', 'payment_ref', 'bank_ref', 'reference'],\n  allocation_id: ['allocation_id', 'line_id', 'allocation_line'],\n  allocated_net_pkr: ['allocated_net_pkr', 'allocated_net', 'net_allocated'],\n  allocated_cod_pkr: ['allocated_cod_pkr', 'allocated_cod'],\n  allocated_delivery_fee_pkr: ['allocated_delivery_fee_pkr', 'allocated_delivery_fee'],\n  allocated_rto_fee_pkr: ['allocated_rto_fee_pkr', 'allocated_rto_fee'],\n};\nfunction normHeader(h) { return String(h).trim().toLowerCase().replace(/\\(.*?\\)/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }\nfunction sha256(ascii) {\n  function rr(v, a) { return (v >>> a) | (v << (32 - a)); }\n  const utf8 = unescape(encodeURIComponent(ascii));\n  const words = []; const bitLen = utf8.length * 8; const K = []; const H = []; let primeCount = 0; const isComposite = {};\n  for (let c = 2; primeCount < 64; c++) {\n    if (!isComposite[c]) {\n      for (let i = 0; i < 313; i += c) isComposite[i] = c;\n      if (primeCount < 8) H[primeCount] = (Math.pow(c, 0.5) * 4294967296) | 0;\n      K[primeCount++] = (Math.pow(c, 1 / 3) * 4294967296) | 0;\n    }\n  }\n  let str = utf8 + '\\x80';\n  while (str.length % 64 - 56) str += '\\x00';\n  for (let i = 0; i < str.length; i++) { const j = str.charCodeAt(i); words[i >> 2] |= j << ((3 - i) % 4) * 8; }\n  words[words.length] = (bitLen / 4294967296) | 0; words[words.length] = bitLen | 0;\n  let hash = H.slice(0, 8);\n  for (let j = 0; j < words.length;) {\n    const w = words.slice(j, j += 16); const oldHash = hash; hash = hash.slice(0, 8);\n    for (let i = 0; i < 64; i++) {\n      const w15 = w[i - 15], w2 = w[i - 2]; const a = hash[0], e = hash[4];\n      const temp1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + K[i] +\n        (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);\n      const temp2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      hash = [(temp1 + temp2) | 0].concat(hash); hash[4] = (hash[4] + temp1) | 0; hash.length = 8;\n    }\n    for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;\n  }\n  let result = '';\n  for (let i = 0; i < 8; i++) for (let j = 3; j + 1; j--) { const b = (hash[i] >> (j * 8)) & 255; result += (b < 16 ? '0' : '') + b.toString(16); }\n  return result;\n}\nfunction canon(v) {\n  if (v === null || v === undefined) return 'null';\n  if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';\n  if (typeof v === 'object') return '{' + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ':' + canon(v[k]); }).join(',') + '}';\n  return JSON.stringify(v);\n}\nfunction cacheKeyFor(source, fingerprint) { return [source, SCHEMA_VERSION, MAPPING_VERSION, fingerprint].join('|'); }\n// Validate a proposed header->field mapping for one source. Returns {pairs, rejected}.\nfunction validatePairs(source, pairs, headers, alreadyTaken) {\n  const fields = CANON[source]; const taken = Object.assign({}, alreadyTaken || {}); const usedHeaders = {}; const ok = []; const rejected = [];\n  (Array.isArray(pairs) ? pairs : []).forEach(function (p) {\n    const h = p && typeof p.header === 'string' ? p.header : null; const f = p && typeof p.canonical_field === 'string' ? p.canonical_field : null;\n    if (!h || !f || f === 'UNMAPPED') return;\n    if (headers.indexOf(h) < 0) { rejected.push({ header: h, canonical_field: f, reason: 'header_not_in_file' }); return; }\n    if (!Object.prototype.hasOwnProperty.call(fields, f)) { rejected.push({ header: h, canonical_field: f, reason: 'unknown_canonical_field' }); return; }\n    if (taken[f]) { rejected.push({ header: h, canonical_field: f, reason: 'field_already_mapped' }); return; }\n    if (usedHeaders[h]) { rejected.push({ header: h, canonical_field: f, reason: 'header_already_mapped' }); return; }\n    taken[f] = h; usedHeaders[h] = true; ok.push({ header: h, canonical_field: f });\n  });\n  return { pairs: ok, rejected: rejected };\n}\n\n// ---- Resolve header mappings: deterministic -> cache -> AI request ----\nconst P = $('Parse Uploaded Files').first().json;\nconst cacheRows = $input.all().map(function (i) { return i.json; }).filter(function (r) { return r && r.cache_key; });\nconst cacheByKey = {};\ncacheRows.forEach(function (r) { if (r.mapping_valid === true || r.mapping_valid === 'true') cacheByKey[r.cache_key] = r; });\n\nconst mapping = {};\nconst needsAi = [];\nSOURCES.forEach(function (source) {\n  const f = P.files[source];\n  if (!f) return;\n  const fields = CANON[source];\n  const taken = {}; const pairs = [];\n  f.headers.forEach(function (h) {\n    const n = normHeader(h);\n    const target = Object.keys(fields).find(function (fld) { return !taken[fld] && (n === fld || (SYNONYMS[fld] || []).indexOf(n) >= 0); });\n    if (target) { taken[target] = h; pairs.push({ header: h, canonical_field: target, method: 'deterministic' }); }\n  });\n  const unmappedHeaders = f.headers.filter(function (h) { return !pairs.some(function (p) { return p.header === h; }); });\n  const unmappedFields = Object.keys(fields).filter(function (fld) { return !taken[fld]; });\n  const key = cacheKeyFor(source, f.header_fingerprint);\n  const entry = { source_type: source, cache_key: key, header_fingerprint: f.header_fingerprint, pairs: pairs, rejected: [], method: 'deterministic', unmapped_headers: unmappedHeaders };\n  if (unmappedHeaders.length > 0 && unmappedFields.length > 0) {\n    const cached = cacheByKey[key];\n    let cachedPairs = null;\n    try { cachedPairs = cached ? JSON.parse(cached.mapping_json) : null; } catch (e) { cachedPairs = null; }\n    if (cachedPairs) {\n      const v = validatePairs(source, cachedPairs, unmappedHeaders, taken);\n      v.pairs.forEach(function (p) { entry.pairs.push({ header: p.header, canonical_field: p.canonical_field, method: 'cache' }); });\n      entry.rejected = v.rejected; entry.method = 'deterministic+cache';\n    } else {\n      entry.method = 'deterministic+ai_pending';\n      needsAi.push({ source_type: source, cache_key: key, header_fingerprint: f.header_fingerprint, headers: f.headers, unmapped_headers: unmappedHeaders,\n        available_fields: unmappedFields.map(function (fld) { return { field: fld, description: fields[fld] }; }), deterministic_taken: taken });\n    }\n  }\n  mapping[source] = entry;\n});\n\n// AI payload contains ONLY column headers and canonical schema descriptions - never row values.\nconst aiPrompt = needsAi.length === 0 ? '' : JSON.stringify({\n  task: 'Map each CSV column header to at most one canonical field of the same source type. Use UNMAPPED when unsure. Never map two headers to the same field.',\n  sources: needsAi.map(function (n) { return { source_type: n.source_type, unmapped_headers: n.unmapped_headers, available_fields: n.available_fields }; }),\n});\nreturn [{ json: { mapping: mapping, needs_ai: needsAi, needs_ai_count: needsAi.length, ai_prompt: aiPrompt, ai_status: needsAi.length ? 'pending' : 'not_needed' } }];\n"
+      },
+      "id": "d3294e45-39a6-40fc-bd46-1738fb4d8839",
+      "name": "Resolve Header Mappings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "NeedsAIMapping",
+              "leftValue": "={{ $json.needs_ai_count > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "16667ba4-9041-49f2-9b0f-8421b2eaa6e1",
+      "name": "Needs AI Mapping?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5.4-mini",
+          "cachedResultName": "GPT-5.4-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "={{ $json.ai_prompt }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "instructions": "You map CSV column headers to canonical field names. You only ever see headers and field descriptions, never data. Return only mappings you are confident about; otherwise use canonical_field UNMAPPED. Each canonical field may be used at most once per source_type.",
+          "store": false,
+          "textFormat": {
+            "textOptions": {
+              "type": "json_schema",
+              "name": "header_mapping",
+              "schema": "{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"mappings\"],\"properties\":{\"mappings\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"additionalProperties\":false,\"required\":[\"source_type\",\"header\",\"canonical_field\"],\"properties\":{\"source_type\":{\"type\":\"string\"},\"header\":{\"type\":\"string\"},\"canonical_field\":{\"type\":\"string\"}}}}}}",
+              "strict": true
+            }
+          }
+        }
+      },
+      "id": "da560868-1e52-4ca9-be70-53b855590a6d",
+      "name": "AI Map Headers",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        1712,
+        32
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "Gateway credits",
+          "__aiGatewayManaged": true
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- shared helpers (inlined into several Code nodes) ----\nconst SCHEMA_VERSION = 'pla-schema-1';\nconst MAPPING_VERSION = 'pla-map-1';\nconst ENGINE_VERSION_EXPECTED = 'pla-engine-1.2.0';\nconst SOURCES = ['orders', 'shipments', 'settlements', 'allocations'];\nconst CANON = {\n  orders: {\n    seller_id: 'Seller account identifier', order_id: 'Unique order identifier (mandatory)', order_date: 'Date the order was placed (mandatory)',\n    cod_amount_pkr: 'Cash-on-delivery amount of the order in PKR (mandatory)', order_status: 'Order status text (mandatory)', customer_ref: 'Customer reference (optional)', notes: 'Free-text notes (optional)',\n  },\n  shipments: {\n    seller_id: 'Seller account identifier', shipment_id: 'Unique shipment identifier (mandatory)', order_id: 'Order the shipment belongs to (mandatory)', tracking_number: 'Courier tracking / consignment number (mandatory)',\n    courier: 'Courier company name (mandatory)', booked_date: 'Date the shipment was booked (mandatory)', status: 'Courier delivery status (mandatory)', status_date: 'Date of the latest status, e.g. delivery date',\n    cod_collected_pkr: 'COD amount collected from customer in PKR', contracted_delivery_fee_pkr: 'Contracted delivery fee in PKR', contracted_rto_fee_pkr: 'Contracted return-to-origin fee in PKR',\n  },\n  settlements: {\n    seller_id: 'Seller account identifier', settlement_id: 'Unique settlement / payment batch identifier (mandatory)', courier: 'Courier company name (mandatory)', settlement_date: 'Date of the settlement (mandatory)',\n    entry_type: 'PAYMENT, REVERSAL or ADJUSTMENT (mandatory)', gross_cod_pkr: 'Gross COD in the batch in PKR (mandatory)', delivery_fees_pkr: 'Delivery fees deducted in PKR (mandatory)', rto_fees_pkr: 'RTO fees deducted in PKR (mandatory)',\n    other_deductions_pkr: 'Other deductions in PKR (mandatory)', net_paid_pkr: 'Net amount paid to seller in PKR (mandatory)', payment_reference: 'Bank / payment reference (optional)',\n  },\n  allocations: {\n    seller_id: 'Seller account identifier', allocation_id: 'Unique allocation line identifier (mandatory)', settlement_id: 'Settlement the line belongs to (mandatory)', tracking_number: 'Tracking number the line pays (mandatory)',\n    allocated_net_pkr: 'Net amount allocated to this shipment in PKR (mandatory)', allocated_cod_pkr: 'COD amount allocated in PKR', allocated_delivery_fee_pkr: 'Delivery fee attributed to this shipment in PKR', allocated_rto_fee_pkr: 'RTO fee attributed to this shipment in PKR',\n  },\n};\nconst SYNONYMS = {\n  seller_id: ['seller', 'seller_id', 'merchant_id', 'account_id'],\n  order_id: ['order_id', 'order_no', 'order_number', 'order', 'order_ref'],\n  order_date: ['order_date', 'date', 'created_at', 'order_created'],\n  cod_amount_pkr: ['cod_amount_pkr', 'cod_amount', 'cod', 'amount', 'order_amount'],\n  order_status: ['order_status'],\n  customer_ref: ['customer_ref', 'customer', 'customer_id'],\n  notes: ['notes', 'note', 'remarks'],\n  shipment_id: ['shipment_id', 'shipment_no', 'shipment'],\n  tracking_number: ['tracking_number', 'tracking_no', 'tracking', 'cn', 'cn_number', 'consignment_no', 'consignment_number', 'awb'],\n  courier: ['courier', 'courier_name', 'carrier'],\n  booked_date: ['booked_date', 'booking_date', 'booked_on'],\n  status: ['status', 'delivery_status', 'shipment_status'],\n  status_date: ['status_date', 'delivered_date', 'delivery_date'],\n  cod_collected_pkr: ['cod_collected_pkr', 'cod_collected', 'collected_amount'],\n  contracted_delivery_fee_pkr: ['contracted_delivery_fee_pkr', 'contracted_delivery_fee', 'delivery_fee_contract'],\n  contracted_rto_fee_pkr: ['contracted_rto_fee_pkr', 'contracted_rto_fee', 'rto_fee_contract'],\n  settlement_id: ['settlement_id', 'settlement_no', 'batch_id', 'payment_batch'],\n  settlement_date: ['settlement_date', 'payment_date', 'paid_on'],\n  entry_type: ['entry_type', 'type', 'transaction_type'],\n  gross_cod_pkr: ['gross_cod_pkr', 'gross_cod', 'gross_amount'],\n  delivery_fees_pkr: ['delivery_fees_pkr', 'delivery_fees', 'delivery_charges'],\n  rto_fees_pkr: ['rto_fees_pkr', 'rto_fees', 'rto_charges'],\n  other_deductions_pkr: ['other_deductions_pkr', 'other_deductions', 'deductions'],\n  net_paid_pkr: ['net_paid_pkr', 'net_paid', 'net_amount', 'amount_paid'],\n  payment_reference: ['payment_reference', 'payment_ref', 'bank_ref', 'reference'],\n  allocation_id: ['allocation_id', 'line_id', 'allocation_line'],\n  allocated_net_pkr: ['allocated_net_pkr', 'allocated_net', 'net_allocated'],\n  allocated_cod_pkr: ['allocated_cod_pkr', 'allocated_cod'],\n  allocated_delivery_fee_pkr: ['allocated_delivery_fee_pkr', 'allocated_delivery_fee'],\n  allocated_rto_fee_pkr: ['allocated_rto_fee_pkr', 'allocated_rto_fee'],\n};\nfunction normHeader(h) { return String(h).trim().toLowerCase().replace(/\\(.*?\\)/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }\nfunction sha256(ascii) {\n  function rr(v, a) { return (v >>> a) | (v << (32 - a)); }\n  const utf8 = unescape(encodeURIComponent(ascii));\n  const words = []; const bitLen = utf8.length * 8; const K = []; const H = []; let primeCount = 0; const isComposite = {};\n  for (let c = 2; primeCount < 64; c++) {\n    if (!isComposite[c]) {\n      for (let i = 0; i < 313; i += c) isComposite[i] = c;\n      if (primeCount < 8) H[primeCount] = (Math.pow(c, 0.5) * 4294967296) | 0;\n      K[primeCount++] = (Math.pow(c, 1 / 3) * 4294967296) | 0;\n    }\n  }\n  let str = utf8 + '\\x80';\n  while (str.length % 64 - 56) str += '\\x00';\n  for (let i = 0; i < str.length; i++) { const j = str.charCodeAt(i); words[i >> 2] |= j << ((3 - i) % 4) * 8; }\n  words[words.length] = (bitLen / 4294967296) | 0; words[words.length] = bitLen | 0;\n  let hash = H.slice(0, 8);\n  for (let j = 0; j < words.length;) {\n    const w = words.slice(j, j += 16); const oldHash = hash; hash = hash.slice(0, 8);\n    for (let i = 0; i < 64; i++) {\n      const w15 = w[i - 15], w2 = w[i - 2]; const a = hash[0], e = hash[4];\n      const temp1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + K[i] +\n        (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);\n      const temp2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      hash = [(temp1 + temp2) | 0].concat(hash); hash[4] = (hash[4] + temp1) | 0; hash.length = 8;\n    }\n    for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;\n  }\n  let result = '';\n  for (let i = 0; i < 8; i++) for (let j = 3; j + 1; j--) { const b = (hash[i] >> (j * 8)) & 255; result += (b < 16 ? '0' : '') + b.toString(16); }\n  return result;\n}\nfunction canon(v) {\n  if (v === null || v === undefined) return 'null';\n  if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';\n  if (typeof v === 'object') return '{' + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ':' + canon(v[k]); }).join(',') + '}';\n  return JSON.stringify(v);\n}\nfunction cacheKeyFor(source, fingerprint) { return [source, SCHEMA_VERSION, MAPPING_VERSION, fingerprint].join('|'); }\n// Validate a proposed header->field mapping for one source. Returns {pairs, rejected}.\nfunction validatePairs(source, pairs, headers, alreadyTaken) {\n  const fields = CANON[source]; const taken = Object.assign({}, alreadyTaken || {}); const usedHeaders = {}; const ok = []; const rejected = [];\n  (Array.isArray(pairs) ? pairs : []).forEach(function (p) {\n    const h = p && typeof p.header === 'string' ? p.header : null; const f = p && typeof p.canonical_field === 'string' ? p.canonical_field : null;\n    if (!h || !f || f === 'UNMAPPED') return;\n    if (headers.indexOf(h) < 0) { rejected.push({ header: h, canonical_field: f, reason: 'header_not_in_file' }); return; }\n    if (!Object.prototype.hasOwnProperty.call(fields, f)) { rejected.push({ header: h, canonical_field: f, reason: 'unknown_canonical_field' }); return; }\n    if (taken[f]) { rejected.push({ header: h, canonical_field: f, reason: 'field_already_mapped' }); return; }\n    if (usedHeaders[h]) { rejected.push({ header: h, canonical_field: f, reason: 'header_already_mapped' }); return; }\n    taken[f] = h; usedHeaders[h] = true; ok.push({ header: h, canonical_field: f });\n  });\n  return { pairs: ok, rejected: rejected };\n}\n\n// ---- Validate AI mapping (or record AI failure) and merge into resolved state ----\nconst R = JSON.parse(JSON.stringify($('Resolve Header Mappings').first().json));\nconst j = $input.first().json || {};\nlet parsed = null; let aiError = null;\ntry {\n  const t = j.output && j.output[0] && j.output[0].content && j.output[0].content[0] ? j.output[0].content[0].text : undefined;\n  parsed = typeof t === 'string' ? JSON.parse(t) : t;\n  if (!parsed || !Array.isArray(parsed.mappings)) { parsed = null; aiError = j.error ? String(j.error.message || j.error) : 'AI response missing mappings array'; }\n} catch (e) { parsed = null; aiError = 'AI response not parseable: ' + e.message; }\nconst newCache = [];\nR.needs_ai.forEach(function (n) {\n  const entry = R.mapping[n.source_type];\n  if (!parsed) { entry.method = 'deterministic_only_ai_failed'; entry.ai_error = aiError; return; }\n  const proposals = parsed.mappings.filter(function (m) { return m && m.source_type === n.source_type; });\n  const v = validatePairs(n.source_type, proposals, n.unmapped_headers, n.deterministic_taken);\n  v.pairs.forEach(function (p) { entry.pairs.push({ header: p.header, canonical_field: p.canonical_field, method: 'ai' }); });\n  entry.rejected = v.rejected; entry.method = 'deterministic+ai';\n  newCache.push({ cache_key: n.cache_key, source_type: n.source_type, schema_version: SCHEMA_VERSION, mapping_version: MAPPING_VERSION,\n    header_fingerprint: n.header_fingerprint, headers_json: JSON.stringify(n.headers), mapping_json: JSON.stringify(v.pairs), mapping_valid: true,\n    model: 'gpt-5.4-mini', created_at: new Date().toISOString() });\n});\nR.ai_status = parsed ? 'ok' : 'failed';\nR.ai_error = aiError;\nR.new_cache_rows = newCache;\nreturn [{ json: R }];\n"
+      },
+      "id": "7dc066b9-7eec-4d93-8be9-279ae889d9e8",
+      "name": "Validate AI Mapping",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2064,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- shared helpers (inlined into several Code nodes) ----\nconst SCHEMA_VERSION = 'pla-schema-1';\nconst MAPPING_VERSION = 'pla-map-1';\nconst ENGINE_VERSION_EXPECTED = 'pla-engine-1.2.0';\nconst SOURCES = ['orders', 'shipments', 'settlements', 'allocations'];\nconst CANON = {\n  orders: {\n    seller_id: 'Seller account identifier', order_id: 'Unique order identifier (mandatory)', order_date: 'Date the order was placed (mandatory)',\n    cod_amount_pkr: 'Cash-on-delivery amount of the order in PKR (mandatory)', order_status: 'Order status text (mandatory)', customer_ref: 'Customer reference (optional)', notes: 'Free-text notes (optional)',\n  },\n  shipments: {\n    seller_id: 'Seller account identifier', shipment_id: 'Unique shipment identifier (mandatory)', order_id: 'Order the shipment belongs to (mandatory)', tracking_number: 'Courier tracking / consignment number (mandatory)',\n    courier: 'Courier company name (mandatory)', booked_date: 'Date the shipment was booked (mandatory)', status: 'Courier delivery status (mandatory)', status_date: 'Date of the latest status, e.g. delivery date',\n    cod_collected_pkr: 'COD amount collected from customer in PKR', contracted_delivery_fee_pkr: 'Contracted delivery fee in PKR', contracted_rto_fee_pkr: 'Contracted return-to-origin fee in PKR',\n  },\n  settlements: {\n    seller_id: 'Seller account identifier', settlement_id: 'Unique settlement / payment batch identifier (mandatory)', courier: 'Courier company name (mandatory)', settlement_date: 'Date of the settlement (mandatory)',\n    entry_type: 'PAYMENT, REVERSAL or ADJUSTMENT (mandatory)', gross_cod_pkr: 'Gross COD in the batch in PKR (mandatory)', delivery_fees_pkr: 'Delivery fees deducted in PKR (mandatory)', rto_fees_pkr: 'RTO fees deducted in PKR (mandatory)',\n    other_deductions_pkr: 'Other deductions in PKR (mandatory)', net_paid_pkr: 'Net amount paid to seller in PKR (mandatory)', payment_reference: 'Bank / payment reference (optional)',\n  },\n  allocations: {\n    seller_id: 'Seller account identifier', allocation_id: 'Unique allocation line identifier (mandatory)', settlement_id: 'Settlement the line belongs to (mandatory)', tracking_number: 'Tracking number the line pays (mandatory)',\n    allocated_net_pkr: 'Net amount allocated to this shipment in PKR (mandatory)', allocated_cod_pkr: 'COD amount allocated in PKR', allocated_delivery_fee_pkr: 'Delivery fee attributed to this shipment in PKR', allocated_rto_fee_pkr: 'RTO fee attributed to this shipment in PKR',\n  },\n};\nconst SYNONYMS = {\n  seller_id: ['seller', 'seller_id', 'merchant_id', 'account_id'],\n  order_id: ['order_id', 'order_no', 'order_number', 'order', 'order_ref'],\n  order_date: ['order_date', 'date', 'created_at', 'order_created'],\n  cod_amount_pkr: ['cod_amount_pkr', 'cod_amount', 'cod', 'amount', 'order_amount'],\n  order_status: ['order_status'],\n  customer_ref: ['customer_ref', 'customer', 'customer_id'],\n  notes: ['notes', 'note', 'remarks'],\n  shipment_id: ['shipment_id', 'shipment_no', 'shipment'],\n  tracking_number: ['tracking_number', 'tracking_no', 'tracking', 'cn', 'cn_number', 'consignment_no', 'consignment_number', 'awb'],\n  courier: ['courier', 'courier_name', 'carrier'],\n  booked_date: ['booked_date', 'booking_date', 'booked_on'],\n  status: ['status', 'delivery_status', 'shipment_status'],\n  status_date: ['status_date', 'delivered_date', 'delivery_date'],\n  cod_collected_pkr: ['cod_collected_pkr', 'cod_collected', 'collected_amount'],\n  contracted_delivery_fee_pkr: ['contracted_delivery_fee_pkr', 'contracted_delivery_fee', 'delivery_fee_contract'],\n  contracted_rto_fee_pkr: ['contracted_rto_fee_pkr', 'contracted_rto_fee', 'rto_fee_contract'],\n  settlement_id: ['settlement_id', 'settlement_no', 'batch_id', 'payment_batch'],\n  settlement_date: ['settlement_date', 'payment_date', 'paid_on'],\n  entry_type: ['entry_type', 'type', 'transaction_type'],\n  gross_cod_pkr: ['gross_cod_pkr', 'gross_cod', 'gross_amount'],\n  delivery_fees_pkr: ['delivery_fees_pkr', 'delivery_fees', 'delivery_charges'],\n  rto_fees_pkr: ['rto_fees_pkr', 'rto_fees', 'rto_charges'],\n  other_deductions_pkr: ['other_deductions_pkr', 'other_deductions', 'deductions'],\n  net_paid_pkr: ['net_paid_pkr', 'net_paid', 'net_amount', 'amount_paid'],\n  payment_reference: ['payment_reference', 'payment_ref', 'bank_ref', 'reference'],\n  allocation_id: ['allocation_id', 'line_id', 'allocation_line'],\n  allocated_net_pkr: ['allocated_net_pkr', 'allocated_net', 'net_allocated'],\n  allocated_cod_pkr: ['allocated_cod_pkr', 'allocated_cod'],\n  allocated_delivery_fee_pkr: ['allocated_delivery_fee_pkr', 'allocated_delivery_fee'],\n  allocated_rto_fee_pkr: ['allocated_rto_fee_pkr', 'allocated_rto_fee'],\n};\nfunction normHeader(h) { return String(h).trim().toLowerCase().replace(/\\(.*?\\)/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }\nfunction sha256(ascii) {\n  function rr(v, a) { return (v >>> a) | (v << (32 - a)); }\n  const utf8 = unescape(encodeURIComponent(ascii));\n  const words = []; const bitLen = utf8.length * 8; const K = []; const H = []; let primeCount = 0; const isComposite = {};\n  for (let c = 2; primeCount < 64; c++) {\n    if (!isComposite[c]) {\n      for (let i = 0; i < 313; i += c) isComposite[i] = c;\n      if (primeCount < 8) H[primeCount] = (Math.pow(c, 0.5) * 4294967296) | 0;\n      K[primeCount++] = (Math.pow(c, 1 / 3) * 4294967296) | 0;\n    }\n  }\n  let str = utf8 + '\\x80';\n  while (str.length % 64 - 56) str += '\\x00';\n  for (let i = 0; i < str.length; i++) { const j = str.charCodeAt(i); words[i >> 2] |= j << ((3 - i) % 4) * 8; }\n  words[words.length] = (bitLen / 4294967296) | 0; words[words.length] = bitLen | 0;\n  let hash = H.slice(0, 8);\n  for (let j = 0; j < words.length;) {\n    const w = words.slice(j, j += 16); const oldHash = hash; hash = hash.slice(0, 8);\n    for (let i = 0; i < 64; i++) {\n      const w15 = w[i - 15], w2 = w[i - 2]; const a = hash[0], e = hash[4];\n      const temp1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + K[i] +\n        (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);\n      const temp2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      hash = [(temp1 + temp2) | 0].concat(hash); hash[4] = (hash[4] + temp1) | 0; hash.length = 8;\n    }\n    for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;\n  }\n  let result = '';\n  for (let i = 0; i < 8; i++) for (let j = 3; j + 1; j--) { const b = (hash[i] >> (j * 8)) & 255; result += (b < 16 ? '0' : '') + b.toString(16); }\n  return result;\n}\nfunction canon(v) {\n  if (v === null || v === undefined) return 'null';\n  if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';\n  if (typeof v === 'object') return '{' + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ':' + canon(v[k]); }).join(',') + '}';\n  return JSON.stringify(v);\n}\nfunction cacheKeyFor(source, fingerprint) { return [source, SCHEMA_VERSION, MAPPING_VERSION, fingerprint].join('|'); }\n// Validate a proposed header->field mapping for one source. Returns {pairs, rejected}.\nfunction validatePairs(source, pairs, headers, alreadyTaken) {\n  const fields = CANON[source]; const taken = Object.assign({}, alreadyTaken || {}); const usedHeaders = {}; const ok = []; const rejected = [];\n  (Array.isArray(pairs) ? pairs : []).forEach(function (p) {\n    const h = p && typeof p.header === 'string' ? p.header : null; const f = p && typeof p.canonical_field === 'string' ? p.canonical_field : null;\n    if (!h || !f || f === 'UNMAPPED') return;\n    if (headers.indexOf(h) < 0) { rejected.push({ header: h, canonical_field: f, reason: 'header_not_in_file' }); return; }\n    if (!Object.prototype.hasOwnProperty.call(fields, f)) { rejected.push({ header: h, canonical_field: f, reason: 'unknown_canonical_field' }); return; }\n    if (taken[f]) { rejected.push({ header: h, canonical_field: f, reason: 'field_already_mapped' }); return; }\n    if (usedHeaders[h]) { rejected.push({ header: h, canonical_field: f, reason: 'header_already_mapped' }); return; }\n    taken[f] = h; usedHeaders[h] = true; ok.push({ header: h, canonical_field: f });\n  });\n  return { pairs: ok, rejected: rejected };\n}\n\n// ---- Apply mappings and build the engine input (monetary strings preserved verbatim) ----\nconst P = $('Parse Uploaded Files').first().json;\nconst R = $input.first().json;\nconst MONEY = {\n  orders: ['cod_amount_pkr'], shipments: ['cod_collected_pkr', 'contracted_delivery_fee_pkr', 'contracted_rto_fee_pkr'],\n  settlements: ['gross_cod_pkr', 'delivery_fees_pkr', 'rto_fees_pkr', 'other_deductions_pkr', 'net_paid_pkr'],\n  allocations: ['allocated_net_pkr', 'allocated_cod_pkr', 'allocated_delivery_fee_pkr', 'allocated_rto_fee_pkr'],\n};\nconst out = {}; const notes = (P.notes || []).slice(); let moneyChecked = 0; const moneyMismatches = [];\nSOURCES.forEach(function (source) {\n  const f = P.files[source];\n  if (!f) { out[source] = []; return; }\n  const m = R.mapping[source] || { pairs: [] };\n  const byField = {}; m.pairs.forEach(function (p) { byField[p.canonical_field] = p.header; });\n  const sellerFromForm = !byField.seller_id;\n  if (sellerFromForm) notes.push(source + ': no seller column found; seller_id taken from the form for every row');\n  out[source] = f.rows.map(function (r) {\n    const row = { _row_number: r.line, _raw: r.raw };\n    Object.keys(CANON[source]).forEach(function (fld) { row[fld] = byField[fld] !== undefined ? r.raw[byField[fld]] : ''; });\n    if (sellerFromForm) row.seller_id = P.seller_id;\n    MONEY[source].forEach(function (fld) {\n      if (byField[fld] === undefined) return;\n      moneyChecked++;\n      if (typeof row[fld] !== 'string' || row[fld] !== r.raw[byField[fld]]) moneyMismatches.push(source + ':' + r.line + ':' + fld);\n    });\n    return row;\n  });\n});\nif (moneyMismatches.length) throw new Error('MONEY_STRING_NOT_PRESERVED: ' + moneyMismatches.slice(0, 10).join(', '));\nconst mappingSummary = {};\nObject.keys(R.mapping).forEach(function (s) { mappingSummary[s] = { method: R.mapping[s].method, pairs: R.mapping[s].pairs, rejected: R.mapping[s].rejected, ai_error: R.mapping[s].ai_error || null, cache_key: R.mapping[s].cache_key }; });\nreturn [{ json: {\n  seller_id: P.seller_id, run_id: P.run_id, as_of_date: P.as_of_date,\n  courier_rules: P.courier_rules, settlement_coverage: P.settlement_coverage,\n  orders: out.orders, shipments: out.shipments, settlements: out.settlements, allocations: out.allocations,\n  _pla_meta: { run_key: P.run_key, mapping: mappingSummary, notes: notes, money_strings_checked: moneyChecked, money_strings_preserved: true, ai_status: R.ai_status },\n} }];\n"
+      },
+      "id": "e868fde4-8059-46d2-b410-8e5cafeadbec",
+      "name": "Build Engine Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2288,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return ($input.first().json.new_cache_rows || []).map(function (r) { return { json: r }; });"
+      },
+      "id": "219715bf-d9e3-4bae-8981-62fe53985fa9",
+      "name": "Prepare Cache Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2288,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "SaHKBmoHI7tJyvSH",
+          "cachedResultName": "pla_header_mappings"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "schema": [
+            {
+              "id": "cache_key",
+              "displayName": "cache_key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_type",
+              "displayName": "source_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "schema_version",
+              "displayName": "schema_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mapping_version",
+              "displayName": "mapping_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "header_fingerprint",
+              "displayName": "header_fingerprint",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "headers_json",
+              "displayName": "headers_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mapping_json",
+              "displayName": "mapping_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mapping_valid",
+              "displayName": "mapping_valid",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "eb1825a5-7c24-4308-8496-7a9eeb8605cf",
+      "name": "Save Header Mapping Cache",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2512,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $json.run_id }}",
+            "run_key": "={{ $json.run_key }}",
+            "seller_id": "={{ $json.seller_id }}",
+            "as_of_date": "={{ $json.as_of_date }}",
+            "status": "FAILED_IMPORT",
+            "submitted_at": "={{ $json.submitted_at }}",
+            "import_errors_json": "={{ JSON.stringify($json.import_errors) }}",
+            "last_error": "Import failed: one or more files are malformed, unreadable or missing",
+            "execution_id": "={{ $execution.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "run_key",
+              "displayName": "run_key",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "seller_id",
+              "displayName": "seller_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "as_of_date",
+              "displayName": "as_of_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "engine_version",
+              "displayName": "engine_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "completed_at",
+              "displayName": "completed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "coverage_json",
+              "displayName": "coverage_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "rules_json",
+              "displayName": "rules_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "mapping_json",
+              "displayName": "mapping_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "import_errors_json",
+              "displayName": "import_errors_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "input_counts_json",
+              "displayName": "input_counts_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "valid_counts_json",
+              "displayName": "valid_counts_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "warnings_json",
+              "displayName": "warnings_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "kpis_json",
+              "displayName": "kpis_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "kpis_pkr_json",
+              "displayName": "kpis_pkr_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "output_hash",
+              "displayName": "output_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "results_count",
+              "displayName": "results_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "exceptions_count",
+              "displayName": "exceptions_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "validation_errors_count",
+              "displayName": "validation_errors_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "settlement_summary_count",
+              "displayName": "settlement_summary_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_error",
+              "displayName": "last_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c119f746-9941-47fc-bd7e-697d031f6da1",
+      "name": "Record Failed Import",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        816,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "showText",
+        "responseText": "=<h2>Import failed – nothing was analyzed</h2><p>Run {{ $('Parse Uploaded Files').first().json.run_id }} was recorded as FAILED_IMPORT. Fix the files and upload again.</p><ul>{{ $('Parse Uploaded Files').first().json.import_errors.map(e => '<li><b>' + e.source + '</b> ' + e.code + ': ' + String(e.message).replace(/</g,'&lt;') + '</li>').join('') }}</ul>"
+      },
+      "id": "abc5dd26-6c8c-4117-a796-7076805e9642",
+      "name": "Import Failed Page",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1040,
+        224
+      ],
+      "webhookId": "d1a6d54c-4f59-402f-9323-5f0e560eabb6"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "5FHxtXzKKJGExrey",
+          "cachedResultName": "PLA – Financial Engine"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "0c20c955-7b0d-4e69-a650-02e0f2d90aba",
+      "name": "Run Financial Engine",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        208
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $('Parse Uploaded Files').first().json.run_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "FAILED_ENGINE",
+            "last_error": "={{ String($json.error && ($json.error.message || $json.error) || \"Engine failed\").slice(0, 2000) }}"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_error",
+              "displayName": "last_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c9d011bc-acc2-4e47-b93b-e0f74a82b566",
+      "name": "Mark Engine Failed",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "showText",
+        "responseText": "=<h2>Analysis failed</h2><p>Run {{ $('Parse Uploaded Files').first().json.run_id }} was marked FAILED_ENGINE. No results are shown for this run.</p>"
+      },
+      "id": "79716de0-b7c4-4c6a-98ad-9bc081d5fc9a",
+      "name": "Engine Failed Page",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        1792,
+        304
+      ],
+      "webhookId": "8840e476-6a46-4300-b9e5-84dd40f31c36"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Template: prepare rows of one table from engine output. __KIND__ replaced at generation ----\nconst E = $('Run Financial Engine').first().json;\nconst KIND = \"results\";\nconst runId = E.run_id; const seller = E.seller_id;\nfunction n(v) { return v === null || v === undefined ? null : v; }\nlet rows = [];\nif (KIND === 'results') {\n  rows = (E.results || []).map(function (r, i) { return { run_id: runId, seller_id: seller, seq: i, order_id: n(r.order_id), shipment_id: n(r.shipment_id), tracking_number: n(r.tracking_number), courier: n(r.courier), normalized_status: n(r.normalized_status), settlement_completeness: n(r.settlement_completeness), due_date_status: n(r.due_date_status), due_date_confidence: n(r.due_date_confidence), expected_receivable_paisa: n(r.expected_receivable_paisa), verified_paid_paisa: n(r.verified_paid_paisa), outstanding_receivable_paisa: n(r.outstanding_receivable_paisa), overpaid_paisa: n(r.overpaid_paisa), result_json: JSON.stringify(r) }; });\n} else if (KIND === 'exceptions') {\n  rows = (E.exceptions || []).map(function (x, i) { return { run_id: runId, seller_id: seller, seq: i, exception_id: x.exception_id, type: x.type, severity: x.severity, confidence: n(x.confidence), order_id: n(x.order_id), shipment_id: n(x.shipment_id), tracking_number: n(x.tracking_number), settlement_id: n(x.settlement_id), amount_paisa: n(x.amount_paisa), description: x.description, evidence_json: JSON.stringify(x.evidence || {}) }; });\n} else if (KIND === 'validation') {\n  rows = (E.validation_errors || []).map(function (v, i) { return { run_id: runId, seller_id: seller, seq: i, source: v.source, row_number: n(v.row_number), field: n(v.field), code: v.code, level: v.level, message: v.message, raw_value: v.raw_value === undefined || v.raw_value === null ? '' : String(v.raw_value) }; });\n} else if (KIND === 'settlements') {\n  rows = (E.settlement_summary || []).map(function (s, i) { return { run_id: runId, seller_id: seller, seq: i, settlement_id: s.settlement_id, courier: s.courier, entry_type: s.entry_type, net_paid_paisa: n(s.net_paid_paisa), allocated_paisa: n(s.allocated_paisa), unallocated_paisa: n(s.unallocated_paisa), arithmetic_ok: !!s.arithmetic_ok, summary_json: JSON.stringify(s) }; });\n}\nif (rows.length === 0) return [{ json: { __empty: true, kind: KIND } }];\nreturn rows.map(function (r) { return { json: Object.assign({ __empty: false }, r) }; });\n"
+      },
+      "id": "d39daa9a-79b7-4877-983b-063142c75272",
+      "name": "Prepare Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        112
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "HasResults",
+              "leftValue": "={{ $json.__empty !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "7975f546-1549-4439-9b38-ce040831ccd9",
+      "name": "Has Results?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1792,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ucxvjinIPovsE5AU",
+          "cachedResultName": "pla_results"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $json.run_id }}",
+            "seller_id": "={{ $json.seller_id }}",
+            "seq": "={{ $json.seq }}",
+            "order_id": "={{ $json.order_id }}",
+            "shipment_id": "={{ $json.shipment_id }}",
+            "tracking_number": "={{ $json.tracking_number }}",
+            "courier": "={{ $json.courier }}",
+            "normalized_status": "={{ $json.normalized_status }}",
+            "settlement_completeness": "={{ $json.settlement_completeness }}",
+            "due_date_status": "={{ $json.due_date_status }}",
+            "due_date_confidence": "={{ $json.due_date_confidence }}",
+            "expected_receivable_paisa": "={{ $json.expected_receivable_paisa }}",
+            "verified_paid_paisa": "={{ $json.verified_paid_paisa }}",
+            "outstanding_receivable_paisa": "={{ $json.outstanding_receivable_paisa }}",
+            "overpaid_paisa": "={{ $json.overpaid_paisa }}",
+            "result_json": "={{ $json.result_json }}"
+          },
+          "schema": [
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seller_id",
+              "displayName": "seller_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seq",
+              "displayName": "seq",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "shipment_id",
+              "displayName": "shipment_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tracking_number",
+              "displayName": "tracking_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "courier",
+              "displayName": "courier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "normalized_status",
+              "displayName": "normalized_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "settlement_completeness",
+              "displayName": "settlement_completeness",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due_date_status",
+              "displayName": "due_date_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due_date_confidence",
+              "displayName": "due_date_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "expected_receivable_paisa",
+              "displayName": "expected_receivable_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "verified_paid_paisa",
+              "displayName": "verified_paid_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "outstanding_receivable_paisa",
+              "displayName": "outstanding_receivable_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "overpaid_paisa",
+              "displayName": "overpaid_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "result_json",
+              "displayName": "result_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bc0b7a5c-cc31-4df2-8867-9843a61f2ea7",
+      "name": "Save Results",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2016,
+        32
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Template: prepare rows of one table from engine output. __KIND__ replaced at generation ----\nconst E = $('Run Financial Engine').first().json;\nconst KIND = \"exceptions\";\nconst runId = E.run_id; const seller = E.seller_id;\nfunction n(v) { return v === null || v === undefined ? null : v; }\nlet rows = [];\nif (KIND === 'results') {\n  rows = (E.results || []).map(function (r, i) { return { run_id: runId, seller_id: seller, seq: i, order_id: n(r.order_id), shipment_id: n(r.shipment_id), tracking_number: n(r.tracking_number), courier: n(r.courier), normalized_status: n(r.normalized_status), settlement_completeness: n(r.settlement_completeness), due_date_status: n(r.due_date_status), due_date_confidence: n(r.due_date_confidence), expected_receivable_paisa: n(r.expected_receivable_paisa), verified_paid_paisa: n(r.verified_paid_paisa), outstanding_receivable_paisa: n(r.outstanding_receivable_paisa), overpaid_paisa: n(r.overpaid_paisa), result_json: JSON.stringify(r) }; });\n} else if (KIND === 'exceptions') {\n  rows = (E.exceptions || []).map(function (x, i) { return { run_id: runId, seller_id: seller, seq: i, exception_id: x.exception_id, type: x.type, severity: x.severity, confidence: n(x.confidence), order_id: n(x.order_id), shipment_id: n(x.shipment_id), tracking_number: n(x.tracking_number), settlement_id: n(x.settlement_id), amount_paisa: n(x.amount_paisa), description: x.description, evidence_json: JSON.stringify(x.evidence || {}) }; });\n} else if (KIND === 'validation') {\n  rows = (E.validation_errors || []).map(function (v, i) { return { run_id: runId, seller_id: seller, seq: i, source: v.source, row_number: n(v.row_number), field: n(v.field), code: v.code, level: v.level, message: v.message, raw_value: v.raw_value === undefined || v.raw_value === null ? '' : String(v.raw_value) }; });\n} else if (KIND === 'settlements') {\n  rows = (E.settlement_summary || []).map(function (s, i) { return { run_id: runId, seller_id: seller, seq: i, settlement_id: s.settlement_id, courier: s.courier, entry_type: s.entry_type, net_paid_paisa: n(s.net_paid_paisa), allocated_paisa: n(s.allocated_paisa), unallocated_paisa: n(s.unallocated_paisa), arithmetic_ok: !!s.arithmetic_ok, summary_json: JSON.stringify(s) }; });\n}\nif (rows.length === 0) return [{ json: { __empty: true, kind: KIND } }];\nreturn rows.map(function (r) { return { json: Object.assign({ __empty: false }, r) }; });\n"
+      },
+      "id": "3a2db1c9-bd11-436b-96b4-8abac041b316",
+      "name": "Prepare Exceptions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        112
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "HasExceptions",
+              "leftValue": "={{ $json.__empty !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "af542337-8f86-497a-acb7-b72ee31ce902",
+      "name": "Has Exceptions?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2464,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ozVKHgFOF0lT8Qq1",
+          "cachedResultName": "pla_exceptions"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $json.run_id }}",
+            "seller_id": "={{ $json.seller_id }}",
+            "seq": "={{ $json.seq }}",
+            "exception_id": "={{ $json.exception_id }}",
+            "type": "={{ $json.type }}",
+            "severity": "={{ $json.severity }}",
+            "confidence": "={{ $json.confidence }}",
+            "order_id": "={{ $json.order_id }}",
+            "shipment_id": "={{ $json.shipment_id }}",
+            "tracking_number": "={{ $json.tracking_number }}",
+            "settlement_id": "={{ $json.settlement_id }}",
+            "amount_paisa": "={{ $json.amount_paisa }}",
+            "description": "={{ $json.description }}",
+            "evidence_json": "={{ $json.evidence_json }}"
+          },
+          "schema": [
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seller_id",
+              "displayName": "seller_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seq",
+              "displayName": "seq",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "exception_id",
+              "displayName": "exception_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "severity",
+              "displayName": "severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "confidence",
+              "displayName": "confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "order_id",
+              "displayName": "order_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "shipment_id",
+              "displayName": "shipment_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tracking_number",
+              "displayName": "tracking_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "settlement_id",
+              "displayName": "settlement_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount_paisa",
+              "displayName": "amount_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "evidence_json",
+              "displayName": "evidence_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a36aa3ff-5d5c-42f4-9687-0cb886821045",
+      "name": "Save Exceptions",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2688,
+        32
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Template: prepare rows of one table from engine output. __KIND__ replaced at generation ----\nconst E = $('Run Financial Engine').first().json;\nconst KIND = \"validation\";\nconst runId = E.run_id; const seller = E.seller_id;\nfunction n(v) { return v === null || v === undefined ? null : v; }\nlet rows = [];\nif (KIND === 'results') {\n  rows = (E.results || []).map(function (r, i) { return { run_id: runId, seller_id: seller, seq: i, order_id: n(r.order_id), shipment_id: n(r.shipment_id), tracking_number: n(r.tracking_number), courier: n(r.courier), normalized_status: n(r.normalized_status), settlement_completeness: n(r.settlement_completeness), due_date_status: n(r.due_date_status), due_date_confidence: n(r.due_date_confidence), expected_receivable_paisa: n(r.expected_receivable_paisa), verified_paid_paisa: n(r.verified_paid_paisa), outstanding_receivable_paisa: n(r.outstanding_receivable_paisa), overpaid_paisa: n(r.overpaid_paisa), result_json: JSON.stringify(r) }; });\n} else if (KIND === 'exceptions') {\n  rows = (E.exceptions || []).map(function (x, i) { return { run_id: runId, seller_id: seller, seq: i, exception_id: x.exception_id, type: x.type, severity: x.severity, confidence: n(x.confidence), order_id: n(x.order_id), shipment_id: n(x.shipment_id), tracking_number: n(x.tracking_number), settlement_id: n(x.settlement_id), amount_paisa: n(x.amount_paisa), description: x.description, evidence_json: JSON.stringify(x.evidence || {}) }; });\n} else if (KIND === 'validation') {\n  rows = (E.validation_errors || []).map(function (v, i) { return { run_id: runId, seller_id: seller, seq: i, source: v.source, row_number: n(v.row_number), field: n(v.field), code: v.code, level: v.level, message: v.message, raw_value: v.raw_value === undefined || v.raw_value === null ? '' : String(v.raw_value) }; });\n} else if (KIND === 'settlements') {\n  rows = (E.settlement_summary || []).map(function (s, i) { return { run_id: runId, seller_id: seller, seq: i, settlement_id: s.settlement_id, courier: s.courier, entry_type: s.entry_type, net_paid_paisa: n(s.net_paid_paisa), allocated_paisa: n(s.allocated_paisa), unallocated_paisa: n(s.unallocated_paisa), arithmetic_ok: !!s.arithmetic_ok, summary_json: JSON.stringify(s) }; });\n}\nif (rows.length === 0) return [{ json: { __empty: true, kind: KIND } }];\nreturn rows.map(function (r) { return { json: Object.assign({ __empty: false }, r) }; });\n"
+      },
+      "id": "86e35bb7-ed74-4807-8602-6ee6fa5a7e65",
+      "name": "Prepare Validation Errors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2912,
+        112
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "HasValidationErrors",
+              "leftValue": "={{ $json.__empty !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e7ca5d39-6a65-4598-8e6f-9efded5a9789",
+      "name": "Has Validation Errors?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3136,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dRvJ4MPeV7msn63N",
+          "cachedResultName": "pla_validation_errors"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $json.run_id }}",
+            "seller_id": "={{ $json.seller_id }}",
+            "seq": "={{ $json.seq }}",
+            "source": "={{ $json.source }}",
+            "row_number": "={{ $json.row_number }}",
+            "field": "={{ $json.field }}",
+            "code": "={{ $json.code }}",
+            "level": "={{ $json.level }}",
+            "message": "={{ $json.message }}",
+            "raw_value": "={{ $json.raw_value }}"
+          },
+          "schema": [
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seller_id",
+              "displayName": "seller_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seq",
+              "displayName": "seq",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "field",
+              "displayName": "field",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "code",
+              "displayName": "code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "level",
+              "displayName": "level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "raw_value",
+              "displayName": "raw_value",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ba0fe0cb-3345-4aaa-a587-d6c342a17dd9",
+      "name": "Save Validation Errors",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3360,
+        32
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Template: prepare rows of one table from engine output. __KIND__ replaced at generation ----\nconst E = $('Run Financial Engine').first().json;\nconst KIND = \"settlements\";\nconst runId = E.run_id; const seller = E.seller_id;\nfunction n(v) { return v === null || v === undefined ? null : v; }\nlet rows = [];\nif (KIND === 'results') {\n  rows = (E.results || []).map(function (r, i) { return { run_id: runId, seller_id: seller, seq: i, order_id: n(r.order_id), shipment_id: n(r.shipment_id), tracking_number: n(r.tracking_number), courier: n(r.courier), normalized_status: n(r.normalized_status), settlement_completeness: n(r.settlement_completeness), due_date_status: n(r.due_date_status), due_date_confidence: n(r.due_date_confidence), expected_receivable_paisa: n(r.expected_receivable_paisa), verified_paid_paisa: n(r.verified_paid_paisa), outstanding_receivable_paisa: n(r.outstanding_receivable_paisa), overpaid_paisa: n(r.overpaid_paisa), result_json: JSON.stringify(r) }; });\n} else if (KIND === 'exceptions') {\n  rows = (E.exceptions || []).map(function (x, i) { return { run_id: runId, seller_id: seller, seq: i, exception_id: x.exception_id, type: x.type, severity: x.severity, confidence: n(x.confidence), order_id: n(x.order_id), shipment_id: n(x.shipment_id), tracking_number: n(x.tracking_number), settlement_id: n(x.settlement_id), amount_paisa: n(x.amount_paisa), description: x.description, evidence_json: JSON.stringify(x.evidence || {}) }; });\n} else if (KIND === 'validation') {\n  rows = (E.validation_errors || []).map(function (v, i) { return { run_id: runId, seller_id: seller, seq: i, source: v.source, row_number: n(v.row_number), field: n(v.field), code: v.code, level: v.level, message: v.message, raw_value: v.raw_value === undefined || v.raw_value === null ? '' : String(v.raw_value) }; });\n} else if (KIND === 'settlements') {\n  rows = (E.settlement_summary || []).map(function (s, i) { return { run_id: runId, seller_id: seller, seq: i, settlement_id: s.settlement_id, courier: s.courier, entry_type: s.entry_type, net_paid_paisa: n(s.net_paid_paisa), allocated_paisa: n(s.allocated_paisa), unallocated_paisa: n(s.unallocated_paisa), arithmetic_ok: !!s.arithmetic_ok, summary_json: JSON.stringify(s) }; });\n}\nif (rows.length === 0) return [{ json: { __empty: true, kind: KIND } }];\nreturn rows.map(function (r) { return { json: Object.assign({ __empty: false }, r) }; });\n"
+      },
+      "id": "f144e17f-29c5-41d5-be55-e0c5be335c0e",
+      "name": "Prepare Settlements",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3584,
+        112
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "HasSettlements",
+              "leftValue": "={{ $json.__empty !== true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b69eb59e-54c7-4cd0-b5be-57efff8fe102",
+      "name": "Has Settlements?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3808,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "EyCDCG9TqwLAxIhM",
+          "cachedResultName": "pla_settlement_summary"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "run_id": "={{ $json.run_id }}",
+            "seller_id": "={{ $json.seller_id }}",
+            "seq": "={{ $json.seq }}",
+            "settlement_id": "={{ $json.settlement_id }}",
+            "courier": "={{ $json.courier }}",
+            "entry_type": "={{ $json.entry_type }}",
+            "net_paid_paisa": "={{ $json.net_paid_paisa }}",
+            "allocated_paisa": "={{ $json.allocated_paisa }}",
+            "unallocated_paisa": "={{ $json.unallocated_paisa }}",
+            "arithmetic_ok": "={{ $json.arithmetic_ok }}",
+            "summary_json": "={{ $json.summary_json }}"
+          },
+          "schema": [
+            {
+              "id": "run_id",
+              "displayName": "run_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seller_id",
+              "displayName": "seller_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "seq",
+              "displayName": "seq",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "settlement_id",
+              "displayName": "settlement_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "courier",
+              "displayName": "courier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "entry_type",
+              "displayName": "entry_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "net_paid_paisa",
+              "displayName": "net_paid_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "allocated_paisa",
+              "displayName": "allocated_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "unallocated_paisa",
+              "displayName": "unallocated_paisa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "arithmetic_ok",
+              "displayName": "arithmetic_ok",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary_json",
+              "displayName": "summary_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d61acb00-6ba3-4906-af59-a1f62f53e7a4",
+      "name": "Save Settlements",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4032,
+        32
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ucxvjinIPovsE5AU",
+          "cachedResultName": "pla_results"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $('Run Financial Engine').first().json.run_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "2e9028dc-6dc3-4211-a91d-736501d9af4b",
+      "name": "Read Back Results",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4256,
+        112
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ozVKHgFOF0lT8Qq1",
+          "cachedResultName": "pla_exceptions"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $('Run Financial Engine').first().json.run_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "a67083e0-ac32-4b10-9b5b-a97e305e0b31",
+      "name": "Read Back Exceptions",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4480,
+        112
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dRvJ4MPeV7msn63N",
+          "cachedResultName": "pla_validation_errors"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $('Run Financial Engine').first().json.run_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "ffe384d7-3b4b-4b3b-8d7f-474492e2ac8e",
+      "name": "Read Back Validation Errors",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4704,
+        112
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "EyCDCG9TqwLAxIhM",
+          "cachedResultName": "pla_settlement_summary"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $('Run Financial Engine').first().json.run_id }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "e385027c-a2d2-4a55-be9e-b7583195c2fc",
+      "name": "Read Back Settlements",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4928,
+        112
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- shared helpers (inlined into several Code nodes) ----\nconst SCHEMA_VERSION = 'pla-schema-1';\nconst MAPPING_VERSION = 'pla-map-1';\nconst ENGINE_VERSION_EXPECTED = 'pla-engine-1.2.0';\nconst SOURCES = ['orders', 'shipments', 'settlements', 'allocations'];\nconst CANON = {\n  orders: {\n    seller_id: 'Seller account identifier', order_id: 'Unique order identifier (mandatory)', order_date: 'Date the order was placed (mandatory)',\n    cod_amount_pkr: 'Cash-on-delivery amount of the order in PKR (mandatory)', order_status: 'Order status text (mandatory)', customer_ref: 'Customer reference (optional)', notes: 'Free-text notes (optional)',\n  },\n  shipments: {\n    seller_id: 'Seller account identifier', shipment_id: 'Unique shipment identifier (mandatory)', order_id: 'Order the shipment belongs to (mandatory)', tracking_number: 'Courier tracking / consignment number (mandatory)',\n    courier: 'Courier company name (mandatory)', booked_date: 'Date the shipment was booked (mandatory)', status: 'Courier delivery status (mandatory)', status_date: 'Date of the latest status, e.g. delivery date',\n    cod_collected_pkr: 'COD amount collected from customer in PKR', contracted_delivery_fee_pkr: 'Contracted delivery fee in PKR', contracted_rto_fee_pkr: 'Contracted return-to-origin fee in PKR',\n  },\n  settlements: {\n    seller_id: 'Seller account identifier', settlement_id: 'Unique settlement / payment batch identifier (mandatory)', courier: 'Courier company name (mandatory)', settlement_date: 'Date of the settlement (mandatory)',\n    entry_type: 'PAYMENT, REVERSAL or ADJUSTMENT (mandatory)', gross_cod_pkr: 'Gross COD in the batch in PKR (mandatory)', delivery_fees_pkr: 'Delivery fees deducted in PKR (mandatory)', rto_fees_pkr: 'RTO fees deducted in PKR (mandatory)',\n    other_deductions_pkr: 'Other deductions in PKR (mandatory)', net_paid_pkr: 'Net amount paid to seller in PKR (mandatory)', payment_reference: 'Bank / payment reference (optional)',\n  },\n  allocations: {\n    seller_id: 'Seller account identifier', allocation_id: 'Unique allocation line identifier (mandatory)', settlement_id: 'Settlement the line belongs to (mandatory)', tracking_number: 'Tracking number the line pays (mandatory)',\n    allocated_net_pkr: 'Net amount allocated to this shipment in PKR (mandatory)', allocated_cod_pkr: 'COD amount allocated in PKR', allocated_delivery_fee_pkr: 'Delivery fee attributed to this shipment in PKR', allocated_rto_fee_pkr: 'RTO fee attributed to this shipment in PKR',\n  },\n};\nconst SYNONYMS = {\n  seller_id: ['seller', 'seller_id', 'merchant_id', 'account_id'],\n  order_id: ['order_id', 'order_no', 'order_number', 'order', 'order_ref'],\n  order_date: ['order_date', 'date', 'created_at', 'order_created'],\n  cod_amount_pkr: ['cod_amount_pkr', 'cod_amount', 'cod', 'amount', 'order_amount'],\n  order_status: ['order_status'],\n  customer_ref: ['customer_ref', 'customer', 'customer_id'],\n  notes: ['notes', 'note', 'remarks'],\n  shipment_id: ['shipment_id', 'shipment_no', 'shipment'],\n  tracking_number: ['tracking_number', 'tracking_no', 'tracking', 'cn', 'cn_number', 'consignment_no', 'consignment_number', 'awb'],\n  courier: ['courier', 'courier_name', 'carrier'],\n  booked_date: ['booked_date', 'booking_date', 'booked_on'],\n  status: ['status', 'delivery_status', 'shipment_status'],\n  status_date: ['status_date', 'delivered_date', 'delivery_date'],\n  cod_collected_pkr: ['cod_collected_pkr', 'cod_collected', 'collected_amount'],\n  contracted_delivery_fee_pkr: ['contracted_delivery_fee_pkr', 'contracted_delivery_fee', 'delivery_fee_contract'],\n  contracted_rto_fee_pkr: ['contracted_rto_fee_pkr', 'contracted_rto_fee', 'rto_fee_contract'],\n  settlement_id: ['settlement_id', 'settlement_no', 'batch_id', 'payment_batch'],\n  settlement_date: ['settlement_date', 'payment_date', 'paid_on'],\n  entry_type: ['entry_type', 'type', 'transaction_type'],\n  gross_cod_pkr: ['gross_cod_pkr', 'gross_cod', 'gross_amount'],\n  delivery_fees_pkr: ['delivery_fees_pkr', 'delivery_fees', 'delivery_charges'],\n  rto_fees_pkr: ['rto_fees_pkr', 'rto_fees', 'rto_charges'],\n  other_deductions_pkr: ['other_deductions_pkr', 'other_deductions', 'deductions'],\n  net_paid_pkr: ['net_paid_pkr', 'net_paid', 'net_amount', 'amount_paid'],\n  payment_reference: ['payment_reference', 'payment_ref', 'bank_ref', 'reference'],\n  allocation_id: ['allocation_id', 'line_id', 'allocation_line'],\n  allocated_net_pkr: ['allocated_net_pkr', 'allocated_net', 'net_allocated'],\n  allocated_cod_pkr: ['allocated_cod_pkr', 'allocated_cod'],\n  allocated_delivery_fee_pkr: ['allocated_delivery_fee_pkr', 'allocated_delivery_fee'],\n  allocated_rto_fee_pkr: ['allocated_rto_fee_pkr', 'allocated_rto_fee'],\n};\nfunction normHeader(h) { return String(h).trim().toLowerCase().replace(/\\(.*?\\)/g, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, ''); }\nfunction sha256(ascii) {\n  function rr(v, a) { return (v >>> a) | (v << (32 - a)); }\n  const utf8 = unescape(encodeURIComponent(ascii));\n  const words = []; const bitLen = utf8.length * 8; const K = []; const H = []; let primeCount = 0; const isComposite = {};\n  for (let c = 2; primeCount < 64; c++) {\n    if (!isComposite[c]) {\n      for (let i = 0; i < 313; i += c) isComposite[i] = c;\n      if (primeCount < 8) H[primeCount] = (Math.pow(c, 0.5) * 4294967296) | 0;\n      K[primeCount++] = (Math.pow(c, 1 / 3) * 4294967296) | 0;\n    }\n  }\n  let str = utf8 + '\\x80';\n  while (str.length % 64 - 56) str += '\\x00';\n  for (let i = 0; i < str.length; i++) { const j = str.charCodeAt(i); words[i >> 2] |= j << ((3 - i) % 4) * 8; }\n  words[words.length] = (bitLen / 4294967296) | 0; words[words.length] = bitLen | 0;\n  let hash = H.slice(0, 8);\n  for (let j = 0; j < words.length;) {\n    const w = words.slice(j, j += 16); const oldHash = hash; hash = hash.slice(0, 8);\n    for (let i = 0; i < 64; i++) {\n      const w15 = w[i - 15], w2 = w[i - 2]; const a = hash[0], e = hash[4];\n      const temp1 = hash[7] + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & hash[5]) ^ ((~e) & hash[6])) + K[i] +\n        (w[i] = (i < 16) ? w[i] : (w[i - 16] + (rr(w15, 7) ^ rr(w15, 18) ^ (w15 >>> 3)) + w[i - 7] + (rr(w2, 17) ^ rr(w2, 19) ^ (w2 >>> 10))) | 0);\n      const temp2 = (rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));\n      hash = [(temp1 + temp2) | 0].concat(hash); hash[4] = (hash[4] + temp1) | 0; hash.length = 8;\n    }\n    for (let i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;\n  }\n  let result = '';\n  for (let i = 0; i < 8; i++) for (let j = 3; j + 1; j--) { const b = (hash[i] >> (j * 8)) & 255; result += (b < 16 ? '0' : '') + b.toString(16); }\n  return result;\n}\nfunction canon(v) {\n  if (v === null || v === undefined) return 'null';\n  if (Array.isArray(v)) return '[' + v.map(canon).join(',') + ']';\n  if (typeof v === 'object') return '{' + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ':' + canon(v[k]); }).join(',') + '}';\n  return JSON.stringify(v);\n}\nfunction cacheKeyFor(source, fingerprint) { return [source, SCHEMA_VERSION, MAPPING_VERSION, fingerprint].join('|'); }\n// Validate a proposed header->field mapping for one source. Returns {pairs, rejected}.\nfunction validatePairs(source, pairs, headers, alreadyTaken) {\n  const fields = CANON[source]; const taken = Object.assign({}, alreadyTaken || {}); const usedHeaders = {}; const ok = []; const rejected = [];\n  (Array.isArray(pairs) ? pairs : []).forEach(function (p) {\n    const h = p && typeof p.header === 'string' ? p.header : null; const f = p && typeof p.canonical_field === 'string' ? p.canonical_field : null;\n    if (!h || !f || f === 'UNMAPPED') return;\n    if (headers.indexOf(h) < 0) { rejected.push({ header: h, canonical_field: f, reason: 'header_not_in_file' }); return; }\n    if (!Object.prototype.hasOwnProperty.call(fields, f)) { rejected.push({ header: h, canonical_field: f, reason: 'unknown_canonical_field' }); return; }\n    if (taken[f]) { rejected.push({ header: h, canonical_field: f, reason: 'field_already_mapped' }); return; }\n    if (usedHeaders[h]) { rejected.push({ header: h, canonical_field: f, reason: 'header_already_mapped' }); return; }\n    taken[f] = h; usedHeaders[h] = true; ok.push({ header: h, canonical_field: f });\n  });\n  return { pairs: ok, rejected: rejected };\n}\n\n// ---- Verify persisted rows against engine output before COMPLETED ----\nconst E = $('Run Financial Engine').first().json;\nfunction rowsOf(name) { return $(name).all().map(function (i) { return i.json; }).filter(function (r) { return r && r.run_id === E.run_id; }); }\nconst checks = [];\nfunction check(table, stored, expected, idField, expectedIds) {\n  const seqs = stored.map(function (r) { return Number(r.seq); }).sort(function (a, b) { return a - b; });\n  const contiguous = seqs.every(function (s, i) { return s === i; });\n  let idsOk = true;\n  if (idField) {\n    const got = stored.map(function (r) { return r[idField]; }).sort().join('|');\n    idsOk = got === expectedIds.slice().sort().join('|');\n  }\n  checks.push({ table: table, stored: stored.length, expected: expected, contiguous_seq: contiguous, ids_match: idsOk, ok: stored.length === expected && contiguous && idsOk });\n}\ncheck('pla_results', rowsOf('Read Back Results'), (E.results || []).length);\ncheck('pla_exceptions', rowsOf('Read Back Exceptions'), (E.exceptions || []).length, 'exception_id', (E.exceptions || []).map(function (x) { return x.exception_id; }));\ncheck('pla_validation_errors', rowsOf('Read Back Validation Errors'), (E.validation_errors || []).length);\ncheck('pla_settlement_summary', rowsOf('Read Back Settlements'), (E.settlement_summary || []).length, 'settlement_id', (E.settlement_summary || []).map(function (s) { return s.settlement_id; }));\n\nfunction canonicalJson(value) {\n  if (value === null || typeof value !== 'object') {\n    return JSON.stringify(value);\n  }\n\n  if (Array.isArray(value)) {\n    return '[' + value.map(canonicalJson).join(',') + ']';\n  }\n\n  return '{' + Object.keys(value).sort().map(function (key) {\n    return JSON.stringify(key) + ':' +\n      canonicalJson(value[key]);\n  }).join(',') + '}';\n}\n\nfunction verifyJsonRows(nodeName, expectedRows, jsonField) {\n  const stored = rowsOf(nodeName);\n  const failures = [];\n  const bySeq = new Map();\n\n  for (const row of stored) {\n    const seq = Number(row.seq);\n\n    if (!Number.isSafeInteger(seq) || bySeq.has(seq)) {\n      failures.push('Invalid or duplicate sequence: ' + row.seq);\n      continue;\n    }\n\n    bySeq.set(seq, row);\n  }\n\n  expectedRows.forEach(function (expected, seq) {\n    const row = bySeq.get(seq);\n\n    if (!row) {\n      failures.push('Missing sequence: ' + seq);\n      return;\n    }\n\n    try {\n      const actual = JSON.parse(row[jsonField]);\n\n      if (canonicalJson(actual) !== canonicalJson(expected)) {\n        failures.push('Content mismatch at sequence: ' + seq);\n      }\n    } catch (error) {\n      failures.push('Invalid JSON at sequence: ' + seq);\n    }\n  });\n\n  return {\n    table: nodeName,\n    ok: failures.length === 0 &&\n      stored.length === expectedRows.length,\n    failures: failures.slice(0, 20)\n  };\n}\n\nconst contentChecks = [\n  verifyJsonRows(\n    'Read Back Results',\n    E.results || [],\n    'result_json'\n  ),\n  verifyJsonRows(\n    'Read Back Settlements',\n    E.settlement_summary || [],\n    'summary_json'\n  )\n];\n\nconst engineOk = E.engine_version === ENGINE_VERSION_EXPECTED && typeof E.output_hash === 'string' && E.output_hash.length === 64;\n\nconst allOk =\n  engineOk &&\n  checks.every(function (c) { return c.ok; }) &&\n  contentChecks.every(function (c) { return c.ok; });\n\nconst meta = $('Build Engine Input').first().json._pla_meta;\n\nconst inputCounts = E.input_counts || {};\nconst validCounts = E.valid_counts || {};\n\nconst rejectedRows = (E.invalid_rows || []).length;\nconst validationErrorCount = (E.validation_errors || [])\n  .filter(e => e.level === 'error').length;\n\nconst submittedSettlements = inputCounts.settlements || 0;\nconst acceptedSettlements = validCounts.settlements || 0;\n\nlet analysisQuality = 'CLEAN';\n\nif (\n  submittedSettlements > 0 &&\n  acceptedSettlements === 0\n) {\n  analysisQuality = 'NO_VALID_SETTLEMENTS';\n} else if (\n  rejectedRows > 0 ||\n  validationErrorCount > 0\n) {\n  analysisQuality = 'PARTIAL_DATA';\n}\n\nconst qualityMessage = {\n  CLEAN: 'All submitted records passed validation.',\n  PARTIAL_DATA:\n    'Some input records were rejected. Financial totals exclude rejected records.',\n  NO_VALID_SETTLEMENTS:\n    'No submitted settlement records were accepted. Payment and outstanding figures may be materially incomplete.'\n}[analysisQuality];\n\n\nreturn [{\n  json: {\n    persisted_ok: allOk,\n    analysis_quality: analysisQuality,\n    quality_message: qualityMessage,\n    rejected_row_count: rejectedRows,\n\n    engine_ok: engineOk,\n    checks: checks,\n    content_checks: contentChecks,\n\n    run_id: E.run_id,\n    seller_id: E.seller_id,\n    completed_at: new Date().toISOString(),\n    engine_version: E.engine_version,\n    output_hash: E.output_hash,\n\n    kpis_json: JSON.stringify(E.kpis),\n    kpis_pkr_json: JSON.stringify(E.kpis_pkr),\n    input_counts_json: JSON.stringify(E.input_counts),\n    valid_counts_json: JSON.stringify(E.valid_counts),\n\n    warnings_json: JSON.stringify({\n      engine: E.warnings,\n      import_notes: meta.notes,\n      analysis_quality: analysisQuality,\n      quality_message: qualityMessage,\n      rejected_row_count: rejectedRows\n    }),\n\n    mapping_json: JSON.stringify(meta.mapping),\n\n    results_count: (E.results || []).length,\n    exceptions_count: (E.exceptions || []).length,\n    validation_errors_count: (E.validation_errors || []).length,\n    settlement_summary_count: (E.settlement_summary || []).length,\n\n    failure_detail: allOk\n      ? ''\n      : 'Persistence check failed: ' +\n        JSON.stringify([\n          ...checks.filter(c => !c.ok),\n          ...contentChecks.filter(c => !c.ok)\n        ]) +\n        (engineOk ? '' : ' (engine contract mismatch)'),\n\n    kpis_pkr: E.kpis_pkr,\n    kpis: E.kpis\n  }\n}];\n\n"
+      },
+      "id": "7f6bcdd1-9b80-4cda-ab16-f96e489d3889",
+      "name": "Verify Persisted Counts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1872,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "PersistedOK",
+              "leftValue": "={{ $json.persisted_ok === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "c1a6f4e4-1588-4e89-9783-8fd92eebb67a",
+      "name": "Persisted OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2096,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $json.run_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "COMPLETED",
+            "completed_at": "={{ $json.completed_at }}",
+            "engine_version": "={{ $json.engine_version }}",
+            "output_hash": "={{ $json.output_hash }}",
+            "kpis_json": "={{ $json.kpis_json }}",
+            "kpis_pkr_json": "={{ $json.kpis_pkr_json }}",
+            "input_counts_json": "={{ $json.input_counts_json }}",
+            "valid_counts_json": "={{ $json.valid_counts_json }}",
+            "warnings_json": "={{ $json.warnings_json }}",
+            "mapping_json": "={{ $json.mapping_json }}",
+            "results_count": "={{ $json.results_count }}",
+            "exceptions_count": "={{ $json.exceptions_count }}",
+            "validation_errors_count": "={{ $json.validation_errors_count }}",
+            "settlement_summary_count": "={{ $json.settlement_summary_count }}",
+            "last_error": ""
+          },
+          "schema": [
+            {
+              "id": "engine_version",
+              "displayName": "engine_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "completed_at",
+              "displayName": "completed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mapping_json",
+              "displayName": "mapping_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "input_counts_json",
+              "displayName": "input_counts_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "valid_counts_json",
+              "displayName": "valid_counts_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "warnings_json",
+              "displayName": "warnings_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "kpis_json",
+              "displayName": "kpis_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "kpis_pkr_json",
+              "displayName": "kpis_pkr_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "output_hash",
+              "displayName": "output_hash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "results_count",
+              "displayName": "results_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "exceptions_count",
+              "displayName": "exceptions_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "validation_errors_count",
+              "displayName": "validation_errors_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "settlement_summary_count",
+              "displayName": "settlement_summary_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_error",
+              "displayName": "last_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ef616dd0-d805-4f7b-925a-440afcf1cdab",
+      "name": "Mark Run Completed",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2320,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "showText",
+        "responseText": "=\n<div style=\"max-width:640px;margin:20px auto;padding:28px;font-family:Inter,Arial,sans-serif;color:#14283f;background:#f4f7fb;border:1px solid #dce4ed;border-radius:18px;box-sizing:border-box;\">\n\n  <div style=\"display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px;\">\n    <div>\n      <div style=\"font-size:19px;font-weight:750;\">◈ Profit Leak Analyzer</div>\n      <div style=\"font-size:12px;color:#64748b;margin-top:4px;\">Financial Reconciliation Report</div>\n    </div>\n    <span style=\"background:#dff5e9;color:#087748;font-size:12px;font-weight:700;padding:7px 12px;border-radius:20px;\">{{ $('Verify Persisted Counts').first().json.analysis_quality === 'CLEAN' ? '● COMPLETED' : '● REVIEW REQUIRED' }}</span>\n  </div>\n\n  <div style=\"background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:28px 20px;text-align:center;margin-bottom:18px;\">\n    <div style=\"display:inline-block;background:#e2f7eb;color:#138454;font-size:30px;line-height:58px;width:58px;height:58px;border-radius:50%;margin-bottom:14px;\">✓</div>\n    <h2 style=\"margin:0 0 10px;font-size:25px;color:#14283f;\">\n  {{ ({\n    CLEAN: 'Analysis completed',\n    PARTIAL_DATA: 'Completed with data warnings',\n    NO_VALID_SETTLEMENTS: 'Financial results incomplete'\n  })[$('Verify Persisted Counts').first().json.analysis_quality] }}\n</h2>\n    <p style=\"font-size:14px;line-height:1.7;color:#64748b;margin:0;\">\n  {{ $('Verify Persisted Counts').first().json.quality_message }}\n</p>\n  </div>\n\n  <div style=\"background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:15px 18px;margin-bottom:18px;font-size:13px;line-height:2;color:#475569;\">\n    <strong>Run ID:</strong> {{ $('Verify Persisted Counts').first().json.run_id }}<br>\n    <strong>Seller:</strong> {{ $('Verify Persisted Counts').first().json.seller_id }}<br>\n    <strong>Engine:</strong> {{ $('Verify Persisted Counts').first().json.engine_version }}\n  </div>\n\n  <div style=\"display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;\">\n    <div style=\"flex:1 1 180px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;\">\n      <div style=\"font-size:12px;color:#64748b;margin-bottom:8px;\">Outstanding receivable</div>\n      <div style=\"font-size:20px;font-weight:750;color:#14283f;overflow-wrap:anywhere;\">{{ $('Verify Persisted Counts').first().json.kpis_pkr.outstanding_receivable_pkr }}</div>\n    </div>\n    <div style=\"flex:1 1 180px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;\">\n      <div style=\"font-size:12px;color:#64748b;margin-bottom:8px;\">Exceptions found</div>\n      <div style=\"font-size:24px;font-weight:750;color:#14283f;\">{{ $('Verify Persisted Counts').first().json.exceptions_count }}</div>\n    </div>\n  </div>\n\n  <div style=\"display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;\">\n    <div style=\"flex:1 1 180px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;\">\n      <div style=\"font-size:12px;color:#64748b;margin-bottom:8px;\">Confirmed overdue</div>\n      <div style=\"font-size:17px;font-weight:700;color:#14283f;overflow-wrap:anywhere;\">{{ $('Verify Persisted Counts').first().json.kpis_pkr.overdue_receivable_confirmed_pkr }}</div>\n    </div>\n    <div style=\"flex:1 1 180px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;\">\n      <div style=\"font-size:12px;color:#64748b;margin-bottom:8px;\">Provisional overdue</div>\n      <div style=\"font-size:17px;font-weight:700;color:#14283f;overflow-wrap:anywhere;\">{{ $('Verify Persisted Counts').first().json.kpis_pkr.overdue_receivable_provisional_pkr }}</div>\n    </div>\n  </div>\n\n  <div style=\"background:#e8f1fa;padding:12px 15px;border-radius:10px;font-size:12px;color:#38516b;line-height:1.6;margin-bottom:22px;\">\n    <strong>Data quality:</strong> {{ $('Verify Persisted Counts').first().json.kpis.invalid_row_count }} invalid rows detected.<br>\n    Provisional overdue amounts are based on user-declared settlement coverage, not independently verified evidence.\n  </div>\n\n  <a href=\"https://k257603.app.n8n.cloud/webhook/pla-demo-7f3k9q2m/dashboard?seller_id={{ encodeURIComponent($('Verify Persisted Counts').first().json.seller_id) }}&amp;run_id={{ encodeURIComponent($('Verify Persisted Counts').first().json.run_id) }}\"\n     style=\"display:block;background:#14283f;color:#ffffff;text-align:center;text-decoration:none;border-radius:10px;padding:16px 20px;font-weight:700;font-size:14px;\">\n    View full analysis report &rarr;\n  </a>\n\n  <div style=\"text-align:center;margin-top:24px;font-size:11px;line-height:1.7;color:#64748b;\">\n    Private demo · Synthetic test data only<br>\n    Not approved for production financial use.\n  </div>\n</div>\n"
+      },
+      "id": "7c2e6cd8-4787-43e8-ae74-93cc35ed6c17",
+      "name": "Analysis Complete Page",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        2544,
+        32
+      ],
+      "webhookId": "fddacfb1-0dd0-4e52-a2c8-214a318f29ce"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ $json.run_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "FAILED_PERSISTENCE",
+            "last_error": "={{ $json.failure_detail.slice(0, 2000) }}"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_error",
+              "displayName": "last_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "756a56c0-af4d-4c4a-a23c-bdcc11b0e3c1",
+      "name": "Mark Persistence Failed",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2320,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "showText",
+        "responseText": "=\n<div style=\"max-width:640px;margin:20px auto;padding:28px;font-family:Inter,Arial,sans-serif;color:#14283f;background:#f4f7fb;border:1px solid #dce4ed;border-radius:18px;box-sizing:border-box;\">\n\n  <div style=\"display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px;\">\n    <div>\n      <div style=\"font-size:19px;font-weight:750;\">◈ Profit Leak Analyzer</div>\n      <div style=\"font-size:12px;color:#64748b;margin-top:4px;\">Financial Reconciliation Report</div>\n    </div>\n    <span style=\"background:#fce8e8;color:#b42318;font-size:12px;font-weight:700;padding:7px 12px;border-radius:20px;\">● FAILED</span>\n  </div>\n\n  <div style=\"background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:30px 20px;text-align:center;margin-bottom:18px;\">\n    <div style=\"display:inline-block;background:#fce8e8;color:#c83737;font-size:30px;line-height:58px;width:58px;height:58px;border-radius:50%;margin-bottom:14px;\">!</div>\n    <h2 style=\"margin:0 0 10px;font-size:24px;color:#14283f;\">Unable to verify results</h2>\n    <p style=\"font-size:14px;line-height:1.7;color:#64748b;margin:0;\">Your analysis was processed, but we could not confirm that every result was saved correctly. To protect report accuracy, no financial figures have been published.</p>\n  </div>\n\n  <div style=\"background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin-bottom:18px;\">\n    <div style=\"font-size:12px;color:#64748b;margin-bottom:7px;\">Run reference</div>\n    <div style=\"font-size:15px;font-weight:700;color:#14283f;overflow-wrap:anywhere;\">{{ $('Verify Persisted Counts').first().json.run_id }}</div>\n    <div style=\"height:1px;background:#e2e8f0;margin:15px 0;\"></div>\n    <div style=\"display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;\">\n      <span style=\"font-size:13px;color:#64748b;\">Analysis status</span>\n      <span style=\"background:#fce8e8;color:#b42318;padding:6px 10px;border-radius:7px;font-size:12px;font-weight:700;\">FAILED_PERSISTENCE</span>\n    </div>\n  </div>\n\n  <div style=\"background:#fff4e5;border:1px solid #f5ddb2;border-radius:10px;padding:16px;margin-bottom:22px;\">\n    <div style=\"font-size:13px;font-weight:700;color:#865508;margin-bottom:7px;\">What happened?</div>\n    <div style=\"font-size:13px;line-height:1.7;color:#865508;\">Stored records did not match the engine's expected results. The incomplete analysis has been withheld from the dashboard and exports.</div>\n  </div>\n\n  <div style=\"font-size:14px;font-weight:700;margin-bottom:10px;\">What should you do?</div>\n  <div style=\"font-size:13px;line-height:1.9;color:#64748b;margin-bottom:22px;\">\n    1. Keep this run reference for troubleshooting.<br>\n    2. Review the workflow execution or contact the demo administrator.<br>\n    3. Start a new analysis once the issue is resolved.\n  </div>\n\n  <a href=\"https://k257603.app.n8n.cloud/form/pla-demo-7f3k9q2m-upload\"\n     style=\"display:block;background:#14283f;color:#fff;text-align:center;text-decoration:none;border-radius:10px;padding:16px 20px;font-weight:700;font-size:14px;\">\n    Start a new analysis &rarr;\n  </a>\n\n  <div style=\"text-align:center;margin-top:24px;font-size:11px;line-height:1.7;color:#64748b;\">\n    Private demo · Synthetic test data only<br>\n    No unverified financial results were published.\n  </div>\n</div>\n"
+      },
+      "id": "625a4f25-a67e-4c1a-9b84-90778d4e31c7",
+      "name": "Persistence Failed Page",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [
+        2544,
+        224
+      ],
+      "webhookId": "7f854fd4-8acd-4d37-b206-d7bf2cc9abc6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Upload Form": {
+      "main": [
+        [
+          {
+            "node": "Parse Uploaded Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Uploaded Files": {
+      "main": [
+        [
+          {
+            "node": "Import OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Import OK?": {
+      "main": [
+        [
+          {
+            "node": "Record Run Started",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Failed Import",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Run Started": {
+      "main": [
+        [
+          {
+            "node": "Read Header Cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Header Cache": {
+      "main": [
+        [
+          {
+            "node": "Resolve Header Mappings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolve Header Mappings": {
+      "main": [
+        [
+          {
+            "node": "Needs AI Mapping?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs AI Mapping?": {
+      "main": [
+        [
+          {
+            "node": "AI Map Headers",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Engine Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Map Headers": {
+      "main": [
+        [
+          {
+            "node": "Validate AI Mapping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate AI Mapping": {
+      "main": [
+        [
+          {
+            "node": "Build Engine Input",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Cache Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Engine Input": {
+      "main": [
+        [
+          {
+            "node": "Run Financial Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Cache Rows": {
+      "main": [
+        [
+          {
+            "node": "Save Header Mapping Cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Failed Import": {
+      "main": [
+        [
+          {
+            "node": "Import Failed Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Financial Engine": {
+      "main": [
+        [
+          {
+            "node": "Prepare Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Engine Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Engine Failed": {
+      "main": [
+        [
+          {
+            "node": "Engine Failed Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Results": {
+      "main": [
+        [
+          {
+            "node": "Has Results?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Results?": {
+      "main": [
+        [
+          {
+            "node": "Save Results",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Results": {
+      "main": [
+        [
+          {
+            "node": "Prepare Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Exceptions": {
+      "main": [
+        [
+          {
+            "node": "Has Exceptions?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Exceptions?": {
+      "main": [
+        [
+          {
+            "node": "Save Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Validation Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Exceptions": {
+      "main": [
+        [
+          {
+            "node": "Prepare Validation Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Validation Errors": {
+      "main": [
+        [
+          {
+            "node": "Has Validation Errors?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Validation Errors?": {
+      "main": [
+        [
+          {
+            "node": "Save Validation Errors",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Settlements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Validation Errors": {
+      "main": [
+        [
+          {
+            "node": "Prepare Settlements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Settlements": {
+      "main": [
+        [
+          {
+            "node": "Has Settlements?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Settlements?": {
+      "main": [
+        [
+          {
+            "node": "Save Settlements",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Back Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Settlements": {
+      "main": [
+        [
+          {
+            "node": "Read Back Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Back Results": {
+      "main": [
+        [
+          {
+            "node": "Read Back Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Back Exceptions": {
+      "main": [
+        [
+          {
+            "node": "Read Back Validation Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Back Validation Errors": {
+      "main": [
+        [
+          {
+            "node": "Read Back Settlements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Back Settlements": {
+      "main": [
+        [
+          {
+            "node": "Verify Persisted Counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Persisted Counts": {
+      "main": [
+        [
+          {
+            "node": "Persisted OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persisted OK?": {
+      "main": [
+        [
+          {
+            "node": "Mark Run Completed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Persistence Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Run Completed": {
+      "main": [
+        [
+          {
+            "node": "Analysis Complete Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Persistence Failed": {
+      "main": [
+        [
+          {
+            "node": "Persistence Failed Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d6c2245b-fbce-48f2-b0e0-21ea162d9195",
+  "meta": {
+    "instanceId": "a7ccd82d9ed2f385c53f8465dfb9eaaab565482fc6ec3ff6d66709b0c6ff8687"
+  },
+  "nodeGroups": [
+    {
+      "id": "2701392a-40f9-4844-bc8f-80ddd77c2398",
+      "name": "Check uploaded files",
+      "nodeIds": [
+        "67e0dd44-d162-4a53-855f-c91dfdb6be62",
+        "12e4c0da-ce2f-4683-beea-c84dc867c008"
+      ],
+      "description": "Rejects malformed, unreadable or missing CSVs as failed imports; headers-only files are allowed as zero records"
+    },
+    {
+      "id": "c139064c-3517-4e4d-b731-b248e80f6595",
+      "name": "Log rejected import",
+      "nodeIds": [
+        "c119f746-9941-47fc-bd7e-697d031f6da1",
+        "abc5dd26-6c8c-4117-a796-7076805e9642"
+      ],
+      "description": "Stores the run as FAILED_IMPORT with each file error and shows them to the uploader"
+    },
+    {
+      "id": "4dee0a72-adcb-4848-a564-3cb5c819ea7f",
+      "name": "Map file columns",
+      "nodeIds": [
+        "211c5b07-1525-4ec8-b126-8a6b58220552",
+        "4f1f1a18-f721-4f81-90f6-35fc7077afc1",
+        "d3294e45-39a6-40fc-bd46-1738fb4d8839",
+        "16667ba4-9041-49f2-9b0f-8421b2eaa6e1",
+        "da560868-1e52-4ca9-be70-53b855590a6d",
+        "7dc066b9-7eec-4d93-8be9-279ae889d9e8",
+        "219715bf-d9e3-4bae-8981-62fe53985fa9",
+        "eb1825a5-7c24-4308-8496-7a9eeb8605cf",
+        "e868fde4-8059-46d2-b410-8e5cafeadbec"
+      ],
+      "description": "Matches headers by rules, then cache, then AI (headers only, no row values); keeps original money text"
+    },
+    {
+      "id": "1a58d483-2318-4407-a80e-73b25f77feac",
+      "name": "Analyze and save results",
+      "nodeIds": [
+        "0c20c955-7b0d-4e69-a650-02e0f2d90aba",
+        "c9d011bc-acc2-4e47-b93b-e0f74a82b566",
+        "79716de0-b7c4-4c6a-98ad-9bc081d5fc9a",
+        "d39daa9a-79b7-4877-983b-063142c75272",
+        "7975f546-1549-4439-9b38-ce040831ccd9",
+        "bc0b7a5c-cc31-4df2-8867-9843a61f2ea7",
+        "3a2db1c9-bd11-436b-96b4-8abac041b316",
+        "af542337-8f86-497a-acb7-b72ee31ce902",
+        "a36aa3ff-5d5c-42f4-9687-0cb886821045",
+        "86e35bb7-ed74-4807-8602-6ee6fa5a7e65",
+        "e7ca5d39-6a65-4598-8e6f-9efded5a9789",
+        "ba0fe0cb-3345-4aaa-a587-d6c342a17dd9",
+        "f144e17f-29c5-41d5-be55-e0c5be335c0e",
+        "b69eb59e-54c7-4cd0-b5be-57efff8fe102",
+        "d61acb00-6ba3-4906-af59-a1f62f53e7a4",
+        "2e9028dc-6dc3-4211-a91d-736501d9af4b",
+        "a67083e0-ac32-4b10-9b5b-a97e305e0b31",
+        "ffe384d7-3b4b-4b3b-8d7f-474492e2ac8e",
+        "e385027c-a2d2-4a55-be9e-b7583195c2fc"
+      ],
+      "description": "Runs the integer-paisa engine (crash = FAILED_ENGINE), stores all four result sets, then reads them back"
+    },
+    {
+      "id": "710ea67b-14fd-4ceb-adc9-212f35e64c01",
+      "name": "Confirm and finish run",
+      "nodeIds": [
+        "7f6bcdd1-9b80-4cda-ab16-f96e489d3889",
+        "c1a6f4e4-1588-4e89-9783-8fd92eebb67a",
+        "ef616dd0-d805-4f7b-925a-440afcf1cdab",
+        "7c2e6cd8-4787-43e8-ae74-93cc35ed6c17",
+        "756a56c0-af4d-4c4a-a23c-bdcc11b0e3c1",
+        "625a4f25-a67e-4c1a-9b84-90778d4e31c7"
+      ],
+      "description": "Only marks COMPLETED when stored counts and IDs match engine output; otherwise FAILED_PERSISTENCE"
+    }
+  ],
+  "id": "sW0PbJmHvLIku7Ay",
+  "tags": []
+}

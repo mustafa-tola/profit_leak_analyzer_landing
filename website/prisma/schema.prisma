@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// One immutable analysis run. Money remains in the engine's bigint-safe JSON
+/// representation; never store numeric money in this table.
+model AnalysisRun {
+  id                 String       @id @db.Uuid
+  sellerId           String       @map("seller_id") @db.VarChar(191)
+  persistenceVersion String       @map("persistence_version") @db.VarChar(64)
+  createdAt          DateTime     @map("created_at") @db.Timestamptz(3)
+  asOfDate           DateTime?    @map("as_of_date") @db.Date
+  engineVersion      String       @map("engine_version") @db.VarChar(64)
+  schemaVersion      String       @map("schema_version") @db.VarChar(64)
+  mappingVersion     String       @map("mapping_version") @db.VarChar(64)
+  inputFingerprint   String       @map("input_fingerprint") @db.Char(64)
+  analysisQuality    String       @map("analysis_quality") @db.VarChar(32)
+  outputHash         String       @map("output_hash") @db.Char(64)
+  rules              Json
+  coverage           Json
+  result             Json
+  counts             Json
+  verification       Json
+  sourceFiles        SourceFile[]
+  sourceRows         SourceRow[]
+
+  @@index([sellerId, createdAt(sort: Desc)])
+  @@index([sellerId, inputFingerprint])
+  @@index([sellerId, analysisQuality])
+  @@map("analysis_runs")
+}
+
+/// File-level audit evidence. Headers and warnings are stored as JSON because
+/// they are versioned ingestion evidence, not query predicates.
+model SourceFile {
+  id             String      @id @default(cuid())
+  runId          String      @map("run_id") @db.Uuid
+  source         String      @db.VarChar(32)
+  filename       String      @db.VarChar(512)
+  sizeBytes      Int         @map("size_bytes")
+  sha256         String      @db.Char(64)
+  rowCount       Int         @map("row_count")
+  schemaVersion  String      @map("schema_version") @db.VarChar(64)
+  mappingVersion String      @map("mapping_version") @db.VarChar(64)
+  headers        Json
+  warnings       Json
+  run            AnalysisRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, source])
+  @@index([sha256])
+  @@map("source_files")
+}
+
+/// Raw normalised source rows kept for audit. Row order is preserved with
+/// rowIndex. The engine result is stored separately and is never derived from
+/// these rows at read time.
+model SourceRow {
+  id       BigInt      @id @default(autoincrement())
+  runId    String      @map("run_id") @db.Uuid
+  source   String      @db.VarChar(32)
+  rowIndex Int         @map("row_index")
+  data     Json
+  run      AnalysisRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, source, rowIndex])
+  @@index([runId, source])
+  @@map("source_rows")
+}

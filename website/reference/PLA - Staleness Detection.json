@@ -1,0 +1,95 @@
+{
+  "name": "PLA - Staleness Detection",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "28025a3f-17d1-40d4-8b67-2b343226ce3d",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "0qbRspDFWpIgooD1",
+          "mode": "list",
+          "cachedResultName": "pla_runs",
+          "cachedResultUrl": "/projects/ZyzQgzC1qlc4wEd6/datatables/0qbRspDFWpIgooD1"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "RUNNING"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "1a69cc77-a0dc-44fe-81ab-6454842c20cc",
+      "name": "Read Running PLA Runs",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst STALE_AFTER_MINUTES = 120;\nconst now = Date.now();\nconst thresholdMs = STALE_AFTER_MINUTES * 60 * 1000;\n\nconst rows = $input.all()\n  .map(item => item.json)\n  .filter(row => row && row.run_id && row.status === 'RUNNING');\n\nconst staleRuns = [];\nconst activeCandidates = [];\nconst invalidTimestamps = [];\n\nfor (const row of rows) {\n  const submitted = Date.parse(row.submitted_at || '');\n\n  if (!Number.isFinite(submitted)) {\n    invalidTimestamps.push({\n      run_id: row.run_id,\n      seller_id: row.seller_id,\n      reason: 'MISSING_OR_INVALID_SUBMITTED_AT'\n    });\n    continue;\n  }\n\n  const ageMs = now - submitted;\n\n  if (ageMs < 0) {\n    invalidTimestamps.push({\n      run_id: row.run_id,\n      seller_id: row.seller_id,\n      reason: 'SUBMITTED_AT_IN_FUTURE'\n    });\n    continue;\n  }\n\n  const result = {\n    run_id: row.run_id,\n    seller_id: row.seller_id,\n    submitted_at: row.submitted_at,\n    age_minutes: Math.floor(ageMs / 60000)\n  };\n\n  if (ageMs >= thresholdMs) {\n    staleRuns.push({\n      ...result,\n      recovery_status: 'REQUIRES_INVESTIGATION',\n      reason: 'RUNNING_STATUS_EXCEEDED_THRESHOLD'\n    });\n  } else {\n    activeCandidates.push(result);\n  }\n}\n\nreturn [{\n  json: {\n    checked_at: new Date(now).toISOString(),\n    threshold_minutes: STALE_AFTER_MINUTES,\n    running_count: rows.length,\n    stale_count: staleRuns.length,\n    active_candidate_count: activeCandidates.length,\n    invalid_timestamp_count: invalidTimestamps.length,\n    stale_runs: staleRuns,\n    active_candidates: activeCandidates,\n    invalid_timestamps: invalidTimestamps,\n    detection_only: true\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "171ecee5-e06d-449d-b567-89da75837099",
+      "name": "Detect Stale Runs"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read Running PLA Runs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Running PLA Runs": {
+      "main": [
+        [
+          {
+            "node": "Detect Stale Runs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9ebfe733-9639-495b-a7a9-c8e1c6a56082",
+  "meta": {
+    "instanceId": "a7ccd82d9ed2f385c53f8465dfb9eaaab565482fc6ec3ff6d66709b0c6ff8687"
+  },
+  "nodeGroups": [],
+  "id": "J17Xwxoar8W4WGnn",
+  "tags": []
+}

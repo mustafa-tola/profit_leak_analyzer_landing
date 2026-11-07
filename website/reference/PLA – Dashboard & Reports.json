@@ -1,0 +1,737 @@
+{
+  "name": "PLA – Dashboard & Reports",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "pla-demo-7f3k9q2m/dashboard",
+        "responseMode": "responseNode",
+        "options": {
+          "ignoreBots": true
+        }
+      },
+      "id": "b4ceb50c-43f1-46a2-b4ce-6aac5b3d8ff8",
+      "name": "Dashboard Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        128
+      ],
+      "webhookId": "0fba927a-acfc-4f8e-a6c0-f4310b223e91"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "4badfa6a-65be-449d-b96b-42c292b19536",
+      "name": "Lookup Run",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        128
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ucxvjinIPovsE5AU",
+          "cachedResultName": "pla_results"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "8a725544-c4fd-41ca-8122-a00a732c820f",
+      "name": "Load Results",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        128
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ozVKHgFOF0lT8Qq1",
+          "cachedResultName": "pla_exceptions"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "145d91d6-b5b7-435e-8ab6-b7ef25efde85",
+      "name": "Load Exceptions",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        736,
+        128
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dRvJ4MPeV7msn63N",
+          "cachedResultName": "pla_validation_errors"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "0beca110-6c65-4af6-979a-f17a81014bd4",
+      "name": "Load Validation Errors",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        128
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "EyCDCG9TqwLAxIhM",
+          "cachedResultName": "pla_settlement_summary"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Dashboard Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "6fb211ff-f58c-4f5b-b360-a9700706b828",
+      "name": "Load Settlements",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1184,
+        128
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst BASE = 'https://k257603.app.n8n.cloud/webhook/pla-demo-7f3k9q2m';\n\nconst q = $('Dashboard Request').first().json.query || {};\nconst sellerQ = String(q.seller_id || '').trim().toUpperCase();\nconst runQ = String(q.run_id || '').trim();\n\nfunction rows(name) {\n  return $(name).all().map(i => i.json)\n    .filter(r => r && r.run_id === runQ && r.seller_id === sellerQ);\n}\n\nfunction esc(v) {\n  return String(v ?? '')\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&#39;');\n}\n\nfunction parse(v, fallback) {\n  if (v && typeof v === 'object') return v;\n  try { return JSON.parse(v || ''); }\n  catch { return fallback; }\n}\n\n// Exact integer-paisa formatting, without floating-point math.\nfunction pkr(v) {\n  if (v === null || v === undefined || v === '') return 'Unknown';\n  const s = String(v);\n  if (!/^-?\\d+$/.test(s)) return 'Unknown';\n\n  const negative = s.startsWith('-');\n  const digits = (negative ? s.slice(1) : s)\n    .replace(/^0+(?=\\d)/, '');\n\n  const padded = digits.padStart(3, '0');\n  const whole = padded.slice(0, -2)\n    .replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',');\n\n  return (negative && !/^0+$/.test(digits) ? '-' : '') +\n    'PKR ' + whole + '.' + padded.slice(-2);\n}\n\nconst css = `\n<style>\n:root {\n  --navy: #14283f;\n  --text: #263b53;\n  --muted: #64748b;\n  --bg: #f3f6fb;\n  --border: #dfe6ef;\n  --green: #087748;\n  --red: #b42318;\n  --amber: #9a6105;\n}\n\n* { box-sizing: border-box; }\n\nbody {\n  margin: 0;\n  background: var(--bg);\n  color: var(--text);\n  font-family: Inter, system-ui, -apple-system,\n    \"Segoe UI\", Arial, sans-serif;\n  font-size: 14px;\n  line-height: 1.6;\n}\n\n.container {\n  max-width: 1380px;\n  margin: auto;\n  padding: 28px 22px 60px;\n}\n\n.header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 16px;\n  margin-bottom: 24px;\n}\n\n.brand {\n  display: flex;\n  align-items: center;\n  gap: 12px;\n}\n\n.logo {\n  width: 44px;\n  height: 44px;\n  display: grid;\n  place-items: center;\n  background: var(--navy);\n  color: white;\n  font-size: 24px;\n  border-radius: 12px;\n}\n\n.brand-title {\n  font-size: 20px;\n  font-weight: 800;\n  color: var(--navy);\n}\n\n.subtitle, .muted {\n  color: var(--muted);\n  font-size: 12px;\n}\n\n.card {\n  background: white;\n  border: 1px solid var(--border);\n  border-radius: 14px;\n  box-shadow: 0 2px 10px rgba(20,40,63,.025);\n}\n\n.hero {\n  padding: 26px;\n  margin-bottom: 20px;\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  flex-wrap: wrap;\n  gap: 20px;\n}\n\nh1 {\n  margin: 0 0 8px;\n  color: var(--navy);\n  font-size: 27px;\n  letter-spacing: -.5px;\n}\n\nh2 {\n  color: var(--navy);\n  font-size: 20px;\n  margin: 0 0 15px;\n}\n\n.meta {\n  color: var(--muted);\n  font-size: 12px;\n  overflow-wrap: anywhere;\n}\n\n.section { margin-top: 30px; }\n\n.section-head {\n  display: flex;\n  justify-content: space-between;\n  gap: 12px;\n  align-items: center;\n  margin-bottom: 12px;\n}\n\n.section-head h2 { margin: 0; }\n\n.grid {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0,1fr));\n  gap: 14px;\n}\n\n.grid.two {\n  grid-template-columns: repeat(2,minmax(0,1fr));\n}\n\n.kpi { padding: 20px; min-width: 0; }\n\n.kpi-label {\n  font-size: 12px;\n  color: var(--muted);\n  margin-bottom: 10px;\n}\n\n.kpi-value {\n  color: var(--navy);\n  font-size: 23px;\n  font-weight: 800;\n  line-height: 1.25;\n  overflow-wrap: anywhere;\n}\n\n.kpi-note {\n  margin-top: 8px;\n  font-size: 11px;\n  color: var(--muted);\n}\n\n.kpi.primary {\n  background: var(--navy);\n  border-color: var(--navy);\n}\n\n.kpi.primary .kpi-label,\n.kpi.primary .kpi-note { color: #cbd8e5; }\n\n.kpi.primary .kpi-value { color: white; }\n\n.badge {\n  display: inline-block;\n  border-radius: 100px;\n  background: #eef2f6;\n  color: #506278;\n  padding: 5px 10px;\n  font-size: 11px;\n  font-weight: 750;\n  white-space: nowrap;\n}\n\n.badge.good { background: #dff5e9; color: #087748; }\n.badge.bad { background: #fce8e8; color: #b42318; }\n.badge.warn { background: #fff0d4; color: #9a6105; }\n\n.actions {\n  display: flex;\n  gap: 9px;\n  flex-wrap: wrap;\n}\n\n.button {\n  display: inline-block;\n  padding: 11px 15px;\n  border-radius: 9px;\n  background: var(--navy);\n  color: white !important;\n  text-decoration: none;\n  font-weight: 700;\n  font-size: 12px;\n}\n\n.button.secondary {\n  background: white;\n  color: var(--navy) !important;\n  border: 1px solid var(--border);\n}\n\n.notice {\n  border-radius: 10px;\n  padding: 14px 17px;\n  margin: 17px 0;\n  font-size: 12px;\n}\n\n.notice.warning {\n  background: #fff4e5;\n  border: 1px solid #f1dab4;\n  color: #865508;\n}\n\n.notice.info {\n  background: #e8f1fa;\n  border: 1px solid #d3e4f4;\n  color: #38516b;\n}\n\n.notice.danger {\n  background: #fce8e8;\n  border: 1px solid #f1caca;\n  color: #9b2930;\n}\n\n.panel { padding: 20px; }\n\n.status-row {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 12px;\n  padding: 10px 0;\n  border-bottom: 1px solid #edf0f4;\n}\n\n.status-row:last-child { border-bottom: 0; }\n\n.table-wrap {\n  overflow-x: auto;\n  background: white;\n  border: 1px solid var(--border);\n  border-radius: 12px;\n}\n\ntable {\n  width: 100%;\n  border-collapse: collapse;\n  text-align: left;\n  font-size: 12px;\n}\n\nth {\n  background: #f8fafc;\n  color: #52647a;\n  font-size: 11px;\n  font-weight: 750;\n}\n\nth, td {\n  padding: 13px;\n  border-bottom: 1px solid #e9edf3;\n  vertical-align: top;\n}\n\ntbody tr:hover { background: #fafcff; }\ntbody tr:last-child td { border-bottom: 0; }\n\ntd { overflow-wrap: anywhere; }\n\n.empty {\n  padding: 26px;\n  text-align: center;\n  color: var(--muted);\n}\n\n.small {\n  display: block;\n  font-size: 11px;\n  color: var(--muted);\n}\n\ndetails { margin-top: 9px; }\n\nsummary {\n  cursor: pointer;\n  font-size: 12px;\n  color: #176595;\n  font-weight: 700;\n}\n\npre {\n  background: #f4f7fb;\n  padding: 12px;\n  border-radius: 8px;\n  font-size: 11px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  max-height: 260px;\n  overflow: auto;\n}\n\n.footer {\n  text-align: center;\n  color: var(--muted);\n  font-size: 11px;\n  margin-top: 35px;\n}\n\n@media (max-width: 1050px) {\n  .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }\n}\n\n@media (max-width: 600px) {\n  .container { padding: 15px 12px 35px; }\n  .grid, .grid.two { grid-template-columns: 1fr; }\n  .hero { padding: 20px; }\n  .header { align-items: flex-start; }\n  .brand-title { font-size: 17px; }\n  .kpi-value { font-size: 21px; }\n  h1 { font-size: 23px; }\n  .actions { width: 100%; }\n  .actions .button { flex: 1; text-align: center; }\n}\n</style>\n`;\n\nfunction badge(v) {\n  const s = String(v ?? 'UNKNOWN').toUpperCase();\n\n  const good = ['SETTLED','COMPLETED','OK','CONFIRMED'];\n  const bad = ['FAILED','OVERSETTLED','OVERDUE',\n    'MISMATCH','HIGH','CONFLICT'];\n  const warn = ['UNKNOWN','PARTIALLY_SETTLED','UNSETTLED',\n    'PROVISIONAL','MEDIUM'];\n\n  const cls = good.includes(s) ? 'good' :\n    bad.includes(s) ? 'bad' :\n    warn.includes(s) ? 'warn' : '';\n\n  return '<span class=\"badge ' + cls + '\">' +\n    esc(s.replace(/_/g,' ')) + '</span>';\n}\n\nfunction page(title, body, statusCode = 200) {\n  const html = `<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"robots\" content=\"noindex\">\n<title>${esc(title)}</title>\n${css}\n</head>\n<body>\n<main class=\"container\">\n<header class=\"header\">\n<div class=\"brand\">\n<div class=\"logo\">◇</div>\n<div>\n<div class=\"brand-title\">Profit Leak Analyzer</div>\n<div class=\"subtitle\">Financial Reconciliation Dashboard</div>\n</div>\n</div>\n${badge('PRIVATE DEMO')}\n</header>\n${body}\n<footer class=\"footer\">\nPrivate demo · Synthetic test data only ·\nNo authentication · Not production-ready\n</footer>\n</main>\n</body>\n</html>`;\n\n  return [{ json: {\n    status_code: statusCode,\n    body: html\n  }}];\n}\n\nconst banner = `\n<div class=\"notice warning\">\n<strong>Private synthetic-data demo.</strong>\nThis dashboard has no authentication. Anyone with a valid\nseller ID and run ID can access its data.\nDo not upload real seller or customer information.\n</div>`;\n\nfunction errorPage(title, message, code) {\n  return page(title, banner + `\n  <div class=\"card hero\">\n    <div>\n      <h1>${esc(title)}</h1>\n      <p class=\"muted\">${esc(message)}</p>\n    </div>\n    ${badge('UNAVAILABLE')}\n  </div>`, code);\n}\n\n// Validate request and run ownership\nif (!sellerQ || !runQ) {\n  return errorPage(\n    'Missing report information',\n    'Provide seller_id and run_id in the URL.',\n    400\n  );\n}\n\nconst run = rows('Lookup Run')[0];\n\nif (!run) {\n  return errorPage(\n    'Run not found',\n    'No analysis exists for the specified seller and run.',\n    404\n  );\n}\n\nif (run.status !== 'COMPLETED') {\n  return errorPage(\n    'Analysis unavailable',\n    'This run has not completed successfully. No financial figures are shown.',\n    409\n  );\n}\n\n// Read original stored data\nconst k = parse(run.kpis_json, {});\nconst coverage = parse(run.coverage_json, []);\nconst rules = parse(run.rules_json, []);\nconst mapping = parse(run.mapping_json, {});\nconst warnings = parse(run.warnings_json, {});\n\nfunction sortedRows(name) {\n  return rows(name).sort((a,b) =>\n    Number(a.seq || 0) - Number(b.seq || 0)\n  );\n}\n\nconst res = sortedRows('Load Results');\nconst exc = sortedRows('Load Exceptions');\nconst ver = sortedRows('Load Validation Errors');\nconst stl = sortedRows('Load Settlements');\n\n// Preserve persistence integrity checks\nconst checks = [\n  [res.length, run.results_count],\n  [exc.length, run.exceptions_count],\n  [ver.length, run.validation_errors_count],\n  [stl.length, run.settlement_summary_count]\n];\n\nif (!checks.every(c => Number(c[0]) === Number(c[1]))) {\n  return errorPage(\n    'Report temporarily unavailable',\n    'Stored record counts do not match the completed analysis. Financial results are withheld.',\n    409\n  );\n}\n\nconst exportUrl = type =>\n  BASE + '/export?seller_id=' +\n  encodeURIComponent(run.seller_id) +\n  '&run_id=' + encodeURIComponent(run.run_id) +\n  '&type=' + type;\n\nfunction metric(label, key, note = '', primary = false) {\n  return `\n  <div class=\"card kpi ${primary ? 'primary' : ''}\">\n    <div class=\"kpi-label\">${esc(label)}</div>\n    <div class=\"kpi-value\">${esc(pkr(k[key]))}</div>\n    ${note ? `<div class=\"kpi-note\">${esc(note)}</div>` : ''}\n  </div>`;\n}\n\nfunction countMetric(label, count) {\n  return `\n  <div class=\"card kpi\">\n    <div class=\"kpi-label\">${esc(label)}</div>\n    <div class=\"kpi-value\">${esc(count)}</div>\n  </div>`;\n}\n\nfunction section(title, content, subtitle = '') {\n  return `\n  <section class=\"section\">\n    <div class=\"section-head\">\n      <h2>${esc(title)}</h2>\n      <span class=\"muted\">${esc(subtitle)}</span>\n    </div>\n    ${content}\n  </section>`;\n}\n\nfunction table(headers, items, render, limit = 300) {\n  const visible = items.slice(0, limit);\n\n  let html = `\n  <div class=\"table-wrap\">\n  <table>\n    <thead><tr>\n      ${headers.map(h => `<th>${esc(h)}</th>`).join('')}\n    </tr></thead>\n    <tbody>`;\n\n  if (!visible.length) {\n    html += `<tr>\n      <td colspan=\"${headers.length}\" class=\"empty\">\n        No records to display\n      </td>\n    </tr>`;\n  } else {\n    html += visible.map(item => `\n      <tr>\n        ${render(item).map(v => `<td>${v}</td>`).join('')}\n      </tr>\n    `).join('');\n  }\n\n  html += '</tbody></table></div>';\n\n  if (items.length > limit) {\n    html += `<p class=\"muted\">\n      Showing ${limit} of ${items.length} records.\n      Download CSV for the complete dataset.\n    </p>`;\n  }\n\n  return html;\n}\n\nfunction statusPanel(title, counts) {\n  const entries = Object.entries(counts || {});\n\n  return `\n  <div class=\"card panel\">\n    <h3>${esc(title)}</h3>\n    ${entries.length ? entries.map(([name,n]) => `\n      <div class=\"status-row\">\n        ${badge(name)}\n        <strong>${esc(n)}</strong>\n      </div>`).join('') :\n      '<p class=\"muted\">No data available</p>'}\n  </div>`;\n}\n\nlet h = banner;\n\n// Header and export actions\nh += `\n<div class=\"card hero\">\n  <div>\n    <h1>Reconciliation overview</h1>\n    <div class=\"meta\">\n      <strong>Seller:</strong> ${esc(run.seller_id)} &nbsp;·&nbsp;\n      <strong>As of:</strong> ${esc(run.as_of_date)}\n    </div>\n    <div class=\"meta\">\n      <strong>Run:</strong> ${esc(run.run_id)} &nbsp;·&nbsp;\n      <strong>Engine:</strong> ${esc(run.engine_version)}\n    </div>\n    <div class=\"meta\">Completed: ${esc(run.completed_at)}</div>\n  </div>\n  <div class=\"actions\">\n    <a class=\"button\" href=\"${esc(exportUrl('results'))}\">\n      &#8595; Export results\n    </a>\n    <a class=\"button secondary\" href=\"${esc(exportUrl('exceptions'))}\">\n      &#8595; Exceptions\n    </a>\n    <a class=\"button secondary\" href=\"${esc(exportUrl('validation'))}\">\n      &#8595; Validation\n    </a>\n  </div>\n</div>`;\n\n// Financial metrics\nh += section('Receivables & cash', `\n  <div class=\"grid\">\n    ${metric('Expected receivables','expected_receivable_paisa')}\n    ${metric('Verified payments','verified_paid_paisa',\n      'Includes adjustments once',true)}\n    ${metric('Outstanding receivables','outstanding_receivable_paisa',\n      'Not automatically a loss')}\n    ${metric('Net settlement variance','net_settlement_variance_paisa',\n      'Signed amount')}\n    ${metric('Overpaid','overpaid_paisa')}\n    ${metric('Cash adjustments','adjustment_paisa',\n      'Already included in verified payments')}\n    ${metric('Overdue — confirmed','overdue_receivable_confirmed_paisa')}\n    ${metric('Overdue — provisional','overdue_receivable_provisional_paisa',\n      'User-declared coverage')}\n  </div>`);\n\n// Operational metrics\nh += section('Fees, returns & exposure', `\n  <div class=\"grid\">\n    ${metric('Verified fee discrepancy','verified_fee_discrepancy_paisa')}\n    ${metric('RTO fee discrepancy','rto_fee_discrepancy_paisa')}\n    ${metric('RTO operational costs','rto_operational_cost_paisa',\n      'Separate from receivables')}\n    ${metric('Unallocated settlement','unallocated_settlement_paisa')}\n    ${metric('Unattributed batch fees','unattributed_fee_paisa')}\n    ${metric('Potential exposure','potential_exposure_paisa',\n      'Informational only')}\n    ${countMetric('Exceptions',exc.length)}\n    ${countMetric('Validation errors',ver.length)}\n  </div>`);\n\nh += `\n<div class=\"notice info\">\n  <strong>Important:</strong> Financial discrepancies, outstanding\n  receivables, RTO costs and potential exposure are separate\n  categories. They must not be added into a single loss amount.\n  User-declared settlement coverage is not independently verified.\n</div>`;\n\n// Independent status breakdowns\nh += section('Settlement health', `\n  <div class=\"grid two\">\n    ${statusPanel('Settlement completeness',\n      k.counts_by_completeness)}\n    ${statusPanel('Due-date status',\n      k.counts_by_due_date_status)}\n  </div>`);\n\n// Shipment table\nh += section('Shipment reconciliation',\n  table(\n    ['Shipment / Order','Courier','Delivery','Settlement',\n     'Due date','Expected','Verified','Outstanding','Overpaid'],\n    res,\n    r => [\n      `<strong>${esc(r.shipment_id || '—')}</strong>\n       <span class=\"small\">${esc(r.order_id || 'No order')}</span>`,\n      esc(r.courier),\n      esc(r.normalized_status),\n      badge(r.settlement_completeness),\n      badge(r.due_date_status) +\n        (r.due_date_confidence ?\n          `<span class=\"small\">${esc(r.due_date_confidence)}</span>` : ''),\n      esc(pkr(r.expected_receivable_paisa)),\n      esc(pkr(r.verified_paid_paisa)),\n      esc(pkr(r.outstanding_receivable_paisa)),\n      esc(pkr(r.overpaid_paisa))\n    ],\n    200\n  ),\n  `${res.length} results`\n);\n\n// Exceptions table with expandable evidence\nh += section('Exceptions & investigation',\n  table(\n    ['Type','Severity','Confidence','Reference',\n     'Amount','Description / Evidence'],\n    exc,\n    x => [\n      badge(x.type),\n      badge(x.severity),\n      badge(x.confidence),\n      esc(x.shipment_id || x.settlement_id ||\n        x.order_id || x.tracking_number || '—'),\n      esc(pkr(x.amount_paisa)),\n      `<div>${esc(x.description)}</div>` +\n        (x.evidence_json ?\n          `<details>\n            <summary>View evidence</summary>\n            <pre>${esc(JSON.stringify(\n              parse(x.evidence_json,{}),null,2\n            ))}</pre>\n          </details>` : '')\n    ]\n  ),\n  `${exc.length} findings`\n);\n\n// Settlement entries\nh += section('Settlement entries',\n  table(\n    ['Settlement','Courier','Type','Net paid',\n     'Allocated','Unallocated','Arithmetic'],\n    stl,\n    s => [\n      esc(s.settlement_id),\n      esc(s.courier),\n      badge(s.entry_type),\n      esc(pkr(s.net_paid_paisa)),\n      esc(pkr(s.allocated_paisa)),\n      esc(pkr(s.unallocated_paisa)),\n      badge(\n        s.arithmetic_ok === true || s.arithmetic_ok === 'true'\n          ? 'OK'\n          : s.arithmetic_ok === null ||\n            s.arithmetic_ok === undefined\n            ? 'NOT_APPLICABLE' : 'MISMATCH'\n      )\n    ]\n  ),\n  `${stl.length} entries`\n);\n\n// Validation errors\nh += section('Validation & data quality',\n  table(\n    ['Source','Row','Field','Code','Level','Raw value','Message'],\n    ver,\n    v => [\n      esc(v.source),\n      esc(v.row_number),\n      esc(v.field),\n      badge(v.code),\n      badge(v.level),\n      esc(v.raw_value),\n      esc(v.message)\n    ]\n  ),\n  `${ver.length} errors`\n);\n\n// Audit and configuration\nh += section('Audit & input configuration', `\n  <div class=\"card panel\">\n    <p class=\"muted\">\n      <strong>Output hash:</strong> ${esc(run.output_hash)}\n    </p>\n    <p class=\"muted\">\n      <strong>Run key:</strong> ${esc(run.run_key)}\n    </p>\n    <details>\n      <summary>Courier rules</summary>\n      <pre>${esc(JSON.stringify(rules,null,2))}</pre>\n    </details>\n    <details>\n      <summary>Settlement coverage</summary>\n      <pre>${esc(JSON.stringify(coverage,null,2))}</pre>\n    </details>\n    <details>\n      <summary>Column mapping</summary>\n      <pre>${esc(JSON.stringify(mapping,null,2))}</pre>\n    </details>\n    <details>\n      <summary>Warnings and import notes</summary>\n      <pre>${esc(JSON.stringify(warnings,null,2))}</pre>\n    </details>\n  </div>\n`);\n\nreturn page('Profit Leak Analyzer – ' + run.seller_id, h, 200);\n"
+      },
+      "id": "38d1b3ee-312b-4371-bc34-3776fe604c41",
+      "name": "Render Dashboard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.status_code }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              },
+              {
+                "name": "X-Robots-Tag",
+                "value": "noindex"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "f54b9f1f-5c91-42ab-989a-b6f4218faad5",
+      "name": "Respond Dashboard",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1632,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "path": "pla-demo-7f3k9q2m/export",
+        "responseMode": "responseNode",
+        "options": {
+          "ignoreBots": true
+        }
+      },
+      "id": "d30825cb-b2ed-4d6b-a119-0dee85f6ad7a",
+      "name": "Export Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        576
+      ],
+      "webhookId": "fa3c0df1-ed3c-43ac-af47-55ef9ffd6f9e"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "0qbRspDFWpIgooD1",
+          "cachedResultName": "pla_runs"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "9653b753-3bbd-487e-acff-6048dfd4c256",
+      "name": "Lookup Export Run",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        576
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ucxvjinIPovsE5AU",
+          "cachedResultName": "pla_results"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "1fa267d8-aaa3-4de5-b9b6-0981ef1fe33c",
+      "name": "Load Result Rows",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        576
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ozVKHgFOF0lT8Qq1",
+          "cachedResultName": "pla_exceptions"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "ab3cf1eb-fc63-42f3-bbde-4973868bbe11",
+      "name": "Load Exception Rows",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        736,
+        576
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "dRvJ4MPeV7msn63N",
+          "cachedResultName": "pla_validation_errors"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "run_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.run_id || '').trim() }}"
+            },
+            {
+              "keyName": "seller_id",
+              "keyValue": "={{ String($('Export Request').first().json.query.seller_id || '').trim().toUpperCase() }}"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "359b8600-3fd2-4844-a8ed-d3d936fc1f94",
+      "name": "Load Validation Rows",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        576
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Build CSV export ----\nconst q = $('Export Request').first().json.query || {};\nconst sellerQ = String(q.seller_id || '').trim().toUpperCase();\nconst runQ = String(q.run_id || '').trim();\nconst type = String(q.type || '');\nfunction err(code, msg) { return [{ json: { status_code: code, content_type: 'text/plain; charset=utf-8', disposition: '', body: msg } }]; }\nconst COLS = {\n  results: ['seq', 'order_id', 'shipment_id', 'tracking_number', 'courier', 'normalized_status', 'settlement_completeness', 'due_date_status', 'due_date_confidence', 'expected_receivable_paisa', 'verified_paid_paisa', 'outstanding_receivable_paisa', 'overpaid_paisa', 'result_json'],\n  exceptions: ['seq', 'exception_id', 'type', 'severity', 'confidence', 'order_id', 'shipment_id', 'tracking_number', 'settlement_id', 'amount_paisa', 'description', 'evidence_json'],\n  validation: ['seq', 'source', 'row_number', 'field', 'code', 'level', 'message', 'raw_value'],\n};\nif (!sellerQ || !runQ) return err(400, 'seller_id and run_id are required');\nif (!COLS[type]) return err(400, 'type must be results, exceptions or validation');\nif (!/^[A-Za-z0-9_-]{1,80}$/.test(runQ)) return err(400, 'invalid run_id');\nconst run = $('Lookup Export Run').all().map(function (i) { return i.json; }).find(function (r) { return r && r.run_id === runQ && r.seller_id === sellerQ; });\nif (!run) return err(404, 'run not found for this seller');\nif (run.status !== 'COMPLETED') return err(409, 'run is ' + run.status + '; exports are only available for COMPLETED runs');\nconst src = { results: 'Load Result Rows', exceptions: 'Load Exception Rows', validation: 'Load Validation Rows' }[type];\nconst data = $(src).all().map(function (i) { return i.json; }).filter(function (r) { return r && r.run_id === runQ && r.seller_id === sellerQ; }).sort(function (a, b) { return a.seq - b.seq; });\nconst expected = Number({ results: run.results_count, exceptions: run.exceptions_count, validation: run.validation_errors_count }[type]);\nif (data.length !== expected) return err(500, 'stored row count ' + data.length + ' does not match run record ' + expected + '; export refused');\nfunction cell(v) {\n  let s = v === null || v === undefined ? '' : String(v);\n  if (/^[=+\\-@\\t\\r]/.test(s) && !/^-?\\d+(\\.\\d+)?$/.test(s)) s = \"'\" + s; // neutralise spreadsheet formulas, keep negative numbers\n  return /[\",\\r\\n]/.test(s) ? '\"' + s.replace(/\"/g, '\"\"') + '\"' : s;\n}\nconst header = ['run_id', 'seller_id'].concat(COLS[type]);\nconst lines = [header.join(',')].concat(data.map(function (r) { return [runQ, sellerQ].concat(COLS[type].map(function (c) { return r[c]; })).map(cell).join(','); }));\nreturn [{ json: { status_code: 200, content_type: 'text/csv; charset=utf-8', disposition: 'attachment; filename=\"pla-' + runQ + '-' + type + '.csv\"', body: lines.join('\\r\\n') + '\\r\\n', row_count: data.length } }];\n"
+      },
+      "id": "574f0093-6db1-4ccb-91ab-6852080db07e",
+      "name": "Build CSV Export",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.status_code }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "={{ $json.content_type }}"
+              },
+              {
+                "name": "Content-Disposition",
+                "value": "={{ $json.disposition || 'inline' }}"
+              },
+              {
+                "name": "X-Robots-Tag",
+                "value": "noindex"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "f8355223-8331-4e4e-bd4b-d6870a736d0c",
+      "name": "Respond CSV",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1408,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "path": "pla-demo-7f3k9q2m/sample",
+        "responseMode": "responseNode",
+        "options": {
+          "ignoreBots": true
+        }
+      },
+      "id": "178f9bc0-2589-4678-ae73-f6c69adadcce",
+      "name": "Sample Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        912
+      ],
+      "webhookId": "7096ae60-076c-4f73-b88d-ef309d078ffa"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ---- Serve synthetic sample CSV files ----\nconst q = ($input.first().json.query) || {};\nconst file = String(q.file || '').toLowerCase();\nconst SAMPLES = {\n  orders: [\n    'Order No,Seller,Order Date,COD Amount (PKR),Order Status,Customer Ref',\n    'O-1001,SELLER-DEMO,2026-10-01,\"1,500.00\",confirmed,CUST-01',\n    'O-1002,SELLER-DEMO,2026-10-01,2200.00,confirmed,CUST-02',\n    'O-1003,SELLER-DEMO,2026-10-02,999.50,confirmed,CUST-03',\n    'O-1004,SELLER-DEMO,2026-10-03,1800.00,confirmed,CUST-04',\n    'O-1005,SELLER-DEMO,2026-10-03,12.345,confirmed,CUST-05',\n  ],\n  shipments: [\n    'Shipment ID,Order No,CN Number,Courier,Booking Date,Delivery Status,Delivered Date,COD Collected,Contracted Delivery Fee,Contracted RTO Fee,Seller',\n    'SH-1,O-1001,TCS-0001,TCS,2026-10-02,Delivered,2026-10-05,\"1,500.00\",150.00,,SELLER-DEMO',\n    'SH-2,O-1002,TCS-0002,TCS,2026-10-02,Delivered,2026-10-06,2200.00,150.00,,SELLER-DEMO',\n    'SH-3,O-1003,LEO-0003,Leopards,2026-10-03,Delivered,2026-10-07,999.50,120.00,,SELLER-DEMO',\n    'SH-4,O-1004,TCS-0004,TCS,2026-10-04,RTO,2026-10-12,0,150.00,110.00,SELLER-DEMO',\n  ],\n  settlements: [\n    'Settlement ID,Courier,Settlement Date,Entry Type,Gross COD,Delivery Fees,RTO Fees,Other Deductions,Net Paid,Payment Ref,Seller',\n    'ST-01,TCS,2026-10-12,PAYMENT,\"1,500.00\",150.00,0,0,\"1,350.00\",BANK-01,SELLER-DEMO',\n    'ST-02,TCS,2026-10-14,PAYMENT,2200.00,200.00,110.00,0,1890.00,BANK-02,SELLER-DEMO',\n    'ADJ-01,TCS,2026-10-20,ADJUSTMENT,0,0,0,0,25.00,BANK-03,SELLER-DEMO',\n  ],\n  allocations: [\n    'Line ID,Settlement ID,CN Number,Allocated Net,Allocated COD,Allocated Delivery Fee,Allocated RTO Fee,Seller',\n    'L-1,ST-01,TCS-0001,\"1,350.00\",\"1,500.00\",150.00,,SELLER-DEMO',\n    'L-2,ST-02,TCS-0002,1000.00,2200.00,200.00,,SELLER-DEMO',\n    'L-3,ADJ-01,TCS-0002,25.00,,,,SELLER-DEMO',\n  ],\n  malformed: [\n    'Order No,Seller,Order Date,COD Amount (PKR),Order Status',\n    'O-1,SELLER-DEMO,2026-10-01,\"1,500.00,confirmed',\n    'O-2,SELLER-DEMO,2026-10-01,100.00,confirmed',\n  ],\n  headers_only: [\n    'Line ID,Settlement ID,CN Number,Allocated Net,Allocated COD,Allocated Delivery Fee,Allocated RTO Fee,Seller',\n  ],\n};\nif (!Object.prototype.hasOwnProperty.call(SAMPLES, file)) {\n  return [{ json: { status_code: 400, content_type: 'text/plain; charset=utf-8', disposition: '', body: 'Unknown sample. Use file=' + Object.keys(SAMPLES).join('|') } }];\n}\nreturn [{ json: { status_code: 200, content_type: 'text/csv; charset=utf-8', disposition: 'attachment; filename=\"pla-sample-' + file + '.csv\"', body: SAMPLES[file].join('\\r\\n') + '\\r\\n' } }];\n"
+      },
+      "id": "db7332ef-34e5-4daa-afc4-8480526fa6f4",
+      "name": "Build Sample File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        1056
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.body }}",
+        "options": {
+          "responseCode": "={{ $json.status_code }}",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "={{ $json.content_type }}"
+              },
+              {
+                "name": "Content-Disposition",
+                "value": "={{ $json.disposition || 'inline' }}"
+              },
+              {
+                "name": "X-Robots-Tag",
+                "value": "noindex"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "da6cbd4f-106c-4e8a-8204-6d348eb8b5e7",
+      "name": "Respond Sample",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        512,
+        1056
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Dashboard Request": {
+      "main": [
+        [
+          {
+            "node": "Lookup Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Run": {
+      "main": [
+        [
+          {
+            "node": "Load Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Results": {
+      "main": [
+        [
+          {
+            "node": "Load Exceptions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Exceptions": {
+      "main": [
+        [
+          {
+            "node": "Load Validation Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Validation Errors": {
+      "main": [
+        [
+          {
+            "node": "Load Settlements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Settlements": {
+      "main": [
+        [
+          {
+            "node": "Render Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Respond Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export Request": {
+      "main": [
+        [
+          {
+            "node": "Lookup Export Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Export Run": {
+      "main": [
+        [
+          {
+            "node": "Load Result Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Result Rows": {
+      "main": [
+        [
+          {
+            "node": "Load Exception Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Exception Rows": {
+      "main": [
+        [
+          {
+            "node": "Load Validation Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Validation Rows": {
+      "main": [
+        [
+          {
+            "node": "Build CSV Export",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build CSV Export": {
+      "main": [
+        [
+          {
+            "node": "Respond CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sample Request": {
+      "main": [
+        [
+          {
+            "node": "Build Sample File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Sample File": {
+      "main": [
+        [
+          {
+            "node": "Respond Sample",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fb173011-1dd0-49d9-9dd0-d4539be4ef1d",
+  "meta": {
+    "instanceId": "a7ccd82d9ed2f385c53f8465dfb9eaaab565482fc6ec3ff6d66709b0c6ff8687"
+  },
+  "nodeGroups": [
+    {
+      "id": "3bc0b3db-09b2-4331-9780-b440eb742799",
+      "name": "Show run dashboard",
+      "nodeIds": [
+        "4badfa6a-65be-449d-b96b-42c292b19536",
+        "8a725544-c4fd-41ca-8122-a00a732c820f",
+        "145d91d6-b5b7-435e-8ab6-b7ef25efde85",
+        "0beca110-6c65-4af6-979a-f17a81014bd4",
+        "6fb211ff-f58c-4f5b-b360-a9700706b828",
+        "38d1b3ee-312b-4371-bc34-3776fe604c41",
+        "f54b9f1f-5c91-42ab-989a-b6f4218faad5"
+      ],
+      "description": "Loads one seller run by seller_id + run_id; shows figures only for COMPLETED runs with matching stored counts"
+    },
+    {
+      "id": "930912ed-70dd-42bf-9951-d8ec2c968550",
+      "name": "Export run CSV",
+      "nodeIds": [
+        "9653b753-3bbd-487e-acff-6048dfd4c256",
+        "1fa267d8-aaa3-4de5-b9b6-0981ef1fe33c",
+        "ab3cf1eb-fc63-42f3-bbde-4973868bbe11",
+        "359b8600-3fd2-4844-a8ed-d3d936fc1f94",
+        "574f0093-6db1-4ccb-91ab-6852080db07e",
+        "f8355223-8331-4e4e-bd4b-d6870a736d0c"
+      ],
+      "description": "Returns results, exceptions or validation rows as pla-<run_id>-<type>.csv; refuses on count mismatch"
+    },
+    {
+      "id": "4c18082d-6148-4db1-8be4-fa5be53efd21",
+      "name": "Serve sample files",
+      "nodeIds": [
+        "db7332ef-34e5-4daa-afc4-8480526fa6f4",
+        "da6cbd4f-106c-4e8a-8204-6d348eb8b5e7"
+      ],
+      "description": "Synthetic demo CSVs incl. malformed and headers-only examples for testing the upload form"
+    }
+  ],
+  "id": "p6OSGUUn3F2ftwZr",
+  "tags": []
+}

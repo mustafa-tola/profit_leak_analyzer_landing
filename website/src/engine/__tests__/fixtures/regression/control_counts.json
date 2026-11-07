@@ -1,0 +1,24 @@
+{
+  "seller_id": "SELLER-DEMO",
+  "as_of_date": "2026-10-30",
+  "courier_rule": "TCS,7",
+  "coverage": "leave blank",
+  "expected_row_counts": {
+    "orders": 117,
+    "shipments": 116,
+    "settlements": 105,
+    "allocations": 99
+  },
+  "clean_settled_count": 80,
+  "partial_count": 12,
+  "unsettled_count": 8,
+  "fee_overcharge_count": 5,
+  "rto_count": 5,
+  "unmatched_shipment_count": 3,
+  "cod_mismatch_count": 2,
+  "invalid_source_order_rows": 5,
+  "duplicate_conflict_rows": 2,
+  "unallocated_payment_entries": 4,
+  "standalone_adjustment_entries": 2,
+  "notes": "Test oracle is scenario-specific. Do not assume global KPI sum = sum per-row expectation; unmatched rows/adjustments and policies affect totals. Observe and compare separately."
+}
