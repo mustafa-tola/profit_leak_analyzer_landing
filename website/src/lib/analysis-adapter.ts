@@ -44,15 +44,13 @@ function buildKpis(run: PublicAnalysisSummary | PublicAnalysisRun): Kpi[] {
   const paid = k.verified_paid_pkr ?? k.verified_paid_paisa_pkr ?? 'PKR 0.00';
   const exposure = k.potential_exposure_pkr;
   const discrepancyValue = exposure ?? outstanding;
-  const discrepancyBasis = exposure ? 'potential exposure' : 'outstanding receivable (no exposure field returned)';
 
   return [
     {
       id: 'discrepancy',
-      label: 'Potential settlement discrepancies',
+      label: 'Potential discrepancies',
       value: discrepancyValue,
-      detail: `${exceptions} exception${exceptions === 1 ? '' : 's'} flagged · provisional indicator`,
-      note: `Informational estimate based on ${discrepancyBasis}. Not a confirmed financial loss — verify against courier statements before action.`,
+      detail: `Provisional estimate · ${exceptions} exception${exceptions === 1 ? '' : 's'} · not a confirmed loss`,
       emphasis: true,
     },
     {

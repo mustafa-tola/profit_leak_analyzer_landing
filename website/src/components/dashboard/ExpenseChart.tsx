@@ -29,19 +29,12 @@ export function ExpenseChart({
     return (
       <section
         aria-label="Monthly trend unavailable for this run"
-        className="min-w-0 rounded-xl border border-dashed border-line bg-surface px-4 py-3 sm:px-5 lg:col-span-2"
+        className="min-w-0 self-start rounded-xl border border-dashed border-line bg-surface px-4 py-3 lg:col-span-2"
       >
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-ink">
-            <BarChart3 className="h-4 w-4 text-muted" aria-hidden="true" />
-            Monthly trend not available
-          </span>
-          <span className="rounded border border-line bg-canvas px-2 py-0.5 text-[11px] font-medium text-muted">
-            Live run · no sample chart
-          </span>
-        </div>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted">
-          This run has no historical monthly series. Sample charts are hidden so demo data is never shown as live financial results.
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+          <BarChart3 className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="font-medium text-ink">Monthly trend unavailable</span>
+          <span className="text-muted">— this run has no historical series. Sample charts are hidden.</span>
         </p>
       </section>
     );

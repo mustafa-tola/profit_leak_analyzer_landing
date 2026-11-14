@@ -16,9 +16,9 @@ export const costDefinition =
 export const kpis: Kpi[] = [
 {
   id: 'discrepancy',
-  label: 'Potential settlement discrepancies',
+  label: 'Potential discrepancies',
   value: 'PKR 38,240',
-  detail: '47 orders flagged · provisional',
+  detail: 'Provisional estimate · 47 orders · not a confirmed loss',
   emphasis: true
 },
 { id: 'expenses', label: 'Courier expenses', value: 'PKR 412,860', detail: '+6.1% vs August' },

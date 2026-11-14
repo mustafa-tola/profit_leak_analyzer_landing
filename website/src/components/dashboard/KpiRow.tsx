@@ -7,34 +7,26 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
         <div
           key={k.id}
           className={`min-w-0 rounded-xl border p-4 sm:p-5 ${
-            k.emphasis ? 'border-warn/30 bg-warn-soft' : 'border-line bg-surface'
+            k.emphasis ? 'border-warn/25 bg-warn-soft/50' : 'border-line bg-surface shadow-sm'
           }`}
         >
           <dt className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1 text-sm font-medium text-muted">
-            <span className={`min-w-0 flex-1 ${k.emphasis ? 'text-ink' : ''}`}>{k.label}</span>
+            <span className="min-w-0 flex-1 text-ink">{k.label}</span>
             {k.emphasis ? (
-              <span className="shrink-0 rounded-full border border-warn/30 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
+              <span className="shrink-0 rounded-full border border-warn/30 bg-surface/60 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
                 Provisional
               </span>
             ) : null}
-            {k.note ? (
-              <a
-                href="#metric-definitions"
-                className="shrink-0 rounded text-xs font-medium text-accent-ink underline-offset-2 hover:underline"
-              >
-                Definition
-              </a>
-            ) : null}
           </dt>
           <dd
-            className={`mt-3 font-semibold tracking-tight text-ink tabular-nums [overflow-wrap:anywhere] ${
-              k.emphasis ? 'text-xl sm:text-2xl xl:text-[1.65rem]' : 'text-xl sm:text-2xl'
+            className={`mt-3 font-semibold tracking-tight tabular-nums [overflow-wrap:anywhere] ${
+              k.emphasis ? 'text-lg text-ink sm:text-xl' : 'text-xl text-ink sm:text-2xl'
             }`}
             title={k.value}
           >
             {k.value}
           </dd>
-          <dd className={`mt-1.5 text-sm leading-relaxed ${k.emphasis ? 'text-warn' : 'text-muted'}`}>{k.detail}</dd>
+          <dd className={`mt-1.5 text-sm leading-relaxed ${k.emphasis ? 'text-muted' : 'text-muted'}`}>{k.detail}</dd>
           {k.note ? <dd className="mt-1 text-sm leading-relaxed text-muted">{k.note}</dd> : null}
         </div>
       ))}
