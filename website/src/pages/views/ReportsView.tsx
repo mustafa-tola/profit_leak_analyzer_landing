@@ -34,28 +34,32 @@ export function ReportsView() {
               <p className="mt-1 text-sm text-muted">Expected vs. verified payments (daily).</p>
             </div>
             <div className="px-5 py-4 sm:px-6 sm:py-5">
-              <div className="rounded-[14px] border border-line bg-[#F7F9F8] p-6 h-64">
-                <div className="flex h-full items-end justify-between gap-1 px-2 pb-4">
-                  {['01 Nov', '02 Nov', '03 Nov', '04 Nov', '05 Nov', '06 Nov', '07 Nov'].map((day, i) => (
-                    <div key={day} className="flex flex-col items-center gap-1">
-                      <div className="w-full bg-[#0A4236]/40 rounded-t-[9px]" style={{ height: `${40 + i * 8}%` }} />
-                      <div className="w-full bg-[#087F62]/60 rounded-t-[9px]" style={{ height: `${30 + i * 6}%` }} />
-                      <span className="text-[10px] text-muted">{day}</span>
+              <div className="rounded-[14px] border border-line bg-[#F7F9F8] p-5 h-64">
+                <div className="flex h-full items-end justify-between gap-2 px-3 pb-5">
+                  {[
+                    { day: '01 Nov', expected: 65, verified: 55 },
+                    { day: '02 Nov', expected: 78, verified: 62 },
+                    { day: '03 Nov', expected: 70, verified: 68 },
+                    { day: '04 Nov', expected: 85, verified: 72 },
+                    { day: '05 Nov', expected: 90, verified: 78 },
+                    { day: '06 Nov', expected: 82, verified: 80 },
+                    { day: '07 Nov', expected: 88, verified: 85 },
+                  ].map((row) => (
+                    <div key={row.day} className="flex flex-col items-center gap-1">
+                      <div className="w-full bg-[#0A4236]/30 rounded-t-[9px]" style={{ height: `${row.expected}%` }} />
+                      <div className="w-full bg-[#087F62]/80 rounded-t-[9px]" style={{ height: `${row.verified}%` }} />
+                      <span className="text-[10px] text-muted">{row.day}</span>
                     </div>
                   ))}
                 </div>
-                <div className="mt-2 flex items-end justify-between text-[10px] text-muted">
-                  <span>PKR 0</span>
-                  <span>PKR 800K</span>
-                </div>
-                <div className="mt-3 flex flex-wrap items-center gap-4 text-[10px] text-muted">
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                <div className="mt-3 flex flex-wrap justify-center items-center gap-4 text-[10px] text-muted">
+                  <div className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-[#0A4236]" aria-hidden="true" />
-                    <span>Expected Receivable</span>
+                    <span className="whitespace-nowrap">Expected Receivable</span>
                   </div>
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                  <div className="flex items-center gap-1.5">
                     <span className="h-2 w-2 rounded-full bg-[#087F62]" aria-hidden="true" />
-                    <span>Verified Payments</span>
+                    <span className="whitespace-nowrap">Verified Payments</span>
                   </div>
                 </div>
               </div>
