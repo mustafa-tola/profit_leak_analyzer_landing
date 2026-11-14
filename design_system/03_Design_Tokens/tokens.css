@@ -1,0 +1,20 @@
+:root {
+  --codvera-brand-primary: #103E36;
+  --codvera-brand-action: #087F62;
+  --codvera-brand-mint: #DDF5EA;
+  --codvera-background: #F5F8F7;
+  --codvera-surface: #FFFFFF;
+  --codvera-text-primary: #192B32;
+  --codvera-text-secondary: #334B5B;
+  --codvera-border: #DCE7E3;
+  --codvera-warning-text: #92400E;
+  --codvera-warning-background: #FFF4E5;
+  --codvera-error-text: #B42318;
+  --codvera-error-background: #FEF3F2;
+  --codvera-font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --codvera-font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+  --codvera-radius-card: 14px;
+  --codvera-radius-control: 9px;
+}
+.codvera-money { font-variant-numeric: tabular-nums; }
+.codvera-focus:focus-visible { outline: 3px solid #087F62; outline-offset: 3px; }
