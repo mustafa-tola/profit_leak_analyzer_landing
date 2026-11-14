@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SignedIn, SignedOut, SignIn, useAuth, useUser } from '@clerk/clerk-react';
 import { AlertCircle, ShieldCheck } from 'lucide-react';
+import { Navbar } from '../components/Navbar';
+import { Footer } from '../components/Footer';
 import { WorkspaceHeader, MobileMenu } from '../components/layout/MobileMenu';
 import { Badge } from '../components/ui/Badge';
 import { DashboardView } from './views/DashboardView';
@@ -48,7 +50,7 @@ const PATH_VIEWS: Record<string, AppView> = {
   '/app/help': 'help',
 };
 
-export function AppPage({ isDark }: { isDark: boolean }) {
+export function AppPage({ isDark, theme, setTheme }: { isDark: boolean; theme: 'light' | 'dark'; setTheme: React.Dispatch<React.SetStateAction<'light' | 'dark'>> }) {
   if (!clerkKey) {
     return (
       <main className="mx-auto max-w-3xl px-5 py-16 sm:px-6">
@@ -75,6 +77,10 @@ export function AppPage({ isDark }: { isDark: boolean }) {
   return (
     <main className="min-h-screen bg-[#F5F8F7]">
       <SignedOut>
+        <Navbar
+          theme={theme}
+          onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+        />
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:py-16">
           <section className="space-y-6">
             <div>
@@ -86,8 +92,8 @@ export function AppPage({ isDark }: { isDark: boolean }) {
                 Sign in to reconcile COD payments
               </h1>
               <p className="mt-3 max-w-xl text-base leading-relaxed text-muted">
-                Upload seller, courier, and settlement exports to review expected receivables, verified payments, outstanding balances,
-                and provisional exceptions in one evidence-led workspace.
+                Upload seller, courier, and settlement exports to review expected receivables, verified payments,
+                outstanding balances, and provisional exceptions in one evidence-led workspace.
               </p>
             </div>
             <ul className="grid gap-3 sm:grid-cols-2" aria-label="Workspace highlights">
@@ -113,6 +119,7 @@ export function AppPage({ isDark }: { isDark: boolean }) {
             />
           </section>
         </div>
+        <Footer />
       </SignedOut>
       <SignedIn>
         <LiveAnalysisApp isDark={isDark} />

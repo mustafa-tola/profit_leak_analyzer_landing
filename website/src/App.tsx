@@ -71,7 +71,7 @@ function AppShell({
       )}
       <Suspense fallback={<PageFallback />}>
         <Routes>
-          <Route path="/app/*" element={<AppPage isDark={isDark} />} />
+          <Route path="/app/*" element={<AppPage isDark={isDark} theme={theme} setTheme={setTheme} />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="*" element={<Home isDark={isDark} />} />
