@@ -47,13 +47,6 @@ function buildKpis(run: PublicAnalysisSummary | PublicAnalysisRun): Kpi[] {
 
   return [
     {
-      id: 'discrepancy',
-      label: 'Potential discrepancies',
-      value: discrepancyValue,
-      detail: `Provisional estimate · ${exceptions} exception${exceptions === 1 ? '' : 's'} · not a confirmed loss`,
-      emphasis: true,
-    },
-    {
       id: 'expected',
       label: 'Expected receivable',
       value: expected,
@@ -70,6 +63,13 @@ function buildKpis(run: PublicAnalysisSummary | PublicAnalysisRun): Kpi[] {
       label: 'Outstanding receivable',
       value: outstanding,
       detail: run.quality_message || `${run.analysis_quality} run`,
+    },
+    {
+      id: 'discrepancy',
+      label: 'Provisional discrepancies',
+      value: discrepancyValue,
+      detail: `${exceptions} exception${exceptions === 1 ? '' : 's'} · estimate, not a confirmed loss`,
+      emphasis: true,
     },
   ];
 }

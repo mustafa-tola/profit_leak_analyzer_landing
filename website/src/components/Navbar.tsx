@@ -38,8 +38,8 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
   return (
     <header
       className={`sticky top-0 z-50 border-b transition-[background-color,border-color] duration-200 ease-out ${
-      solid ? 'border-line bg-canvas/85 backdrop-blur-lg' : 'border-transparent bg-canvas/0'}`
-      }>
+      solid ? 'border-line bg-surface/85 backdrop-blur-lg' : 'border-transparent bg-surface/0'}`}
+      aria-label="Primary navigation">
       
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6">
         <Logo />
@@ -84,7 +84,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
-          className="border-t border-line bg-canvas px-5 pb-5 pt-2 lg:hidden">
+          className="border-t border-line bg-surface px-5 pb-5 pt-2 lg:hidden">
           
             <ul className="flex flex-col">
               {navLinks.map((link) =>
@@ -94,10 +94,10 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
                 onClick={() => setOpen(false)}
                 className="block rounded-md px-2 py-3 text-[15px] font-medium text-ink hover:bg-subtle">
                 
-                    {link.label}
-                  </Link>
-                </li>
-            )}
+                  {link.label}
+                </Link>
+              </li>
+              )}
             </ul>
             <div className="mt-3">
               <ButtonLink href="/#get-started" fullWidth onClick={() => setOpen(false)}>

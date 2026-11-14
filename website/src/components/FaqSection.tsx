@@ -10,7 +10,7 @@ export function FaqSection() {
     <section id="faqs" aria-labelledby="faqs-heading" className="border-t border-line bg-surface py-24 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
-          <h2 id="faqs-heading" className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+          <h2 id="faqs-heading" className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
             Questions sellers ask first
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">
@@ -39,13 +39,12 @@ export function FaqSection() {
                     aria-expanded={isOpen}
                     aria-controls={panelId}
                     onClick={() => setOpenIndex(isOpen ? null : i)}
-                    className="flex w-full items-center justify-between gap-6 py-5 text-left text-[16px] font-semibold text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                    className="flex w-full items-center justify-between gap-6 py-5 text-left text-[16px] font-bold text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                     
                     {faq.question}
                     <PlusIcon
                       className={`h-5 w-5 shrink-0 text-muted transition-transform duration-200 ease-out ${
-                      isOpen ? 'rotate-45' : ''}`
-                      }
+                      isOpen ? 'rotate-45' : ''}`}
                       aria-hidden="true" />
                     
                   </button>
@@ -67,7 +66,6 @@ export function FaqSection() {
                   }
                 </AnimatePresence>
               </li>);
-
           })}
         </ul>
       </div>

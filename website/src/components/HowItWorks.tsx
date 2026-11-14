@@ -20,14 +20,14 @@ export function HowItWorks() {
             const Icon = stepIcons[step.icon];
             return <li key={step.title} className="relative flex flex-col">
                 <div className="flex items-center gap-3">
-                  <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-sm font-semibold text-ink shadow-soft">
+                  <span className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-sm font-bold text-ink shadow-soft">
                     {i + 1}
                   </span>
                   <span className="relative z-10 bg-surface pr-2">
                     <Icon className="h-4 w-4 text-accent-ink" aria-hidden="true" />
                   </span>
                 </div>
-                <h3 className="mt-5 text-lg font-semibold tracking-tight text-ink">{step.title}</h3>
+                <h3 className="mt-5 font-display text-lg font-bold tracking-tight text-ink">{step.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
                 <div className="mt-auto pt-6">
                   <StepArtifact index={i} />
@@ -42,9 +42,8 @@ export function HowItWorks() {
 function StepArtifact({
   index
 
-
 }: {index: number;}) {
-  const shell = 'rounded-xl border border-line bg-canvas p-3.5 text-[12px]';
+  const shell = 'rounded-lg border border-line bg-canvas p-3.5 text-[12px]';
   if (index === 0) {
     return <div className={`${shell} space-y-2`}>
         {[{
@@ -63,7 +62,7 @@ function StepArtifact({
   if (index === 1) {
     return <div className={shell}>
         <div className="flex justify-between">
-          <span className="font-medium text-ink">Matched 1,486 of 1,502</span>
+          <span className="font-bold text-ink">Matched 1,486 of 1,502</span>
           <span className="text-muted tabular-nums">98.9%</span>
         </div>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
@@ -74,14 +73,14 @@ function StepArtifact({
   }
   if (index === 2) {
     return <div className={shell}>
-        <p className="font-medium text-ink">47 potential discrepancies</p>
+        <p className="font-bold text-ink">47 potential discrepancies</p>
         <p className="mt-1 text-muted">
           PKR 38,240 · <span className="text-warn">provisional</span>
         </p>
       </div>;
   }
   return <div className={`${shell} flex items-center gap-2`}>
-      {['PDF', 'CSV'].map((t) => <span key={t} className="rounded-md border border-line bg-surface px-2 py-0.5 font-semibold text-ink">
+      {['PDF', 'CSV'].map((t) => <span key={t} className="rounded-md border border-line bg-surface px-2 py-0.5 font-bold text-ink">
           {t}
         </span>)}
       <span className="ml-1 text-muted">Row citations included</span>

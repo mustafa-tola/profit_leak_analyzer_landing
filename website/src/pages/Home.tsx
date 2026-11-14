@@ -20,8 +20,8 @@ export function Home({ isDark }: HomeProps) {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('free');
 
   useDocumentMeta(
-    'Profit Leak Analyzer — Find hidden courier costs and COD settlement gaps',
-    'An academic prototype of Profit Leak Analyzer, showing how Pakistani COD sellers could uncover hidden courier charges, RTO costs, delayed settlements and potential payment discrepancies.'
+    'Codvera — COD Reconciliation & Financial Intelligence',
+    'Every COD rupee, accounted for. Reconcile courier settlements, identify payment discrepancies, and understand outstanding receivables in one financial workspace.'
   );
 
   return (
@@ -45,11 +45,11 @@ function DashboardPreviewFallback() {
       id="demo"
       aria-busy="true"
       aria-label="Loading dashboard preview"
-      className="bg-navy py-24 sm:py-28">
+      className="bg-[#F5F8F7] py-24 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="h-8 w-2/3 max-w-lg animate-pulse rounded-md bg-white/10" />
-        <div className="mt-4 h-4 w-full max-w-2xl animate-pulse rounded bg-white/10" />
-        <div className="mt-12 min-h-[560px] animate-pulse rounded-2xl bg-white/5 ring-1 ring-white/10" />
+        <div className="h-8 w-2/3 max-w-lg animate-pulse rounded-md bg-surface" />
+        <div className="mt-4 h-4 w-full max-w-2xl animate-pulse rounded bg-subtle" />
+        <div className="mt-12 min-h-[560px] animate-pulse rounded-[14px] border border-line bg-surface" />
       </div>
     </section>);
 }

@@ -9,15 +9,15 @@ export function Hero() {
     <section id="top" aria-labelledby="hero-heading" className="relative">
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 pb-20 pt-14 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:pb-24 lg:pt-20">
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-accent-ink">Built for cash-on-delivery sellers in Pakistan</p>
+          <p className="text-sm font-semibold text-accent-ink uppercase tracking-wider">Built for cash-on-delivery sellers in Pakistan</p>
           <h1
             id="hero-heading"
-            className="mt-4 text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">
+            className="mt-4 font-display text-[2.5rem] font-bold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]">
             
             Stop losing profits you can’t see.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Profit Leak Analyzer reads your order and courier reports side by side to surface hidden courier
+            Codvera reads your order and courier reports side by side to surface hidden courier
             charges, return-to-origin costs, delayed COD settlements and payouts that don’t add up — each one
             traced back to the rows that support it.
           </p>

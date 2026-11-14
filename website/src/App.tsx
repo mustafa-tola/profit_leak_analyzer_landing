@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -22,7 +22,6 @@ const AppPage = lazy(() =>
   }))
 );
 
-
 interface AppProps {
   initialTheme?: 'light' | 'dark';
 }
@@ -44,21 +43,43 @@ export function App({ initialTheme = 'light' }: AppProps) {
     <BrowserRouter>
       <MotionConfig reducedMotion="user">
         <ScrollManager />
-        <div className="min-h-screen w-full bg-canvas font-sans text-ink antialiased">
-          <Navbar theme={theme} onToggleTheme={() => setTheme((t) => t === 'dark' ? 'light' : 'dark')} />
-          <Suspense fallback={<PageFallback />}>
-            <Routes>
-              <Route path="/app" element={<AppPage isDark={isDark} />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="*" element={<Home isDark={isDark} />} />
-            </Routes>
-          </Suspense>
-          <Footer />
-        </div>
+        <AppShell theme={theme} setTheme={setTheme} isDark={isDark} />
       </MotionConfig>
-    </BrowserRouter>);
+    </BrowserRouter>
+  );
+}
 
+function AppShell({
+  theme,
+  setTheme,
+  isDark,
+}: {
+  theme: 'light' | 'dark';
+  setTheme: React.Dispatch<React.SetStateAction<'light' | 'dark'>>;
+  isDark: boolean;
+}) {
+  const location = useLocation();
+  const isAppRoute = location.pathname.startsWith('/app');
+
+  return (
+    <div className="min-h-screen w-full bg-canvas font-sans text-ink antialiased">
+      {!isAppRoute && (
+        <Navbar
+          theme={theme}
+          onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        />
+      )}
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route path="/app/*" element={<AppPage isDark={isDark} />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="*" element={<Home isDark={isDark} />} />
+        </Routes>
+      </Suspense>
+      {!isAppRoute && <Footer />}
+    </div>
+  );
 }
 
 function PageFallback() {

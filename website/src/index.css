@@ -1,5 +1,5 @@
 /* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
 
 /* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
 @import 'tailwindcss/base';
@@ -8,36 +8,59 @@
 
 /* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
 
+/* ── Codvera Design Tokens (v1.0) ────────────────────────────────────────── */
+/* Colors (light-first, FinTech palette) */
 :root {
-  --canvas: 247 249 252;
+  --codvera-brand-primary: #103E36;   /* Deep Forest */
+  --codvera-brand-action: #087F62;    /* Action Green */
+  --codvera-brand-mint: #DDF5EA;      /* Mint */
+  --codvera-background: #F5F8F7;      /* Cloud canvas */
+  --codvera-surface: #FFFFFF;         /* White cards */
+  --codvera-text-primary: #192B32;    /* Ink */
+  --codvera-text-secondary: #334B5B;  /* Slate */
+  --codvera-border: #DCE7E3;          /* Soft border */
+  --codvera-warning-text: #92400E;    /* Amber dark */
+  --codvera-warning-bg: #FFF4E5;      /* Amber light */
+  --codvera-error-text: #B42318;      /* Error dark */
+  --codvera-error-bg: #FEF3F2;        /* Error light */
+
+  /* RGB channels for alpha compositing (Tailwind) */
+  --canvas: 245 248 247;
   --surface: 255 255 255;
-  --subtle: 240 243 248;
-  --ink: 17 36 58;
-  --muted: 82 98 120;
-  --line: 226 232 240;
-  --accent: 4 120 87;
-  --accent-hover: 6 95 70;
-  --accent-ink: 4 120 87;
-  --accent-soft: 236 253 245;
-  --warn: 180 83 9;
-  --warn-soft: 255 247 237;
+  --subtle: 237 244 241;
+  --ink: 25 43 50;
+  --muted: 51 75 91;
+  --line: 220 231 227;
+  --accent: 8 127 98;
+  --accent-hover: 16 62 54;
+  --accent-ink: 8 127 98;
+  --accent-soft: 221 245 234;
+  --warn: 146 64 14;
+  --warn-soft: 255 244 229;
+  --danger: 180 35 24;
+  --danger-soft: 254 243 242;
   color-scheme: light;
 }
+
 .dark {
-  --canvas: 8 18 31;
-  --surface: 14 29 48;
-  --subtle: 22 41 66;
-  --ink: 238 243 248;
-  --muted: 155 171 192;
-  --line: 34 55 82;
-  --accent: 4 120 87;
-  --accent-hover: 5 150 105;
-  --accent-ink: 52 211 153;
-  --accent-soft: 8 56 44;
+  --canvas: 10 23 21;
+  --surface: 15 34 31;
+  --subtle: 22 46 42;
+  --ink: 236 244 241;
+  --muted: 176 199 192;
+  --line: 41 72 66;
+  --accent: 52 183 143;
+  --accent-hover: 92 212 176;
+  --accent-ink: 92 212 176;
+  --accent-soft: 18 56 47;
   --warn: 251 191 36;
-  --warn-soft: 58 40 12;
+  --warn-soft: 63 44 18;
+  --danger: 248 113 113;
+  --danger-soft: 63 28 28;
   color-scheme: dark;
 }
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
@@ -46,13 +69,164 @@ html {
   html {
     scroll-behavior: auto;
   }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 body {
   margin: 0;
   background-color: rgb(var(--canvas));
   color: rgb(var(--ink));
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'cv11', 'ss01';
+}
+
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.015em;
+  }
+  :focus-visible {
+    outline: 3px solid rgb(var(--accent));
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: rgb(var(--accent-soft));
+    color: rgb(var(--ink));
+  }
+  /* Skip link for keyboard users */
+  #skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: -9999;
+  }
+}
+
+@layer components {
+  /* Structural */
+  .card {
+    @apply rounded-[14px] border border-line bg-surface shadow-soft;
+  }
+  .card-interactive {
+    @apply card transition-colors hover:bg-subtle/60;
+  }
+  .money {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-[9px] bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-[9px] border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-ink shadow-sm transition-colors hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-[9px] px-4 py-2.5 text-sm font-medium text-muted transition-colors hover:bg-subtle hover:text-ink disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30;
+  }
+  .btn-icon {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-[9px] text-ink hover:bg-subtle transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30;
+  }
+  .btn-text {
+    @apply inline-flex items-center gap-1.5 rounded-[9px] px-3 py-2 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-soft/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30;
+  }
+
+  /* Form controls */
+  .form-label {
+    @apply block text-sm font-medium text-ink mb-1.5;
+  }
+  .form-label-required::after {
+    content: ' *';
+    color: var(--danger);
+  }
+  .form-input {
+    @apply w-full rounded-[9px] border border-line bg-canvas px-3 py-2.5 text-sm text-ink shadow-sm transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:bg-subtle/50;
+  }
+  .form-select {
+    @apply form-input appearance-none bg-canvas;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23334B5B'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M19 9l-7 7-7-7'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 2.75rem;
+  }
+  .form-hint {
+    @apply mt-1 block text-xs text-muted;
+  }
+  .form-error {
+    @apply mt-1 block text-sm text-danger;
+  }
+
+  /* Badges & pills */
+  .badge {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold tracking-wide;
+  }
+  .badge-clean { @apply badge border-accent/30 bg-accent-soft text-accent-ink; }
+  .badge-partial { @apply badge border-warn/30 bg-warn-soft text-warn; }
+  .badge-error { @apply badge border-danger/30 bg-danger-soft text-danger; }
+  .badge-neutral { @apply badge border-line bg-subtle text-muted; }
+
+  /* Table */
+  .table-wrap {
+    @apply overflow-x-auto border border-line rounded-[14px] bg-surface shadow-soft;
+  }
+  .table {
+    @apply w-full text-left text-sm border-collapse;
+  }
+  .table th {
+    @apply border-b border-line bg-canvas/70 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted;
+  }
+  .table td {
+    @apply border-b border-line px-4 py-3.5 text-ink;
+  }
+  .table tr:hover td {
+    @apply bg-subtle/30;
+  }
+
+  /* Alerts */
+  .alert {
+    @apply flex items-start gap-3 rounded-[14px] px-4 py-3.5 text-sm sm:px-5;
+  }
+  .alert-info { @apply alert border-accent/30 bg-accent-soft text-accent-ink; }
+  .alert-warn { @apply alert border-warn/30 bg-warn-soft text-warn; }
+  .alert-error { @apply alert border-danger/30 bg-danger-soft text-danger; }
+  .alert-success { @apply alert border-accent/30 bg-accent-soft text-accent-ink; }
+
+  /* Empty state */
+  .empty-state {
+    @apply flex flex-col items-center justify-center rounded-[14px] border border-dashed border-line bg-canvas p-10 text-center;
+  }
+}
+
+/* ── Layout helpers ─────────────────────────────────────────────────────── */
+.sidebar {
+  @apply flex-shrink-0 border-r border-line/30 bg-[#0A4236] text-white w-72 lg:w-80 flex flex-col;
+}
+.sidebar-brand {
+  @apply flex items-center gap-2.5 px-5 py-5 border-b border-line/30;
+}
+.sidebar-nav {
+  @apply flex-1 overflow-y-auto px-3 space-y-1;
+}
+.sidebar-footer {
+  @apply border-t border-line/30 px-3 py-4 space-y-3;
+}
+.page-header {
+  @apply flex-shrink-0 border-b border-line bg-surface px-5 py-4 sm:px-6 sm:py-5 flex items-center justify-between;
+}
+.page-container {
+  @apply flex-1 overflow-y-auto p-5 sm:p-6 lg:p-8;
+}
+.page-grid {
+  @apply grid gap-5 sm:gap-6 lg:grid-cols-12 lg:gap-6;
 }
