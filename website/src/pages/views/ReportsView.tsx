@@ -48,12 +48,12 @@ export function ReportsView() {
                   <span>PKR 0</span>
                   <span>PKR 800K</span>
                 </div>
-                <div className="mt-3 flex items-center gap-2">
-                  <div className="flex items-center gap-1.5">
+                <div className="mt-3 flex flex-wrap items-center gap-4 text-[10px] text-muted">
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
                     <span className="h-2 w-2 rounded-full bg-[#0A4236]" aria-hidden="true" />
                     <span>Expected Receivable</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
                     <span className="h-2 w-2 rounded-full bg-[#087F62]" aria-hidden="true" />
                     <span>Verified Payments</span>
                   </div>
