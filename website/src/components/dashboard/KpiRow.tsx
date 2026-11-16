@@ -1,3 +1,4 @@
+import { Badge } from '../ui/Badge';
 import { kpis as sampleKpis, type Kpi } from '../../data/dashboard';
 
 export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
@@ -8,7 +9,7 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
         return (
           <div
             key={k.id}
-            className={`min-w-0 rounded-2xl border p-4 sm:p-5 ${
+            className={`min-w-0 rounded-[14px] border p-4 sm:p-5 ${
               provisional
                 ? 'border-warn/25 bg-warn-soft/45'
                 : 'border-line bg-surface shadow-sm'
@@ -16,11 +17,7 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
           >
             <dt className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1.5">
               <span className="min-w-0 flex-1 text-sm font-medium leading-snug text-muted">{k.label}</span>
-              {provisional ? (
-                <span className="shrink-0 rounded-full border border-warn/30 bg-surface/70 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warn">
-                  Provisional
-                </span>
-              ) : null}
+              {provisional ? <Badge variant="partial">Provisional</Badge> : null}
             </dt>
             <dd
               className={`mt-3 font-display font-semibold tracking-tight text-ink money [overflow-wrap:anywhere] ${

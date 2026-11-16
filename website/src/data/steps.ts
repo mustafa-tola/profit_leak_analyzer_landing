@@ -1,29 +1,34 @@
 export type StepIcon = 'upload' | 'analyze' | 'identify' | 'download';
 
-export type Step = {icon: StepIcon;title: string;description: string;};
+export type Step = {
+  icon: StepIcon;
+  title: string;
+  description: string;
+};
 
 export const steps: Step[] = [
-{
-  icon: 'upload',
-  title: 'Upload order and courier files',
-  description:
-  'Add your store’s order export and your courier’s CSV or XLSX report. Map columns once — the layout is remembered.'
-},
-{
-  icon: 'analyze',
-  title: 'Analyze transactions',
-  description:
-  'Orders are matched to shipments by tracking number and checked for duplicates, missing IDs and invalid amounts.'
-},
-{
-  icon: 'identify',
-  title: 'Identify potential discrepancies',
-  description:
-  'Rules compare expected and actual remittances, charges and settlement terms. Anything uncertain stays provisional.'
-},
-{
-  icon: 'download',
-  title: 'Download evidence-backed reports',
-  description:
-  'Export PDF or CSV reports with date ranges, assumptions and row citations you can share with your courier.'
-}];
+  {
+    icon: 'upload',
+    title: 'Upload your exports',
+    description:
+      'Add Orders, Shipments, and Settlements CSV files for the same seller. Allocations are optional.',
+  },
+  {
+    icon: 'analyze',
+    title: 'Validate and reconcile',
+    description:
+      'Codvera checks required fields, matches records, and computes expected vs verified payment outcomes.',
+  },
+  {
+    icon: 'identify',
+    title: 'Review exceptions',
+    description:
+      'See outstanding receivables and evidence-backed exceptions flagged for investigation, with clear quality labels.',
+  },
+  {
+    icon: 'download',
+    title: 'Track run history',
+    description:
+      'Open previous runs in your seller-scoped workspace to compare results and follow up on findings.',
+  },
+];

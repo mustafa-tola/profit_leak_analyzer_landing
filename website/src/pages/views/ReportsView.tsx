@@ -9,8 +9,8 @@ interface ReportsViewProps {
 export function ReportsView({ run }: ReportsViewProps) {
   if (!run) {
     return (
-      <div className="rounded-lg border border-dashed border-line bg-surface p-10 text-center">
-        <h2 className="font-display text-lg font-semibold text-ink">No analysis selected</h2>
+      <div className="empty-state">
+        <h2 className="mt-4 font-display text-lg font-semibold text-ink">No analysis selected</h2>
         <p className="mt-1 text-sm text-muted">Open a run from Dashboard or History to view the report.</p>
       </div>
     );

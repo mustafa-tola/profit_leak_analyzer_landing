@@ -9,8 +9,8 @@ interface SettlementsViewProps {
 export function SettlementsView({ run }: SettlementsViewProps) {
   if (!run) {
     return (
-      <div className="rounded-lg border border-dashed border-line bg-surface p-10 text-center">
-        <h2 className="font-display text-lg font-semibold text-ink">No analysis selected</h2>
+      <div className="empty-state">
+        <h2 className="mt-4 font-display text-lg font-semibold text-ink">No analysis selected</h2>
         <p className="mt-1 text-sm text-muted">Open a run from Dashboard or History to view settlement details.</p>
       </div>
     );
@@ -25,7 +25,7 @@ export function SettlementsView({ run }: SettlementsViewProps) {
       </div>
       <div className="grid gap-5 lg:grid-cols-2">
         <SettlementBreakdown slices={data.settlementStatus} label={data.settlementLabel} />
-        <div className="rounded-xl border border-line bg-surface p-5 shadow-soft">
+        <div className="card p-5">
           <h3 className="font-display text-base font-semibold text-ink">Run KPIs</h3>
           <dl className="mt-4 space-y-3 text-sm">
             {Object.entries(run.kpis_pkr).map(([k, v]) => (

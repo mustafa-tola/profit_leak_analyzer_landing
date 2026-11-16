@@ -25,18 +25,18 @@ export function HistoryView({ runs, selectedRunId, onSelectRun, loading, onRefre
       </div>
 
       {loading && runs.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-line bg-[#F7F9F8] p-10 text-center text-sm text-muted">Loading runs…</div>
+        <div className="rounded-lg border border-dashed border-line bg-canvas p-10 text-center text-sm text-muted">Loading runs…</div>
       ) : runs.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-line bg-[#F7F9F8] p-10 text-center">
-          <History className="mx-auto h-12 w-12 text-[#B8CBD4]" aria-hidden="true" />
+        <div className="rounded-lg border border-dashed border-line bg-canvas p-10 text-center">
+          <History className="mx-auto h-12 w-12 text-muted" aria-hidden="true" />
           <h2 className="mt-4 font-display text-xl font-semibold text-ink">No runs yet</h2>
           <p className="mt-1 text-sm text-muted">Upload CSV files to create your first analysis.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-line bg-surface">
-          <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+        <div className="table-wrap overflow-x-auto">
+          <table className="table min-w-[760px]">
             <thead>
-              <tr className="border-b border-line bg-[#F7F9F8] text-xs font-semibold uppercase tracking-wide text-muted">
+              <tr>
                 <th scope="col" className="px-4 py-3">Run</th>
                 <th scope="col" className="px-4 py-3 text-right">Expected</th>
                 <th scope="col" className="px-4 py-3 text-right">Verified paid</th>
@@ -51,7 +51,7 @@ export function HistoryView({ runs, selectedRunId, onSelectRun, loading, onRefre
                 const selected = run.run_id === selectedRunId;
                 const quality = run.analysis_quality === 'CLEAN' ? 'clean' : run.analysis_quality === 'NO_VALID_SETTLEMENTS' ? 'error' : 'partial';
                 return (
-                  <tr key={run.run_id} className={`transition-colors ${selected ? 'bg-[#F0FBF7]' : 'hover:bg-[#F5F8F7]/50'}`}>
+                  <tr key={run.run_id} className={`transition-colors ${selected ? 'bg-accent-soft/40' : ''}`}>
                     <td className="px-4 py-3.5">
                       <div className="font-medium text-ink">{run.run_id.slice(0, 8)}</div>
                       <div className="text-[11px] text-muted">{run.seller_id} · as of {run.as_of_date ?? '—'}</div>

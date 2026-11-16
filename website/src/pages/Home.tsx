@@ -14,14 +14,14 @@ const DashboardPreview = lazy(() =>
   }))
 );
 
-type HomeProps = {isDark: boolean;};
+type HomeProps = { isDark: boolean };
 
 export function Home({ isDark }: HomeProps) {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('free');
 
   useDocumentMeta(
-    'Codvera — COD Reconciliation & Financial Intelligence',
-    'Every COD rupee, accounted for. Reconcile courier settlements, identify payment discrepancies, and understand outstanding receivables in one financial workspace.'
+    'Codvera — COD Reconciliation & Settlement Intelligence',
+    'Every COD rupee, accounted for. Reconcile courier settlements, track verified payments and outstanding receivables, and review evidence-backed exceptions in one workspace.'
   );
 
   return (
@@ -35,8 +35,8 @@ export function Home({ isDark }: HomeProps) {
       <Pricing onSelectPlan={setSelectedPlan} />
       <FaqSection />
       <LeadForm plan={selectedPlan} onPlanChange={setSelectedPlan} />
-    </main>);
-
+    </main>
+  );
 }
 
 function DashboardPreviewFallback() {
@@ -51,5 +51,6 @@ function DashboardPreviewFallback() {
         <div className="mt-4 h-4 w-full max-w-2xl animate-pulse rounded bg-subtle" />
         <div className="mt-12 min-h-[560px] animate-pulse rounded-[14px] border border-line bg-surface" />
       </div>
-    </section>);
+    </section>
+  );
 }

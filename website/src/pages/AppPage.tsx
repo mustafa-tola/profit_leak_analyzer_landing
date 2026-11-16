@@ -72,7 +72,7 @@ export function AppPage({ isDark, theme, setTheme }: { isDark: boolean; theme: '
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F8F7]">
+    <main className="min-h-screen bg-[rgb(var(--canvas))]">
       <SignedOut>
         <Navbar theme={theme} onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} />
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:py-16">
@@ -239,7 +239,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
         <aside className="sidebar w-72">
           <div className="sidebar-brand">
             <LogoMark />
-            <span className="font-display text-xl font-semibold tracking-tight text-[#F5F8F7]">codvera</span>
+            <span className="font-display text-xl font-semibold tracking-tight text-[rgb(var(--canvas))]">codvera</span>
           </div>
           <nav className="sidebar-nav" aria-label="Main navigation">
             {SIDEBAR_ITEMS.map((item) => {
@@ -251,7 +251,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
                   type="button"
                   onClick={() => handleViewChange(item.id)}
                   className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${
-                    active ? 'bg-[#DDF5EA] text-[#0A4236] shadow-sm' : 'text-[#B8CBD4] hover:bg-[#11564B]/50 hover:text-white'
+                    active ? 'bg-accent-soft text-accent-ink shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink'
                   }`}
                   aria-current={active ? 'page' : undefined}
                 >
@@ -263,19 +263,19 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
             })}
           </nav>
           <div className="sidebar-footer">
-            <button type="button" onClick={() => handleViewChange('settings')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'settings' ? 'bg-[#DDF5EA] text-[#0A4236] shadow-sm' : 'text-[#B8CBD4] hover:bg-[#11564B]/50 hover:text-white'}`}>
+            <button type="button" onClick={() => handleViewChange('settings')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'settings' ? 'bg-accent-soft text-accent-ink shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink'}`}>
               <SettingsIcon className="h-5 w-5" aria-hidden="true" />Settings
             </button>
-            <button type="button" onClick={() => handleViewChange('help')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'help' ? 'bg-[#DDF5EA] text-[#0A4236] shadow-sm' : 'text-[#B8CBD4] hover:bg-[#11564B]/50 hover:text-white'}`}>
+            <button type="button" onClick={() => handleViewChange('help')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'help' ? 'bg-accent-soft text-accent-ink shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink'}`}>
               <HelpIcon className="h-5 w-5" aria-hidden="true" />Help & Support
             </button>
           </div>
           <div className="border-t border-line/30 px-4 py-4">
-            <div className="flex items-center gap-3 rounded-[14px] bg-[#11564B]/40 px-3 py-3">
-              <UserIcon className="h-5 w-5 shrink-0 text-[#B8CBD4]" aria-hidden="true" />
+            <div className="flex items-center gap-3 rounded-[14px] bg-accent/20 px-3 py-3">
+              <UserIcon className="h-5 w-5 shrink-0 text-muted" aria-hidden="true" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-[#F5F8F7]">{accountLabel}</p>
-                <p className="text-xs text-[#B8CBD4]">{orgLabel}</p>
+                <p className="truncate text-sm font-medium text-[rgb(var(--canvas))]">{accountLabel}</p>
+                <p className="text-xs text-muted">{orgLabel}</p>
               </div>
             </div>
           </div>
@@ -292,7 +292,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
         />
         <div className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-8">
           {error && (
-            <div className="mb-6 flex items-start gap-2 rounded-[14px] border border-[#B42318]/30 bg-[#FEF3F2] px-4 py-3.5 text-sm text-[#B42318] sm:px-5" role="alert">
+            <div className="mb-6 flex items-start gap-2 rounded-[14px] border border-danger/30 bg-danger-soft px-4 py-3.5 text-sm text-danger sm:px-5" role="alert">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
               <span>{error}</span>
             </div>

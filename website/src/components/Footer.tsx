@@ -3,7 +3,7 @@ import { Logo } from './Logo';
 import { navLinks } from '../data/navigation';
 
 const linkClass =
-'text-sm text-muted transition-colors duration-150 ease-out hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm';
+  'text-sm text-muted transition-colors duration-150 ease-out hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm';
 
 export function Footer() {
   return (
@@ -12,32 +12,31 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
-            Financial analytics for Pakistani cash-on-delivery sellers. Find hidden courier costs, RTO losses and
-            potential settlement discrepancies — with the evidence to back them.
+            COD reconciliation and settlement intelligence for Pakistani sellers. Track expected vs verified payments,
+            outstanding receivables, and evidence-backed exceptions in one workspace.
           </p>
         </div>
 
         <nav aria-label="Product">
           <h2 className="text-sm font-semibold text-ink">Product</h2>
           <ul className="mt-4 space-y-3">
-            {navLinks.map((l) =>
-            <li key={l.href}>
-                <Link to={`/${l.href}`} className={linkClass}>
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <Link to={l.href.startsWith('#') ? `/${l.href}` : `/${l.href}`} className={linkClass}>
                   {l.label}
                 </Link>
               </li>
-            )}
+            ))}
           </ul>
         </nav>
 
         <div>
-          <h2 className="text-sm font-semibold text-ink">Prototype notice</h2>
+          <h2 className="text-sm font-semibold text-ink">Get started</h2>
           <p className="mt-4 text-sm leading-relaxed text-muted">
-            This is an academic demo. Dashboard figures are illustrative, and no live contact channels or business
-            address are published.
+            Upload your order, shipment, and settlement CSVs to generate a reconciliation run with clear, auditable results.
           </p>
-          <Link to="/#get-started" className={`mt-4 inline-block ${linkClass}`}>
-            Try the demo form
+          <Link to="/app" className="mt-4 inline-block text-sm font-semibold text-accent-ink underline-offset-4 hover:underline">
+            Open Codvera workspace
           </Link>
         </div>
 
@@ -60,10 +59,10 @@ export function Footer() {
 
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-[12px] text-muted sm:px-6 md:flex-row md:justify-between">
-          <p>© 2026 Codvera. All rights reserved.</p>
-          <p>Dashboard figures on this site are sample data. Potential discrepancies are not confirmed losses.</p>
+          <p>© {new Date().getFullYear()} Codvera. All rights reserved.</p>
+          <p>Sample dashboard figures are illustrative. Flagged discrepancies are provisional and not confirmed losses.</p>
         </div>
       </div>
-    </footer>);
-
+    </footer>
+  );
 }

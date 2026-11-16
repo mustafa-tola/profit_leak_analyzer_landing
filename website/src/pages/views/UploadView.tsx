@@ -41,7 +41,8 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
     setFiles({});
     setError(null);
     (Object.keys(inputs) as SlotKey[]).forEach((k) => {
-      if (inputs[k].current) inputs[k].current!.value = '';
+      const el = inputs[k].current;
+      if (el) el.value = '';
     });
   };
 
@@ -70,11 +71,11 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
       <div className="space-y-5">
         <div className="flex flex-col gap-1 border-b border-line pb-4">
           <ol className="flex items-center gap-4 text-xs font-medium text-muted sm:gap-8">
-            <li className="flex items-center gap-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0A4236] text-white">1</span><span className="font-bold text-[#0A4236]">Upload</span></li>
-            <span className="h-px w-8 bg-[#DCE7E3]" aria-hidden="true" />
-            <li className="flex items-center gap-2 opacity-60"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#DCE7E3]">2</span><span>Validate</span></li>
-            <span className="h-px w-8 bg-[#DCE7E3]" aria-hidden="true" />
-            <li className="flex items-center gap-2 opacity-60"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[#DCE7E3]">3</span><span>Analyze</span></li>
+            <li className="flex items-center gap-2"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-white">1</span><span className="font-bold text-accent-ink">Upload</span></li>
+            <span className="h-px w-8 bg-line" aria-hidden="true" />
+            <li className="flex items-center gap-2 opacity-60"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line">2</span><span>Validate</span></li>
+            <span className="h-px w-8 bg-line" aria-hidden="true" />
+            <li className="flex items-center gap-2 opacity-60"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line">3</span><span>Analyze</span></li>
           </ol>
           <p className="mt-2 text-sm font-medium text-ink">Add required CSV files for reconciliation</p>
         </div>
@@ -84,9 +85,9 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
         </Alert>
 
         {error && (
-          <div className="rounded-lg border border-[#B42318]/30 bg-[#FEF3F2] px-4 py-3 text-sm text-[#B42318]" role="alert">
+          <Alert variant="error" title="Upload error">
             {error}
-          </div>
+          </Alert>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -94,17 +95,17 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
             {SLOTS.map((slot) => {
               const file = files[slot.key];
               return (
-                <div key={slot.key} className="rounded-lg border border-line bg-surface p-4 shadow-soft">
+                <div key={slot.key} className="card p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <p className="font-medium text-ink">
                         {slot.label}{' '}
-                        {slot.required ? <span className="text-[#B42318]">*</span> : <span className="text-xs font-normal text-muted">(optional)</span>}
+                        {slot.required ? <span className="text-danger">*</span> : <span className="text-xs font-normal text-muted">(optional)</span>}
                       </p>
                       <p className="mt-0.5 text-sm text-muted">{slot.hint}</p>
                       {file && (
                         <p className="mt-2 flex items-center gap-2 text-sm text-ink">
-                          <FileSpreadsheet className="h-4 w-4 text-[#0A4236]" aria-hidden="true" />
+                          <FileSpreadsheet className="h-4 w-4 text-accent-ink" aria-hidden="true" />
                           <span className="truncate font-medium">{file.name}</span>
                           <span className="shrink-0 text-muted">({(file.size / 1024).toFixed(1)} KB)</span>
                         </p>
@@ -123,7 +124,7 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
                         {file ? 'Change file' : 'Choose file'}
                       </Button>
                       {file && (
-                        <button type="button" className="text-sm font-medium text-muted hover:text-[#B42318]" onClick={() => setFile(slot.key, undefined)}>
+                        <button type="button" className="text-sm font-medium text-muted hover:text-danger" onClick={() => setFile(slot.key, undefined)}>
                           Remove
                         </button>
                       )}

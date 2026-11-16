@@ -1,6 +1,8 @@
+import { SectionHeader } from './SectionHeader';
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PlusIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { faqs } from '../data/faqs';
 
 export function FaqSection() {
@@ -10,19 +12,18 @@ export function FaqSection() {
     <section id="faqs" aria-labelledby="faqs-heading" className="border-t border-line bg-surface py-24 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
-          <h2 id="faqs-heading" className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-            Questions sellers ask first
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">
-            This academic prototype has no live support channel. Use the{' '}
-            <a
-              href="#get-started"
-              className="font-medium text-accent-ink underline decoration-accent-ink/30 underline-offset-4 hover:decoration-accent-ink">
-              
-              demo request form
-            </a>{' '}
-            to preview the flow.
-          </p>
+          <SectionHeader
+            id="faqs-heading"
+            title="Questions sellers ask first"
+            description="Get answers on supported couriers, required files, data handling, and how discrepancies are flagged."
+            aside={
+              <Link
+                to="/app"
+                className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-accent-ink shadow-sm hover:bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                Open workspace →
+              </Link>
+            }
+          />
         </div>
 
         <ul className="divide-y divide-line border-y border-line">

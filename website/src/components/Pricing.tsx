@@ -22,7 +22,7 @@ const palette = {
     card: 'border border-line bg-surface',
     title: 'text-ink',
     body: 'text-muted',
-    note: 'text-warn',
+    note: 'text-muted',
     divider: 'border-line',
     check: 'text-accent-ink',
     feature: 'text-ink',
@@ -35,13 +35,8 @@ export function Pricing({ onSelectPlan }: PricingProps) {
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <SectionHeader
           id="pricing-heading"
-          title="Pricing that scales with your order volume"
-          description="Start with a free analysis. Upgrade when you want ongoing settlement tracking and reports."
-          aside={
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-warn/30 bg-warn-soft px-3 py-1.5 text-[12px] font-medium text-warn">
-              Proposed pricing — subject to change at launch
-            </span>
-          }
+          title="Simple pricing that scales with your order volume"
+          description="Start free with a reconciliation run, then upgrade for higher volumes, ongoing tracking, and team workflows."
         />
 
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
@@ -75,11 +70,10 @@ function PricingCard({ tier, onSelect }: { tier: PricingTier; onSelect: () => vo
         </span>
         <span className={`text-sm ${c.body}`}>/ month</span>
       </div>
-      <p className={`mt-1 text-[12px] ${c.note}`}>Proposed price</p>
 
       <div className="mt-7">
         <ButtonLink
-          href="#get-started"
+          href={tier.id === 'free' ? '/app' : '#get-started'}
           fullWidth
           variant={tier.featured ? 'primary' : 'secondary'}
           onClick={onSelect}

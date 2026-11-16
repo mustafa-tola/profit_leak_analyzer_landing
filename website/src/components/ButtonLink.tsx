@@ -26,8 +26,8 @@ export function ButtonLink({
   children,
   onClick
 }: ButtonLinkProps) {
-  const className = `inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg font-semibold transition-[background-color,transform] duration-150 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ${
-  size === 'lg' ? 'h-12 px-6 text-[15px]' : 'h-10 px-4 text-sm'} ${
+  const className = `inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[9px] font-semibold transition-[background-color,transform] duration-150 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 disabled:pointer-events-none disabled:opacity-60 ${
+  size === 'lg' ? 'h-11 px-4 py-3 text-sm font-semibold' : 'h-10 px-3 py-2.5 text-sm font-semibold'} ${
   fullWidth ? 'w-full' : ''} ${variantClasses[variant]}`;
 
   if (href.startsWith('/')) {
