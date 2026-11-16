@@ -34,6 +34,11 @@ export function LeadForm({ plan, onPlanChange }: LeadFormProps) {
     if (Object.keys(next).length > 0) {
       return;
     }
+    const subject = encodeURIComponent(`Codvera Demo Request – ${selectedTier.name}`);
+    const body = encodeURIComponent(
+      `Email: ${email.trim()}\nPlan: ${selectedTier.name} (${selectedTier.price})\nMonthly order volume: ${volume}\n\nA potential customer has requested a demo of Codvera. Please follow up.`,
+    );
+    window.location.href = `mailto:sales@codvera.example.com?subject=${subject}&body=${body}`;
     setStatus('submitted');
   };
 

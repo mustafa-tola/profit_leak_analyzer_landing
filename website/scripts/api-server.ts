@@ -39,6 +39,25 @@ loadLocalEnv();
 const host = process.env.HOST?.trim() || '127.0.0.1';
 const port = Number(process.env.PORT ?? 8787);
 
+// ── Rate limiting (in-memory, per seller + IP) ──────────────────────────────
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 60; // 60 requests per minute per key
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+function rateLimit(key: string): { allowed: boolean; remaining: number; resetAt: number } {
+  const now = Date.now();
+  const entry = rateLimitStore.get(key);
+  if (!entry || now >= entry.resetAt) {
+    rateLimitStore.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetAt: now + RATE_LIMIT_WINDOW_MS };
+  }
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { allowed: false, remaining: 0, resetAt: entry.resetAt };
+  }
+  entry.count += 1;
+  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - entry.count, resetAt: entry.resetAt };
+}
+
 function parseList(value: string | undefined): string[] | undefined {
   const items = value
     ?.split(',')
@@ -132,6 +151,24 @@ const server = createServer(async (request, response) => {
     : request.headers.origin ?? null;
   const corsHeaders = resolveCorsHeaders(origin, { allowedOrigins });
   Object.entries(corsHeaders).forEach(([key, value]) => response.setHeader(key, value));
+
+  // Rate limit per client IP (fallback to 'unknown')
+  const clientIp = request.headers['x-forwarded-for'] ?? request.headers['x-real-ip'] ?? 'unknown';
+  const clientKey = Array.isArray(clientIp) ? clientIp[0] : clientIp;
+  const rate = rateLimit(String(clientKey));
+  response.setHeader('ratelimit-limit', String(RATE_LIMIT_MAX_REQUESTS));
+  response.setHeader('ratelimit-remaining', String(rate.remaining));
+  response.setHeader('ratelimit-reset', String(Math.ceil(rate.resetAt / 1000)));
+  if (!rate.allowed) {
+    response.statusCode = 429;
+    response.setHeader('content-type', 'application/json; charset=utf-8');
+    response.end(
+      JSON.stringify({
+        error: { code: 'RATE_LIMITED', message: 'Too many requests. Please try again later.' },
+      }),
+    );
+    return;
+  }
 
   if (request.method === 'OPTIONS') {
     response.statusCode = 204;

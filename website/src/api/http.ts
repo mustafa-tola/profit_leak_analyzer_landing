@@ -60,6 +60,24 @@ function ingestionStatus(code: string): number {
 }
 
 /**
+ * Recursively strip raw/audit fields from the engine result before exposing it
+ * publicly. `raw` fields contain verbatim source row data and must never be
+ * returned through the public API.
+ */
+function stripRawFields(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(stripRawFields);
+  if (value && typeof value === 'object') {
+    const out: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+      if (key === 'raw') continue;
+      out[key] = stripRawFields(val);
+    }
+    return out;
+  }
+  return value;
+}
+
+/**
  * Public representation of an analysis run. Source rows are audit evidence and
  * are deliberately excluded from API responses.
  */
@@ -83,7 +101,7 @@ export function toPublicAnalysisRun(stored: PersistedAnalysisRun) {
     counts: stored.counts,
     verification: stored.verification,
     source_files: stored.source_files,
-    result: stored.result,
+    result: stripRawFields(stored.result),
   };
 }
 
@@ -139,7 +157,18 @@ export function createAnalyzeHandler(deps: AnalyzeHandlerDeps): AnalyzeHandler {
             { path: FILE_FIELDS[source], message: 'Expected a CSV file' },
           ]);
         }
-        files[source] = value;
+        const file = value as File;
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+          throw new RequestValidationError(`${FILE_FIELDS[source]} must be a CSV file`, [
+            { path: FILE_FIELDS[source], message: 'File must have a .csv extension' },
+          ]);
+        }
+        if (file.type && !file.type.includes('csv') && !file.type.includes('text/plain')) {
+          throw new RequestValidationError(`${FILE_FIELDS[source]} must be a CSV file`, [
+            { path: FILE_FIELDS[source], message: 'Invalid file type. Expected text/csv.' },
+          ]);
+        }
+        files[source] = file;
       }
 
       const missing = REQUIRED_FILE_SOURCES.filter((source) => !files[source]);
@@ -267,9 +296,16 @@ export function createListAnalysesHandler(deps: ReadHandlerDeps): ListAnalysesHa
     const identity = await readIdentity(deps, request);
     if (identity instanceof Response) return identity;
 
+    const url = new URL(request.url);
+    const limit = Math.min(Math.max(Number(url.searchParams.get('limit') ?? '20'), 1), 100);
+    const cursor = url.searchParams.get('cursor') ?? undefined;
+
     try {
       const runs = await deps.repository.listSummaries(identity.sellerId);
-      return json(200, { data: runs });
+      const startIndex = cursor ? runs.findIndex((r) => r.run_id === cursor) + 1 : 0;
+      const page = runs.slice(startIndex, startIndex + limit);
+      const nextCursor = page.length === limit && startIndex + limit < runs.length ? page[page.length - 1].run_id : undefined;
+      return json(200, { data: page, next_cursor: nextCursor, count: runs.length });
     } catch {
       return json(500, errorBody('INTERNAL_ERROR', 'Analyses could not be listed'));
     }

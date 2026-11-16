@@ -35,20 +35,77 @@ export interface PublicAnalysisRun extends PublicAnalysisSummary {
   result: Record<string, unknown>;
 }
 
+const MAX_RETRIES = 3;
+const RETRY_BASE_MS = 300;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function request<T>(path: string, token: string | null, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);
   if (token) headers.set('Authorization', `Bearer ${token}`);
-  const res = await fetch(`${API_URL}${path}`, { ...init, headers });
-  const json = (await res.json().catch(() => ({}))) as T & ApiErrorBody;
-  if (!res.ok) {
-    const message = json.error?.message ?? `Request failed (${res.status})`;
-    const err = new Error(message) as Error & { status?: number; code?: string; details?: unknown };
-    err.status = res.status;
-    err.code = json.error?.code;
-    err.details = json.error?.details;
-    throw err;
+
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetch(`${API_URL}${path}`, { ...init, headers });
+      const json = (await res.json().catch(() => ({}))) as T & ApiErrorBody;
+
+      // 401 means session expired — do not retry, surface to caller
+      if (res.status === 401) {
+        const err = new Error(json.error?.message ?? 'Session expired') as Error & {
+          status?: number;
+          code?: string;
+          details?: unknown;
+        };
+        err.status = 401;
+        err.code = json.error?.code;
+        err.details = json.error?.details;
+        throw err;
+      }
+
+      if (!res.ok) {
+        // Retry on 5xx server errors only
+        if (res.status >= 500 && attempt < MAX_RETRIES - 1) {
+          const err = new Error(json.error?.message ?? `Request failed (${res.status})`) as Error & {
+            status?: number;
+            code?: string;
+            details?: unknown;
+            retryable?: boolean;
+          };
+          err.status = res.status;
+          err.code = json.error?.code;
+          err.details = json.error?.details;
+          err.retryable = true;
+          lastError = err;
+          await sleep(RETRY_BASE_MS * (attempt + 1));
+          continue;
+        }
+        const err = new Error(json.error?.message ?? `Request failed (${res.status})`) as Error & {
+          status?: number;
+          code?: string;
+          details?: unknown;
+        };
+        err.status = res.status;
+        err.code = json.error?.code;
+        err.details = json.error?.details;
+        throw err;
+      }
+      return json;
+    } catch (err) {
+      const e = err as Error & { retryable?: boolean; status?: number };
+      if (e.status === 401) throw err;
+      if (!e.retryable && !(err as Error).message.includes('fetch')) throw err;
+      lastError = err as Error;
+      if (attempt < MAX_RETRIES - 1) {
+        await sleep(RETRY_BASE_MS * (attempt + 1));
+        continue;
+      }
+      throw err;
+    }
   }
-  return json;
+  throw lastError ?? new Error('Request failed');
 }
 
 export async function listAnalyses(token: string): Promise<PublicAnalysisSummary[]> {

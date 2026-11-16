@@ -3,7 +3,7 @@ import { Badge } from '../ui/Badge';
 
 const variantMap: Record<FindingStatus, 'clean' | 'partial' | 'error' | 'neutral' | 'info'> = {
   Provisional: 'partial',
-  'Needs review': 'neutral',
+  'Needs review': 'partial',
   Overdue: 'error',
 };
 

@@ -67,14 +67,14 @@ export function Sidebar({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-md text-[#B8CBD4] hover:text-[#F5F8F7] hover:bg-[#11564B]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DDF5EA]/50"
+            className="p-1.5 rounded-md text-muted hover:text-ink hover:bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
             aria-label="Close navigation"
           >
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
         )}
         <LogoMark />
-        <span className="font-display font-semibold text-xl tracking-tight text-[#F5F8F7]">codvera</span>
+        <span className="font-display font-semibold text-xl tracking-tight text-ink dark:text-white">codvera</span>
       </div>
 
       <nav className="sidebar-nav" aria-label="Main navigation">
@@ -90,8 +90,8 @@ export function Sidebar({
               }}
               className={`w-full flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-medium transition text-left ${
                 active
-                  ? 'bg-[#DDF5EA] text-[#0A4236] shadow-sm'
-                  : 'text-[#B8CBD4] hover:bg-[#11564B]/50 hover:text-white'
+                  ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
+                  : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
               }`}
               aria-current={active ? 'page' : undefined}
             >
@@ -116,8 +116,8 @@ export function Sidebar({
           }}
           className={`w-full flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-medium transition text-left ${
             activeView === 'settings'
-              ? 'bg-[#DDF5EA] text-[#0A4236] shadow-sm'
-              : 'text-[#B8CBD4] hover:bg-[#11564B]/50 hover:text-white'
+              ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
+              : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
           }`}
           aria-current={activeView === 'settings' ? 'page' : undefined}
         >
@@ -132,8 +132,8 @@ export function Sidebar({
           }}
           className={`w-full flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-medium transition text-left ${
             activeView === 'help'
-              ? 'bg-[#DDF5EA] text-[#0A4236] shadow-sm'
-              : 'text-[#B8CBD4] hover:bg-[#11564B]/50 hover:text-white'
+              ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
+              : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
           }`}
           aria-current={activeView === 'help' ? 'page' : undefined}
         >
@@ -143,11 +143,11 @@ export function Sidebar({
       </div>
 
       <div className="px-4 py-4 border-t border-line/30">
-        <div className="flex items-center gap-3 rounded-[14px] px-3 py-3 bg-[#11564B]/40">
-          <User className="h-5 w-5 shrink-0 text-[#B8CBD4]" aria-hidden="true" />
+        <div className="flex items-center gap-3 rounded-[14px] px-3 py-3 bg-accent/20 dark:bg-accent/10">
+          <User className="h-5 w-5 shrink-0 text-muted" aria-hidden="true" />
           <div className="min-w-0">
-            <p className="text-sm font-medium text-[#F5F8F7]">{accountLabel}</p>
-            <p className="text-xs text-[#B8CBD4]">{orgLabel}</p>
+            <p className="text-sm font-medium text-ink dark:text-white">{accountLabel}</p>
+            <p className="text-xs text-muted">{orgLabel}</p>
           </div>
         </div>
       </div>

@@ -150,7 +150,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
         setSelectedRun(null);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load analysis runs');
+      setError(handleApiError(e));
     } finally {
       setLoadingList(false);
     }
@@ -163,7 +163,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
       const detail = await getAnalysis(await token(), runId);
       setSelectedRun(detail);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load analysis run');
+      setError(handleApiError(e));
       setSelectedRun(null);
     } finally {
       setLoadingRun(false);
@@ -179,6 +179,18 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
     if (selectedRunId) void loadRunDetail(selectedRunId);
   }, [selectedRunId, loadRunDetail]);
 
+  const handleApiError = (e: unknown): string => {
+    const err = e instanceof Error ? e : new Error(String(e));
+    const status = (err as Error & { status?: number }).status;
+    if (status === 401 || err.message.includes('Session expired')) {
+      setSelectedRun(null);
+      setSelectedRunId(null);
+      setRuns([]);
+      return 'Your session has expired. Please sign in again.';
+    }
+    return err.message;
+  };
+
   const onAnalyze = async (form: FormData) => {
     setUploading(true);
     setError(null);
@@ -190,7 +202,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
       navigate(VIEW_PATHS.dashboard);
       setView('dashboard');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Upload failed');
+      setError(handleApiError(e));
       throw e;
     } finally {
       setUploading(false);

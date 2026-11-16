@@ -1,5 +1,5 @@
-import React from 'react';
-import { User, ShieldCheck, Bell, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, ShieldCheck, Bell, FileText, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody } from '../../components/ui/Card';
 
@@ -11,6 +11,17 @@ interface SettingsSectionProps {
 }
 
 export function SettingsView() {
+  const [resetConfirm, setResetConfirm] = useState(false);
+
+  const handleReset = () => {
+    if (resetConfirm) {
+      // In a production app this would call an API to clear all runs/uploads.
+      setResetConfirm(false);
+    } else {
+      setResetConfirm(true);
+    }
+  };
+
   return (
     <div className="max-w-2xl space-y-6">
       <SettingsSection
@@ -64,7 +75,18 @@ export function SettingsView() {
               <p className="font-medium text-ink">Reset Workspace</p>
               <p className="text-sm text-muted">Clear all runs, uploads, and cached data. This action cannot be undone.</p>
             </div>
-            <Button variant="danger" size="sm">Reset Workspace</Button>
+            <div className="flex items-center gap-2">
+              {resetConfirm ? (
+                <div className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2">
+                  <AlertCircle className="h-4 w-4 text-danger" aria-hidden="true" />
+                  <span className="text-xs font-medium text-danger">Click again to confirm reset</span>
+                </div>
+              ) : (
+                <Button variant="danger" size="sm" onClick={handleReset}>
+                  Reset Workspace
+                </Button>
+              )}
+            </div>
           </div>
         </CardBody>
       </Card>

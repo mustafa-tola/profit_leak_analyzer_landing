@@ -333,7 +333,12 @@ describe('GET /api/analyses', () => {
     expect(listBody.data[0]).not.toHaveProperty('source_rows');
 
     const otherList = await listHandler(readRequest('OTHER-SELLER'));
-    expect((await otherList.json()) as { data: unknown[] }).toEqual({ data: [] });
+    const otherListBody = (await otherList.json()) as {
+      data: unknown[];
+      next_cursor?: string;
+      count: number;
+    };
+    expect(otherListBody).toEqual({ data: [], next_cursor: undefined, count: 0 });
   });
 
   it('returns 404 for malformed run ids', async () => {

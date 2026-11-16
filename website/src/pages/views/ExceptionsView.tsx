@@ -82,9 +82,9 @@ export function ExceptionsView({ run }: ExceptionsViewProps) {
           </label>
           <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" aria-label="Filter status">
             <option value="All">All statuses</option>
-            <option value="PROVISIONAL">Provisional</option>
-            <option value="OVERDUE">Overdue</option>
-            <option value="REVIEW">Needs review</option>
+            <option value="Provisional">Provisional</option>
+            <option value="Needs review">Needs review</option>
+            <option value="Overdue">Overdue</option>
           </select>
         </div>
       </div>

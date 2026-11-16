@@ -59,7 +59,7 @@ export function Footer() {
 
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-[12px] text-muted sm:px-6 md:flex-row md:justify-between">
-          <p>© {new Date().getFullYear()} Codvera. All rights reserved.</p>
+          <p>© 2026 Codvera. All rights reserved.</p>
           <p>Sample dashboard figures are illustrative. Flagged discrepancies are provisional and not confirmed losses.</p>
         </div>
       </div>

@@ -60,7 +60,12 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
     });
     try {
       await onAnalyze(form);
-      // keep files shown on success? clear for next run is fine
+      setFiles({});
+      setError(null);
+      (Object.keys(inputs) as SlotKey[]).forEach((k) => {
+        const el = inputs[k].current;
+        if (el) el.value = '';
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Analysis failed. Please check your files and try again.');
     }

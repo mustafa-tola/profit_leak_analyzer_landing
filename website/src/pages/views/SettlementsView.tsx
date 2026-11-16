@@ -28,12 +28,21 @@ export function SettlementsView({ run }: SettlementsViewProps) {
         <div className="card p-5">
           <h3 className="font-display text-base font-semibold text-ink">Run KPIs</h3>
           <dl className="mt-4 space-y-3 text-sm">
-            {Object.entries(run.kpis_pkr).map(([k, v]) => (
-              <div key={k} className="flex items-center justify-between gap-3 border-b border-line pb-2 last:border-0">
-                <dt className="text-muted">{k.replace(/_/g, ' ')}</dt>
-                <dd className="font-medium tabular-nums text-ink">{String(v)}</dd>
-              </div>
-            ))}
+            {Object.entries(run.kpis_pkr).map(([k, v]) => {
+              const labelMap: Record<string, string> = {
+                expected_receivable_pkr: 'Expected receivable',
+                verified_paid_pkr: 'Verified paid',
+                verified_paid_paisa_pkr: 'Verified paid',
+                outstanding_receivable_pkr: 'Outstanding receivable',
+                potential_exposure_pkr: 'Potential exposure',
+              };
+              return (
+                <div key={k} className="flex items-center justify-between gap-3 border-b border-line pb-2 last:border-0">
+                  <dt className="text-muted">{labelMap[k] ?? k.replace(/_/g, ' ')}</dt>
+                  <dd className="font-medium tabular-nums text-ink">{String(v)}</dd>
+                </div>
+              );
+            })}
           </dl>
         </div>
       </div>
