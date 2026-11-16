@@ -239,7 +239,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
         <aside className="sidebar w-72">
           <div className="sidebar-brand">
             <LogoMark />
-            <span className="font-display text-xl font-semibold tracking-tight text-[rgb(var(--canvas))]">codvera</span>
+            <span className="font-display text-xl font-semibold tracking-tight text-ink dark:text-white">codvera</span>
           </div>
           <nav className="sidebar-nav" aria-label="Main navigation">
             {SIDEBAR_ITEMS.map((item) => {
@@ -251,7 +251,9 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
                   type="button"
                   onClick={() => handleViewChange(item.id)}
                   className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${
-                    active ? 'bg-accent-soft text-accent-ink shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink'
+                    active
+                      ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
+                      : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
                   }`}
                   aria-current={active ? 'page' : undefined}
                 >
@@ -263,10 +265,10 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
             })}
           </nav>
           <div className="sidebar-footer">
-            <button type="button" onClick={() => handleViewChange('settings')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'settings' ? 'bg-accent-soft text-accent-ink shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink'}`}>
+            <button type="button" onClick={() => handleViewChange('settings')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'settings' ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'}`}>
               <SettingsIcon className="h-5 w-5" aria-hidden="true" />Settings
             </button>
-            <button type="button" onClick={() => handleViewChange('help')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'help' ? 'bg-accent-soft text-accent-ink shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink'}`}>
+            <button type="button" onClick={() => handleViewChange('help')} className={`flex w-full items-center gap-3 rounded-[14px] px-3 py-2.5 text-left text-sm font-medium transition ${view === 'help' ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm' : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'}`}>
               <HelpIcon className="h-5 w-5" aria-hidden="true" />Help & Support
             </button>
           </div>
@@ -274,7 +276,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
             <div className="flex items-center gap-3 rounded-[14px] bg-accent/20 px-3 py-3">
               <UserIcon className="h-5 w-5 shrink-0 text-muted" aria-hidden="true" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-[rgb(var(--canvas))]">{accountLabel}</p>
+                <p className="truncate text-sm font-medium text-ink dark:text-[rgb(var(--canvas))]">{accountLabel}</p>
                 <p className="text-xs text-muted">{orgLabel}</p>
               </div>
             </div>
