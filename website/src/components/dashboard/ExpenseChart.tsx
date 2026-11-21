@@ -1,4 +1,3 @@
-import { BarChart3 } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { monthlyExpenses as sampleExpenses, type MonthlyExpense } from '../../data/dashboard';
 
@@ -7,8 +6,6 @@ type ExpenseChartProps = {
   data?: MonthlyExpense[];
   label?: string;
   sampleLabel?: string;
-  /** When true, do not render sample values as live results. Shows a compact placeholder instead. */
-  demoMode?: boolean;
 };
 
 type TooltipEntry = { name?: string; value?: number; color?: string };
@@ -19,36 +16,13 @@ export function ExpenseChart({
   data = sampleExpenses,
   label = 'Apr – Sep 2026 · PKR thousands',
   sampleLabel = 'sample',
-  demoMode = false,
 }: ExpenseChartProps) {
   const c = isDark
     ? { forward: '#5CBFA0', returns: '#34D399', grid: '#294842', tick: '#B0C7C0', cursor: 'rgba(255,255,255,0.04)' }
     : { forward: '#103E36', returns: '#087F62', grid: '#DCE7E3', tick: '#334B5B', cursor: 'rgba(16,62,54,0.05)' };
 
-  if (demoMode) {
-    return (
-      <section
-        aria-labelledby="trend-heading"
-        className="min-w-0 rounded-2xl border border-dashed border-line bg-surface p-4 shadow-sm sm:p-5 lg:col-span-2"
-      >
-        <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-subtle text-muted">
-            <BarChart3 className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <div>
-            <h3 id="trend-heading" className="font-display text-base font-semibold text-ink">Monthly trend unavailable</h3>
-            <p className="mt-1 text-sm leading-relaxed text-muted">
-              A historical expense series is not available for a single analysis run. Sample trend charts are intentionally hidden to avoid
-              presenting simulated data as live results.
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section aria-labelledby="expenses-heading" className="min-w-0 rounded-2xl border border-line bg-surface p-4 shadow-sm sm:p-5 lg:col-span-2">
+    <section aria-labelledby="expenses-heading" className="min-w-0 rounded-[14px] border border-line bg-surface p-4 shadow-sm sm:p-5 lg:col-span-2">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 id="expenses-heading" className="font-display text-base font-semibold text-ink">Courier expenses by month</h3>

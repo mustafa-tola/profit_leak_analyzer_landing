@@ -4,6 +4,7 @@ import { SectionHeader } from '../SectionHeader';
 import { SampleBadge } from '../SampleBadge';
 import { KpiRow } from './KpiRow';
 import { ExpenseChart } from './ExpenseChart';
+import { RunAnalytics } from './RunAnalytics';
 import { SettlementBreakdown } from './SettlementBreakdown';
 import { CourierTable } from './CourierTable';
 import { FindingsList } from './FindingsList';
@@ -32,8 +33,8 @@ export function DashboardPreview({
   const costDefinition = data.costDefinition ?? sampleCostDefinition;
 
   const body = (
-    <article className={`min-w-0 overflow-hidden rounded-2xl border border-line bg-surface ${embedded ? 'shadow-soft' : 'shadow-lift ring-1 ring-white/10'}`}>
-      <header className="border-b border-line bg-gradient-to-r from-accent-soft/50 via-surface to-surface px-4 py-4 sm:px-6 sm:py-5">
+    <article className={`min-w-0 overflow-hidden rounded-[14px] border border-line bg-surface ${embedded ? 'shadow-soft' : 'shadow-lift ring-1 ring-white/10'}`}>
+      <header className="border-b border-line bg-surface px-4 py-4 sm:px-6 sm:py-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -58,7 +59,7 @@ export function DashboardPreview({
               <button
                 type="button"
                 onClick={onExport}
-                className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-hover"
+                className="inline-flex shrink-0 items-center gap-2 self-start rounded-[9px] bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
               >
                 <Download className="h-4 w-4" />
                 Export summary CSV
@@ -76,7 +77,7 @@ export function DashboardPreview({
         </div>
       </header>
 
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-line bg-surface/60 px-4 py-2.5 text-xs sm:px-6">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-canvas/40 px-4 py-2.5 text-xs sm:px-6">
         <SignalDot tone={qualityTone(data.analysisQuality, live)} label="Data quality" value={qualityShortLabel(data.analysisQuality, live)} />
         <SignalDot tone={data.findings.length > 0 ? 'warn' : 'good'} label="Exceptions" value={`${data.findings.length} provisional`} />
         <SignalDot tone={reconciliationTone(data.analysisQuality, data.findings.length, live)} label="Reconciliation" value={reconciliationLabel(data.analysisQuality, data.findings.length, live)} />
@@ -95,11 +96,12 @@ export function DashboardPreview({
         </div>
       ) : null}
 
-      <div className="min-w-0 space-y-5 bg-canvas p-3 sm:p-5 lg:p-6">
+      <div className="min-w-0 space-y-5 bg-canvas p-4 sm:p-5 lg:p-6">
         <section aria-labelledby={live ? 'kpis-heading-live' : 'kpis-heading-sample'}>
           <div className="mb-3 flex items-end justify-between gap-3">
             <div>
-              <h3 id={live ? 'kpis-heading-live' : 'kpis-heading-sample'} className="font-display text-base font-semibold text-ink sm:text-lg">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Financial position</p>
+              <h3 id={live ? 'kpis-heading-live' : 'kpis-heading-sample'} className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">
                 Financial summary
               </h3>
               <p className="mt-0.5 text-sm text-muted">Expected, verified, and outstanding amounts first; provisional discrepancies are shown separately.</p>
@@ -108,21 +110,33 @@ export function DashboardPreview({
           <KpiRow items={data.kpis} />
         </section>
 
-        <div className="grid min-w-0 gap-5 lg:grid-cols-3">
-          <ExpenseChart
-            isDark={isDark}
-            data={data.monthlyExpenses}
-            label={data.monthlyExpensesLabel}
-            sampleLabel={live ? 'sample preview' : 'sample'}
-            demoMode={live}
+        <div className="grid min-w-0 gap-4 sm:gap-5 lg:grid-cols-3">
+          {live ? (
+            <RunAnalytics
+              couriers={data.courierComparison}
+              findings={data.findings}
+              live
+              id={embedded ? 'run-analytics-embedded' : 'run-analytics-live'}
+            />
+          ) : (
+            <ExpenseChart
+              isDark={isDark}
+              data={data.monthlyExpenses}
+              label={data.monthlyExpensesLabel}
+              sampleLabel="sample"
+            />
+          )}
+          <SettlementBreakdown
+            slices={data.settlementStatus}
+            label={data.settlementLabel}
+            progress={data.settlementProgress}
           />
-          <SettlementBreakdown slices={data.settlementStatus} label={data.settlementLabel} />
         </div>
 
         <CourierTable rows={data.courierComparison} label={data.courierComparisonLabel} />
         <FindingsList items={data.findings} label={data.findingsLabel} />
 
-        <section aria-label="Metric definitions" className="rounded-2xl border border-dashed border-line bg-surface p-4 sm:p-5">
+        <section aria-label="Metric definitions" className="rounded-[14px] border border-dashed border-line bg-surface p-4 sm:p-5">
           <h3 className="font-display text-base font-semibold text-ink">How metrics are calculated</h3>
           <dl className="mt-3 grid gap-4 text-sm leading-relaxed md:grid-cols-2">
             <div className="rounded-xl bg-canvas p-4 ring-1 ring-line/60">

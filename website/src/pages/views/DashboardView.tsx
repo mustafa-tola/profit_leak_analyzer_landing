@@ -16,8 +16,22 @@ interface DashboardViewProps {
 export function DashboardView({ run, isDark, loading, onUploadClick, onHistoryClick, onExport }: DashboardViewProps) {
   if (loading) {
     return (
-      <div className="rounded-[14px] border border-line bg-surface p-10 text-center shadow-soft">
-        <p className="text-sm font-medium text-muted">Loading analysis…</p>
+      <div
+        className="rounded-[14px] border border-line bg-surface p-5 shadow-sm sm:p-6"
+        role="status"
+        aria-live="polite"
+      >
+        <span className="sr-only">Loading analysis…</span>
+        <div className="h-3 w-32 rounded bg-subtle" aria-hidden="true" />
+        <div className="mt-3 h-6 w-64 max-w-full rounded bg-subtle" aria-hidden="true" />
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
+          <div className="h-24 rounded-[14px] border border-line bg-canvas" />
+          <div className="h-24 rounded-[14px] border border-line bg-canvas" />
+          <div className="h-24 rounded-[14px] border border-line bg-canvas" />
+          <div className="h-24 rounded-[14px] border border-line bg-canvas" />
+        </div>
+        <div className="mt-4 h-40 rounded-[14px] border border-line bg-canvas" aria-hidden="true" />
+        <p className="mt-4 text-sm font-medium text-muted">Loading reconciliation results…</p>
       </div>
     );
   }

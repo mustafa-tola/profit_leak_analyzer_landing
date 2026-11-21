@@ -15,9 +15,10 @@ export function CourierTable({
   const maxRto = rows.length ? Math.max(...rows.map((r) => r.rto)) : 0;
 
   return (
-    <section aria-labelledby="courier-heading" className="min-w-0 rounded-2xl border border-line bg-surface shadow-sm">
+    <section aria-labelledby="courier-heading" className="min-w-0 rounded-[14px] border border-line bg-surface shadow-sm">
       <div className="px-4 pt-4 sm:px-5 sm:pt-5">
-        <h3 id="courier-heading" className="font-display text-base font-semibold text-ink">Courier comparison</h3>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Delivery performance</p>
+        <h3 id="courier-heading" className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">Courier comparison</h3>
         <p className="mt-1 text-sm leading-relaxed text-muted">{label}</p>
       </div>
       <div className="mt-4 overflow-x-auto pb-1">
@@ -39,7 +40,7 @@ export function CourierTable({
             {rows.map((c) => {
               const isHighest = maxRto > 0 && c.rto === maxRto;
               return (
-                <tr key={c.courier} className="hover:bg-subtle/30">
+                <tr key={c.courier} className="transition-colors duration-150 hover:bg-subtle/30">
                   <th scope="row" className="px-4 py-3.5 font-semibold text-ink sm:px-5">{c.courier}</th>
                   <td className="px-3 py-3.5 text-right tabular-nums text-ink">{c.shipped.toLocaleString('en-US')}</td>
                   <td className="px-3 py-3.5 text-right tabular-nums text-muted">{c.inTransit}</td>

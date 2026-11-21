@@ -19,24 +19,40 @@ export function FindingsList({
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((f) => {
-      if (status !== 'All' && f.status !== status) return false;
+    return items.filter((finding) => {
+      if (status !== 'All' && finding.status !== status) return false;
       if (!q) return true;
-      return [f.ruleId, f.title, f.courier, f.status].some((v) => String(v).toLowerCase().includes(q));
+      return [finding.ruleId, finding.title, finding.courier, finding.status].some((value) =>
+        String(value).toLowerCase().includes(q),
+      );
     });
   }, [items, query, status]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount);
-  const visible = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  const start = (safePage - 1) * PAGE_SIZE;
+  const visible = filtered.slice(start, safePage * PAGE_SIZE);
+  const hasFilters = query.trim().length > 0 || status !== 'All';
+
+  const clearFilters = () => {
+    setQuery('');
+    setStatus('All');
+    setPage(1);
+  };
 
   return (
-    <section aria-labelledby="findings-heading" className="min-w-0 rounded-2xl border border-line bg-surface shadow-sm">
+    <section
+      aria-labelledby="findings-heading"
+      className="min-w-0 overflow-hidden rounded-[14px] border border-line bg-surface shadow-sm"
+    >
       <div className="border-b border-line px-4 py-4 sm:px-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0">
-            <h3 id="findings-heading" className="font-display text-base font-semibold text-ink">Exceptions &amp; findings</h3>
-            <p className="mt-1 text-sm leading-relaxed text-muted">{label}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Review queue</p>
+            <h3 id="findings-heading" className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">
+              Exceptions &amp; findings
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{label}</p>
           </div>
           {items.length > 0 ? (
             <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto sm:min-w-[360px] sm:flex-row">
@@ -46,17 +62,25 @@ export function FindingsList({
                 <input
                   type="search"
                   value={query}
-                  onChange={(e) => { setQuery(e.target.value); setPage(1); }}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setPage(1);
+                  }}
                   placeholder="Filter rule, description, courier…"
-                  className="w-full rounded-xl border border-line bg-canvas py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted/80 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                  aria-controls="findings-table"
+                  className="form-input py-2 pl-9 text-xs sm:text-sm"
                 />
               </label>
-              <label className="sm:w-44">
+              <label className="sm:w-40">
                 <span className="sr-only">Filter by status</span>
                 <select
                   value={status}
-                  onChange={(e) => { setStatus(e.target.value as FindingStatus | 'All'); setPage(1); }}
-                  className="w-full rounded-xl border border-line bg-canvas px-3 py-2.5 text-sm text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                  onChange={(event) => {
+                    setStatus(event.target.value as FindingStatus | 'All');
+                    setPage(1);
+                  }}
+                  aria-controls="findings-table"
+                  className="form-select py-2 text-xs sm:text-sm"
                 >
                   <option value="All">All statuses</option>
                   <option value="Provisional">Provisional</option>
@@ -65,6 +89,23 @@ export function FindingsList({
                 </select>
               </label>
             </div>
+          ) : null}
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+          <p aria-live="polite">
+            {items.length === 0
+              ? 'No findings in this run'
+              : `Showing ${filtered.length} of ${items.length} findings`}
+          </p>
+          {hasFilters ? (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="rounded-md px-2 py-1 font-semibold text-accent-ink transition-colors duration-150 hover:bg-accent-soft/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+            >
+              Clear filters
+            </button>
           ) : null}
         </div>
       </div>
@@ -82,10 +123,12 @@ export function FindingsList({
       ) : (
         <>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-left text-sm">
-              <caption className="sr-only">Exception findings for the selected analysis run, including rule, evidence, source, amount, and status.</caption>
+            <table id="findings-table" className="w-full min-w-[720px] text-left text-sm">
+              <caption className="sr-only">
+                Exception findings for the selected analysis run, including rule, evidence, source, amount, and status.
+              </caption>
               <thead>
-                <tr className="border-b border-line bg-canvas/70 text-xs font-semibold uppercase tracking-wide text-muted">
+                <tr className="border-b border-line bg-canvas/70 text-[11px] font-semibold uppercase tracking-wide text-muted">
                   <th scope="col" className="px-4 py-3 sm:px-5">Rule</th>
                   <th scope="col" className="px-4 py-3">Description &amp; evidence</th>
                   <th scope="col" className="px-4 py-3">Source</th>
@@ -94,38 +137,45 @@ export function FindingsList({
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
-                {visible.map((f, index) => (
-                  <tr key={`${f.ruleId}-${f.title}-${(safePage - 1) * PAGE_SIZE + index}`} className="align-top hover:bg-subtle/20">
-                    <td className="px-4 py-4 sm:px-5">
-                      <span className="inline-flex rounded-lg bg-subtle px-2 py-1 font-mono text-xs font-semibold text-muted ring-1 ring-inset ring-line/60">
-                        {f.ruleId}
+                {visible.map((finding, index) => (
+                  <tr
+                    key={`${finding.ruleId}-${finding.title}-${start + index}`}
+                    className="align-top transition-colors duration-150 hover:bg-subtle/30 focus-within:bg-subtle/30"
+                  >
+                    <td className="px-4 py-3.5 sm:px-5">
+                      <span className="inline-flex rounded-md bg-subtle px-2 py-1 font-mono text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60">
+                        {finding.ruleId}
                       </span>
                     </td>
-                    <td className="max-w-xl px-4 py-4">
-                      <p className="font-medium leading-snug text-ink [overflow-wrap:anywhere]">{f.title}</p>
-                      {f.evidence && Object.keys(f.evidence).length > 0 ? (
-                        <details className="group mt-2">
-                          <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md text-xs font-semibold text-accent-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 [&::-webkit-details-marker]:hidden">
-                            <ChevronDown className="h-3.5 w-3.5 transition group-open:rotate-180" aria-hidden="true" />
+                    <td className="max-w-xl px-4 py-3.5">
+                      <p className="line-clamp-2 font-medium leading-snug text-ink [overflow-wrap:anywhere]">
+                        {finding.title}
+                      </p>
+                      {finding.evidence && Object.keys(finding.evidence).length > 0 ? (
+                        <details className="group mt-1.5">
+                          <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md text-[11px] font-semibold text-accent-ink transition-colors duration-150 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 [&::-webkit-details-marker]:hidden">
+                            <ChevronDown className="h-3.5 w-3.5 transition-transform duration-150 group-open:rotate-180" aria-hidden="true" />
                             View evidence
                           </summary>
-                          <pre className="mt-2 max-h-52 overflow-auto rounded-xl bg-canvas p-3 text-[11px] leading-relaxed text-muted ring-1 ring-line">
-                            {JSON.stringify(f.evidence, null, 2)}
+                          <pre className="mt-2 max-h-52 overflow-auto rounded-lg bg-canvas p-3 text-[11px] leading-relaxed text-muted ring-1 ring-line">
+                            {JSON.stringify(finding.evidence, null, 2)}
                           </pre>
                         </details>
                       ) : (
-                        <p className="mt-1.5 text-xs text-muted">No additional evidence fields available for display.</p>
+                        <p className="mt-1 text-[11px] text-muted">No additional evidence fields available.</p>
                       )}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-4 text-sm text-muted">
-                      <div className="font-medium text-ink">{f.courier}</div>
-                      <div className="mt-0.5 text-xs">{f.orders} item{f.orders === 1 ? '' : 's'}</div>
+                    <td className="whitespace-nowrap px-4 py-3.5 text-sm text-muted">
+                      <div className="font-medium text-ink">{finding.courier}</div>
+                      <div className="mt-0.5 text-xs tabular-nums">
+                        {finding.orders} item{finding.orders === 1 ? '' : 's'}
+                      </div>
                     </td>
-                    <td className="px-4 py-4 text-right font-semibold tabular-nums text-ink money">
-                      {formatPKR(f.amount)}
+                    <td className="px-4 py-3.5 text-right text-sm font-semibold tabular-nums text-ink money">
+                      {formatPKR(finding.amount)}
                     </td>
-                    <td className="px-4 py-4 sm:pr-5">
-                      <FindingStatusPill status={f.status} />
+                    <td className="px-4 py-3.5 sm:pr-5">
+                      <FindingStatusPill status={finding.status} />
                     </td>
                   </tr>
                 ))}
@@ -133,23 +183,30 @@ export function FindingsList({
             </table>
           </div>
           {pageCount > 1 ? (
-            <nav className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 text-sm text-muted sm:px-5" aria-label="Findings pagination">
-              <span>Showing {(safePage - 1) * PAGE_SIZE + 1}–{Math.min(safePage * PAGE_SIZE, filtered.length)} of {filtered.length}</span>
+            <nav
+              className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 text-xs text-muted sm:px-5 sm:text-sm"
+              aria-label="Findings pagination"
+            >
+              <span className="tabular-nums">
+                {start + 1}–{Math.min(safePage * PAGE_SIZE, filtered.length)} of {filtered.length}
+              </span>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
                   disabled={safePage <= 1}
-                  className="rounded-lg border border-line bg-canvas px-3 py-1.5 font-medium text-ink transition hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-50"
+                  aria-label="Previous findings page"
+                  className="rounded-md border border-line bg-canvas px-2.5 py-1.5 font-medium text-ink transition-colors duration-150 hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Previous
                 </button>
                 <span className="tabular-nums">Page {safePage} of {pageCount}</span>
                 <button
                   type="button"
-                  onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                  onClick={() => setPage((current) => Math.min(pageCount, current + 1))}
                   disabled={safePage >= pageCount}
-                  className="rounded-lg border border-line bg-canvas px-3 py-1.5 font-medium text-ink transition hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-50"
+                  aria-label="Next findings page"
+                  className="rounded-md border border-line bg-canvas px-2.5 py-1.5 font-medium text-ink transition-colors duration-150 hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Next
                 </button>
@@ -159,11 +216,11 @@ export function FindingsList({
         </>
       )}
 
-      <div className="flex gap-2.5 border-t border-line bg-warn-soft/30 px-4 py-3.5 text-xs leading-relaxed text-muted sm:px-5">
-        <Info className="mt-0.5 h-4 w-4 shrink-0 text-warn" aria-hidden="true" />
+      <div className="flex gap-2.5 border-t border-line bg-warn-soft/30 px-4 py-3 text-[11px] leading-relaxed text-muted sm:px-5 sm:text-xs">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warn" aria-hidden="true" />
         <p>
-          <strong className="font-semibold text-ink">Provisional findings.</strong> Flagged items are evidence-backed estimates, not confirmed
-          financial losses. Verify against courier statements and settlement records before raising a claim.
+          <strong className="font-semibold text-ink">Provisional findings.</strong> Flagged items are evidence-backed estimates,
+          not confirmed financial losses. Verify against courier statements and settlement records before raising a claim.
         </p>
       </div>
     </section>

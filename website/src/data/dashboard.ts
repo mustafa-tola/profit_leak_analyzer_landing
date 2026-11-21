@@ -1,3 +1,9 @@
+export type KpiProgress = {
+  value: number;
+  label: string;
+  tone?: 'accent' | 'warn' | 'danger';
+};
+
 export type Kpi = {
   id: string;
   label: string;
@@ -5,6 +11,7 @@ export type Kpi = {
   detail: string;
   note?: string;
   emphasis?: boolean;
+  progress?: KpiProgress;
 };
 
 export const rtoDefinition =
@@ -130,6 +137,12 @@ export interface DashboardData {
   courierComparisonLabel?: string;
   settlementStatus: SettlementSlice[];
   settlementLabel?: string;
+  settlementProgress?: {
+    settled: number;
+    partial: number;
+    unsettled: number;
+    unknown: number;
+  };
   findings: Finding[];
   findingsLabel?: string;
   rtoDefinition?: string;

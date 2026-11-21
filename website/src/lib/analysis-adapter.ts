@@ -44,6 +44,12 @@ function buildKpis(run: PublicAnalysisSummary | PublicAnalysisRun): Kpi[] {
   const paid = k.verified_paid_pkr ?? k.verified_paid_paisa_pkr ?? 'PKR 0.00';
   const exposure = k.potential_exposure_pkr;
   const discrepancyValue = exposure ?? outstanding;
+  const expectedNumber = num(expected);
+  const share = (part: number) =>
+    expectedNumber > 0 ? Math.max(0, Math.min(100, Math.round((part / expectedNumber) * 1000) / 10)) : 0;
+  const paidShare = share(num(paid));
+  const outstandingShare = share(num(outstanding));
+  const discrepancyShare = share(num(discrepancyValue));
 
   return [
     {
@@ -57,12 +63,14 @@ function buildKpis(run: PublicAnalysisSummary | PublicAnalysisRun): Kpi[] {
       label: 'Verified payments',
       value: paid,
       detail: `As of ${run.as_of_date ?? 'analysis date'}`,
+      progress: { value: paidShare, label: `${paidShare}% of expected`, tone: 'accent' },
     },
     {
       id: 'outstanding',
       label: 'Outstanding receivable',
       value: outstanding,
       detail: run.quality_message || `${run.analysis_quality} run`,
+      progress: { value: outstandingShare, label: `${outstandingShare}% of expected`, tone: 'warn' },
     },
     {
       id: 'discrepancy',
@@ -70,6 +78,7 @@ function buildKpis(run: PublicAnalysisSummary | PublicAnalysisRun): Kpi[] {
       value: discrepancyValue,
       detail: `${exceptions} exception${exceptions === 1 ? '' : 's'} · estimate, not a confirmed loss`,
       emphasis: true,
+      progress: { value: discrepancyShare, label: `${discrepancyShare}% of expected · provisional`, tone: 'warn' },
     },
   ];
 }
@@ -110,7 +119,11 @@ function buildCourierRows(result: Record<string, unknown> | undefined): CourierR
   return mapped.length > 0 ? mapped : sampleDashboardData.courierComparison;
 }
 
-function buildSettlementSlices(run: PublicAnalysisRun): { slices: SettlementSlice[]; label: string } {
+function buildSettlementSlices(run: PublicAnalysisRun): {
+  slices: SettlementSlice[];
+  label: string;
+  progress: { settled: number; partial: number; unsettled: number; unknown: number };
+} {
   const kpis = asRecord(run.result?.kpis) ?? {};
   const counts = (kpis.counts_by_completeness as Record<string, number> | undefined) ?? {};
   const dueCounts = (kpis.counts_by_due_date_status as Record<string, number> | undefined) ?? {};
@@ -133,7 +146,13 @@ function buildSettlementSlices(run: PublicAnalysisRun): { slices: SettlementSlic
 
   if (slices.length === 0) slices.push({ label: 'No settlement amounts', amount: 1, colorClass: 'bg-slate-400' });
   const label = `Settled ${settled} · Partial ${partial} · Unsettled ${unsettled} · Oversettled ${oversettled} · Overdue ${overdue} · Not due ${notDue} · Unknown/NA ${unknown}`;
-  return { slices, label };
+  const progress = {
+    settled,
+    partial: partial + oversettled,
+    unsettled,
+    unknown,
+  };
+  return { slices, label, progress };
 }
 
 function buildFindings(result: Record<string, unknown> | undefined): { items: Finding[]; label: string } {
@@ -184,6 +203,7 @@ export function toDashboardData(run: PublicAnalysisRun): DashboardData {
     courierComparisonLabel: 'Derived from live shipment results',
     settlementStatus: settlement.slices,
     settlementLabel: settlement.label,
+    settlementProgress: settlement.progress,
     findings: findings.items,
     findingsLabel: findings.label,
     rtoDefinition: 'Live RTO metrics are derived from shipment statuses in the analyzed run. Returned/RTO rows are compared to resolved rows where available.',
