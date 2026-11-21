@@ -21,7 +21,12 @@ export function CourierTable({
         <h3 id="courier-heading" className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">Courier comparison</h3>
         <p className="mt-1 text-sm leading-relaxed text-muted">{label}</p>
       </div>
-      <div className="mt-4 overflow-x-auto pb-1">
+      <div
+        className="mt-4 overflow-x-auto pb-1"
+        role="region"
+        aria-label="Courier comparison table"
+        tabIndex={0}
+      >
         <table className="w-full min-w-[680px] text-left text-sm">
           <caption className="sr-only">Courier performance comparison including shipment counts, RTO rate, cost per delivered parcel, and average settlement time.</caption>
           <thead>

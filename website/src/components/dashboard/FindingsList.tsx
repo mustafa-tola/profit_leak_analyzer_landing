@@ -122,7 +122,12 @@ export function FindingsList({
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto"
+            role="region"
+            aria-label="Exception findings table"
+            tabIndex={0}
+          >
             <table id="findings-table" className="w-full min-w-[720px] text-left text-sm">
               <caption className="sr-only">
                 Exception findings for the selected analysis run, including rule, evidence, source, amount, and status.

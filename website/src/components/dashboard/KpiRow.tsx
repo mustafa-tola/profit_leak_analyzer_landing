@@ -48,33 +48,29 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
                 : 'border-line border-l-accent bg-surface'
             }`}
           >
-            <div className="flex min-w-0 items-start justify-between gap-3">
-              <div className="flex min-w-0 items-start gap-2.5">
+            <dt className="flex min-w-0 items-start justify-between gap-3">
+              <span className="flex min-w-0 items-start gap-2.5">
                 <span className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${iconTone}`}>
                   {iconByKpi[k.id] ?? iconByKpi.expected}
                 </span>
-                <div className="min-w-0">
-                  <dt className="text-[11px] font-semibold uppercase leading-snug tracking-[0.08em] text-muted">
-                    {k.label}
-                  </dt>
-                  <dd
-                    className="mt-2 font-display text-xl font-semibold leading-tight tracking-tight text-ink money [overflow-wrap:anywhere] sm:text-2xl"
-                    title={k.value}
-                  >
-                    {k.value}
-                  </dd>
-                </div>
-              </div>
+                <span className="min-w-0 text-[11px] font-semibold uppercase leading-snug tracking-[0.08em] text-muted">
+                  {k.label}
+                </span>
+              </span>
               <Badge variant={provisional ? 'partial' : 'neutral'} className="shrink-0">
                 {provisional ? 'Provisional' : 'Reported'}
               </Badge>
-            </div>
-
+            </dt>
+            <dd
+              className="mt-3 font-display text-xl font-semibold leading-tight tracking-tight text-ink money [overflow-wrap:anywhere] sm:text-2xl"
+              title={k.value}
+            >
+              {k.value}
+            </dd>
             <dd className="mt-3 text-xs leading-relaxed text-muted">{k.detail}</dd>
             {k.note ? <dd className="mt-1 text-xs leading-relaxed text-muted">{k.note}</dd> : null}
-
             {progress ? (
-              <div className="mt-4 border-t border-line/70 pt-3">
+              <dd className="mt-4 border-t border-line/70 pt-3">
                 <div
                   className="h-1.5 w-full overflow-hidden rounded-full bg-subtle"
                   role="progressbar"
@@ -89,7 +85,7 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
                   />
                 </div>
                 <p className="mt-1.5 text-[11px] font-medium tabular-nums text-muted">{progress.label}</p>
-              </div>
+              </dd>
             ) : null}
           </div>
         );
