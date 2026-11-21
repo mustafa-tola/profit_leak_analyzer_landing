@@ -210,22 +210,22 @@ body {
 
 /* ── Layout helpers ─────────────────────────────────────────────────────── */
 .sidebar {
-  @apply flex-shrink-0 border-r border-line/30 bg-surface text-ink w-72 lg:w-80 flex flex-col;
+  @apply flex-shrink-0 border-r border-line/30 bg-surface text-ink w-60 lg:w-64 flex flex-col;
 }
 .dark .sidebar {
   @apply bg-[#0A4236] text-white border-line/30;
 }
 .sidebar-brand {
-  @apply flex items-center gap-2.5 px-5 py-5 border-b border-line/30;
+  @apply flex items-center gap-2 px-3 py-3.5 border-b border-line/30;
 }
 .dark .sidebar-brand {
   @apply border-[#0A4236]/30;
 }
 .sidebar-nav {
-  @apply flex-1 overflow-y-auto px-3 space-y-1;
+  @apply flex-1 overflow-y-auto px-2 space-y-0.5;
 }
 .sidebar-footer {
-  @apply border-t border-line/30 px-3 py-4 space-y-3;
+  @apply border-t border-line/30 px-2 py-3 space-y-1;
 }
 .dark .sidebar-footer {
   @apply border-[#0A4236]/30;

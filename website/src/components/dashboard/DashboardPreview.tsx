@@ -76,6 +76,13 @@ export function DashboardPreview({
         </div>
       </header>
 
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-line bg-surface/60 px-4 py-2.5 text-xs sm:px-6">
+        <SignalDot tone={qualityTone(data.analysisQuality, live)} label="Data quality" value={qualityShortLabel(data.analysisQuality, live)} />
+        <SignalDot tone={data.findings.length > 0 ? 'warn' : 'good'} label="Exceptions" value={`${data.findings.length} provisional`} />
+        <SignalDot tone={reconciliationTone(data.analysisQuality, data.findings.length, live)} label="Reconciliation" value={reconciliationLabel(data.analysisQuality, data.findings.length, live)} />
+        <span className="ml-auto hidden font-medium text-muted sm:inline">{live ? 'Evidence-backed view' : 'Illustrative sample'}</span>
+      </div>
+
       {live && data.qualityMessage ? (
         <div className={`border-b px-4 py-3.5 sm:px-6 ${qualityMessageClass(data.analysisQuality)}`} role="status">
           <p className="flex items-start gap-2 text-sm leading-relaxed">
@@ -147,6 +154,54 @@ export function DashboardPreview({
         <div className="mt-12">{body}</div>
       </div>
     </section>
+  );
+}
+
+type SignalTone = 'good' | 'warn' | 'bad' | 'neutral';
+
+function qualityTone(quality?: string, live = true): SignalTone {
+  if (!live) return 'neutral';
+  if (quality === 'CLEAN') return 'good';
+  if (quality === 'PARTIAL_DATA') return 'warn';
+  if (quality === 'NO_VALID_SETTLEMENTS') return 'bad';
+  return 'neutral';
+}
+
+function qualityShortLabel(quality?: string, live = true): string {
+  if (!live) return 'Sample cohort';
+  if (quality === 'CLEAN') return 'Complete';
+  if (quality === 'PARTIAL_DATA') return 'Partial';
+  if (quality === 'NO_VALID_SETTLEMENTS') return 'Evidence gap';
+  return quality ?? 'Pending';
+}
+
+function reconciliationTone(quality: string | undefined, findings: number, live: boolean): SignalTone {
+  if (!live) return 'neutral';
+  if (quality === 'NO_VALID_SETTLEMENTS') return 'bad';
+  if (quality === 'CLEAN' && findings === 0) return 'good';
+  return 'warn';
+}
+
+function reconciliationLabel(quality: string | undefined, findings: number, live: boolean): string {
+  if (!live) return 'Preview only';
+  if (quality === 'NO_VALID_SETTLEMENTS') return 'Evidence gap';
+  if (quality === 'CLEAN' && findings === 0) return 'Ready to review';
+  return 'Review required';
+}
+
+function SignalDot({ tone, label, value }: { tone: SignalTone; label: string; value: string }) {
+  const dot: Record<SignalTone, string> = {
+    good: 'bg-accent',
+    warn: 'bg-warn',
+    bad: 'bg-danger',
+    neutral: 'bg-slate-400 dark:bg-slate-500',
+  };
+  return (
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot[tone]}`} aria-hidden="true" />
+      <span className="font-medium text-muted">{label}</span>
+      <span className="font-semibold tabular-nums text-ink">{value}</span>
+    </span>
   );
 }
 

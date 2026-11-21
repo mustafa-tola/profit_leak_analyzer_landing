@@ -22,12 +22,12 @@ type SidebarItem = {
 };
 
 const SIDEBAR_ITEMS: SidebarItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" aria-hidden="true" /> },
-  { id: 'upload', label: 'Upload & Analyze', icon: <FileUp className="h-5 w-5" aria-hidden="true" /> },
-  { id: 'exceptions', label: 'Exceptions', icon: <ShieldAlert className="h-5 w-5" aria-hidden="true" /> },
-  { id: 'settlements', label: 'Settlements', icon: <FileCheck className="h-5 w-5" aria-hidden="true" /> },
-  { id: 'reports', label: 'Reports', icon: <FileText className="h-5 w-5" aria-hidden="true" /> },
-  { id: 'history', label: 'Previous Runs', icon: <History className="h-5 w-5" aria-hidden="true" /> },
+  { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-4 w-4" aria-hidden="true" /> },
+  { id: 'upload', label: 'Upload & Analyze', icon: <FileUp className="h-4 w-4" aria-hidden="true" /> },
+  { id: 'exceptions', label: 'Exceptions', icon: <ShieldAlert className="h-4 w-4" aria-hidden="true" /> },
+  { id: 'settlements', label: 'Settlements', icon: <FileCheck className="h-4 w-4" aria-hidden="true" /> },
+  { id: 'reports', label: 'Reports', icon: <FileText className="h-4 w-4" aria-hidden="true" /> },
+  { id: 'history', label: 'Previous Runs', icon: <History className="h-4 w-4" aria-hidden="true" /> },
 ];
 
 interface SidebarProps {
@@ -55,14 +55,14 @@ export function Sidebar({
 
   // Mobile sidebar: slide in from left with translate-x animation
   const mobileClasses = isMobile
-    ? `fixed inset-y-0 left-0 z-[60] w-[260px] transform transition-transform duration-300 ease-in-out ${
+    ? `fixed inset-y-0 left-0 z-[60] w-[224px] transform transition-transform duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`
     : '';
 
   return (
     <aside className={`sidebar ${mobileClasses}`}>
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-line/30">
+      <div className="flex items-center gap-2 px-3 py-3.5 border-b border-line/30">
         {isMobile && (
           <button
             type="button"
@@ -70,11 +70,11 @@ export function Sidebar({
             className="p-1.5 rounded-md text-muted hover:text-ink hover:bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
             aria-label="Close navigation"
           >
-            <X className="h-5 w-5" aria-hidden="true" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
         <LogoMark />
-        <span className="font-display font-semibold text-xl tracking-tight text-ink dark:text-white">codvera</span>
+        <span className="font-display font-semibold text-lg tracking-tight text-ink dark:text-white">codvera</span>
       </div>
 
       <nav className="sidebar-nav" aria-label="Main navigation">
@@ -88,7 +88,7 @@ export function Sidebar({
                 onViewChange(item.id);
                 onClose?.();
               }}
-              className={`w-full flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-medium transition text-left ${
+              className={`w-full flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13px] font-medium transition text-left ${
                 active
                   ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
                   : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
@@ -114,14 +114,14 @@ export function Sidebar({
             onViewChange('settings');
             onClose?.();
           }}
-          className={`w-full flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-medium transition text-left ${
+          className={`w-full flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13px] font-medium transition text-left ${
             activeView === 'settings'
               ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
               : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
           }`}
           aria-current={activeView === 'settings' ? 'page' : undefined}
         >
-          <Settings className="h-5 w-5" aria-hidden="true" />
+          <Settings className="h-4 w-4" aria-hidden="true" />
           Settings
         </button>
         <button
@@ -130,23 +130,23 @@ export function Sidebar({
             onViewChange('help');
             onClose?.();
           }}
-          className={`w-full flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-medium transition text-left ${
+          className={`w-full flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13px] font-medium transition text-left ${
             activeView === 'help'
               ? 'bg-accent-soft text-accent-ink dark:bg-accent/30 dark:text-accent shadow-sm'
               : 'text-muted hover:bg-subtle hover:text-ink dark:text-muted/60 dark:hover:bg-white/10 dark:hover:text-white'
           }`}
           aria-current={activeView === 'help' ? 'page' : undefined}
         >
-          <HelpCircle className="h-5 w-5" aria-hidden="true" />
+          <HelpCircle className="h-4 w-4" aria-hidden="true" />
           Help & Support
         </button>
       </div>
 
-      <div className="px-4 py-4 border-t border-line/30">
-        <div className="flex items-center gap-3 rounded-[14px] px-3 py-3 bg-accent/20 dark:bg-accent/10">
-          <User className="h-5 w-5 shrink-0 text-muted" aria-hidden="true" />
+      <div className="px-2 py-3 border-t border-line/30">
+        <div className="flex items-center gap-2.5 rounded-[10px] px-2.5 py-2.5 bg-accent/20 dark:bg-accent/10">
+          <User className="h-4 w-4 shrink-0 text-muted" aria-hidden="true" />
           <div className="min-w-0">
-            <p className="text-sm font-medium text-ink dark:text-white">{accountLabel}</p>
+            <p className="truncate text-[13px] font-medium text-ink dark:text-white">{accountLabel}</p>
             <p className="text-xs text-muted">{orgLabel}</p>
           </div>
         </div>
@@ -157,7 +157,7 @@ export function Sidebar({
 
 function LogoMark() {
   return (
-    <svg width="28" height="28" viewBox="0 0 68 68" aria-hidden="true" className="shrink-0">
+    <svg width="24" height="24" viewBox="0 0 68 68" aria-hidden="true" className="shrink-0">
       <path d="M43 16H27c-4 0-7 2-10 5L8 30c-3 3-3 8 0 11l9 9c3 3 8 3 11 0l8-8" fill="none" stroke="#087F62" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M24 47l10 10c3 3 8 3 11 0l15-17" fill="none" stroke="#103E36" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>

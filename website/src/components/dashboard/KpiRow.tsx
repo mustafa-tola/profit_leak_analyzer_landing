@@ -9,15 +9,17 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
         return (
           <div
             key={k.id}
-            className={`min-w-0 rounded-[14px] border p-4 sm:p-5 ${
+            className={`min-w-0 rounded-[14px] border border-l-[3px] p-4 sm:p-5 ${
               provisional
-                ? 'border-warn/25 bg-warn-soft/45'
-                : 'border-line bg-surface shadow-sm'
+                ? 'border-warn/25 border-l-warn bg-warn-soft/45'
+                : 'border-line border-l-accent bg-surface shadow-sm'
             }`}
           >
             <dt className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1.5">
               <span className="min-w-0 flex-1 text-sm font-medium leading-snug text-muted">{k.label}</span>
-              {provisional ? <Badge variant="partial">Provisional</Badge> : null}
+              <Badge variant={provisional ? 'partial' : 'neutral'}>
+                {provisional ? 'Provisional' : 'Reported'}
+              </Badge>
             </dt>
             <dd
               className={`mt-3 font-display font-semibold tracking-tight text-ink money [overflow-wrap:anywhere] ${
