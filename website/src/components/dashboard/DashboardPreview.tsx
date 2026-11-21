@@ -96,45 +96,67 @@ export function DashboardPreview({
         </div>
       ) : null}
 
-      <div className="min-w-0 space-y-5 bg-canvas p-4 sm:p-5 lg:p-6">
-        <section aria-labelledby={live ? 'kpis-heading-live' : 'kpis-heading-sample'}>
-          <div className="mb-3 flex items-end justify-between gap-3">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Financial position</p>
-              <h3 id={live ? 'kpis-heading-live' : 'kpis-heading-sample'} className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">
-                Financial summary
-              </h3>
-              <p className="mt-0.5 text-sm text-muted">Expected, verified, and outstanding amounts first; provisional discrepancies are shown separately.</p>
-            </div>
-          </div>
+      <div className="min-w-0 space-y-6 bg-canvas p-4 sm:p-5 lg:p-6">
+        <section aria-labelledby={live ? 'financial-heading-live' : 'financial-heading-sample'}>
+          <SectionIntro
+            id={live ? 'financial-heading-live' : 'financial-heading-sample'}
+            step="01"
+            title="Financial overview"
+            description="Expected, verified, and outstanding amounts first; provisional discrepancies are shown separately."
+          />
           <KpiRow items={data.kpis} />
         </section>
 
-        <div className="grid min-w-0 gap-4 sm:gap-5 lg:grid-cols-3">
-          {live ? (
-            <RunAnalytics
-              couriers={data.courierComparison}
-              findings={data.findings}
-              live
-              id={embedded ? 'run-analytics-embedded' : 'run-analytics-live'}
-            />
-          ) : (
-            <ExpenseChart
-              isDark={isDark}
-              data={data.monthlyExpenses}
-              label={data.monthlyExpensesLabel}
-              sampleLabel="sample"
-            />
-          )}
+        <section aria-labelledby={live ? 'settlement-heading-live' : 'settlement-heading-sample'}>
+          <SectionIntro
+            id={live ? 'settlement-heading-live' : 'settlement-heading-sample'}
+            step="02"
+            title="Settlement health"
+            description="Shipment counts and settlement value are shown separately so operational status is never confused with money."
+          />
           <SettlementBreakdown
             slices={data.settlementStatus}
             label={data.settlementLabel}
             progress={data.settlementProgress}
           />
-        </div>
+        </section>
 
-        <CourierTable rows={data.courierComparison} label={data.courierComparisonLabel} />
-        <FindingsList items={data.findings} label={data.findingsLabel} />
+        <section aria-labelledby={live ? 'operations-heading-live' : 'operations-heading-sample'}>
+          <SectionIntro
+            id={live ? 'operations-heading-live' : 'operations-heading-sample'}
+            step="03"
+            title="Operational insights"
+            description="Where the exceptions sit, and how the carriers behind this run performed."
+          />
+          <div className="grid min-w-0 gap-4 lg:grid-cols-2 sm:gap-5">
+            {live ? (
+              <RunAnalytics
+                couriers={data.courierComparison}
+                findings={data.findings}
+                live
+                id={embedded ? 'run-analytics-embedded' : 'run-analytics-live'}
+              />
+            ) : (
+              <ExpenseChart
+                isDark={isDark}
+                data={data.monthlyExpenses}
+                label={data.monthlyExpensesLabel}
+                sampleLabel="sample"
+              />
+            )}
+            <CourierTable rows={data.courierComparison} label={data.courierComparisonLabel} />
+          </div>
+        </section>
+
+        <section aria-labelledby={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'} aria-label="Exceptions">
+          <SectionIntro
+            id={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'}
+            step="04"
+            title="Exceptions"
+            description="Review evidence-backed items in severity order before raising a claim."
+          />
+          <FindingsList items={data.findings} label={data.findingsLabel} />
+        </section>
 
         <section aria-label="Metric definitions" className="rounded-[14px] border border-dashed border-line bg-surface p-4 sm:p-5">
           <h3 className="font-display text-base font-semibold text-ink">How metrics are calculated</h3>
@@ -201,6 +223,23 @@ function reconciliationLabel(quality: string | undefined, findings: number, live
   if (quality === 'NO_VALID_SETTLEMENTS') return 'Evidence gap';
   if (quality === 'CLEAN' && findings === 0) return 'Ready to review';
   return 'Review required';
+}
+
+function SectionIntro({ id, step, title, description }: { id: string; step: string; title: string; description: string }) {
+  return (
+    <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="rounded-md bg-accent-soft px-1.5 py-0.5 font-mono text-[10px] font-semibold text-accent-ink">{step}</span>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Dashboard section</p>
+        </div>
+        <h3 id={id} className="mt-1.5 font-display text-base font-semibold text-ink sm:text-lg">
+          {title}
+        </h3>
+      </div>
+      <p className="max-w-xl text-xs leading-relaxed text-muted sm:text-right sm:text-sm">{description}</p>
+    </div>
+  );
 }
 
 function SignalDot({ tone, label, value }: { tone: SignalTone; label: string; value: string }) {
