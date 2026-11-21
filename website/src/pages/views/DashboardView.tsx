@@ -10,9 +10,10 @@ interface DashboardViewProps {
   loading?: boolean;
   onUploadClick?: () => void;
   onHistoryClick?: () => void;
+  onExport?: () => void;
 }
 
-export function DashboardView({ run, isDark, loading, onUploadClick, onHistoryClick }: DashboardViewProps) {
+export function DashboardView({ run, isDark, loading, onUploadClick, onHistoryClick, onExport }: DashboardViewProps) {
   if (loading) {
     return (
       <div className="rounded-[14px] border border-line bg-surface p-10 text-center shadow-soft">
@@ -37,5 +38,5 @@ export function DashboardView({ run, isDark, loading, onUploadClick, onHistoryCl
     );
   }
 
-  return <DashboardPreview embedded isDark={isDark} data={toDashboardData(run)} />;
+  return <DashboardPreview embedded isDark={isDark} data={toDashboardData(run)} onExport={onExport} />;
 }

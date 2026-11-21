@@ -15,6 +15,7 @@ import { HistoryView } from './views/HistoryView';
 import { SettingsView } from './views/SettingsView';
 import { HelpView } from './views/HelpView';
 import { apiUrl, getAnalysis, listAnalyses, uploadAnalysis, type PublicAnalysisRun, type PublicAnalysisSummary } from '../lib/api';
+import { downloadRunCsv } from '../lib/export';
 
 const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -226,6 +227,10 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
   const orgLabel = 'Seller Workspace';
   const isDesktop = windowWidth >= 1024;
 
+  const exportSelectedRun = () => {
+    if (selectedRun) downloadRunCsv(selectedRun, 'summary');
+  };
+
   const viewComponents: Record<AppView, React.ReactNode> = {
     dashboard: (
       <DashboardView
@@ -234,15 +239,21 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
         loading={loadingRun || loadingList}
         onUploadClick={() => handleViewChange('upload')}
         onHistoryClick={() => handleViewChange('history')}
+        onExport={exportSelectedRun}
       />
     ),
     upload: <UploadView onAnalyze={onAnalyze} uploading={uploading} />,
     exceptions: <ExceptionsView run={selectedRun} />,
     settlements: <SettlementsView run={selectedRun} />,
-    reports: <ReportsView run={selectedRun} />,
+    reports: <ReportsView run={selectedRun} isDark={isDark} />,
     history: <HistoryView runs={runs} selectedRunId={selectedRunId} onSelectRun={handleSelectRun} loading={loadingList} onRefresh={() => void loadRuns()} />,
-    settings: <SettingsView />,
-    help: <HelpView />,
+    settings: <SettingsView sellerId={selectedRun?.seller_id} onViewChange={handleViewChange} />,
+    help: (
+      <HelpView
+        onViewChange={handleViewChange}
+        onExport={selectedRun ? exportSelectedRun : () => handleViewChange('upload')}
+      />
+    ),
   };
 
   return (
@@ -299,10 +310,12 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
       <main className="relative flex flex-1 flex-col overflow-hidden">
         <WorkspaceHeader
           view={view}
-          selected={selectedRun ? { runId: selectedRun.run_id.slice(0, 8), sellerId: selectedRun.seller_id, asOfDate: selectedRun.as_of_date ?? undefined } : null}
+          run={selectedRun}
           isMobileMenuOpen={isMobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
           isDesktop={isDesktop}
+          onExport={exportSelectedRun}
+          onViewChange={handleViewChange}
         />
         <div className="flex-1 overflow-y-auto p-5 sm:p-6 lg:p-8">
           {error && (

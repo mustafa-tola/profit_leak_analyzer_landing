@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
-import { User, ShieldCheck, Bell, FileText, AlertCircle } from 'lucide-react';
+import React from 'react';
+import { useAuth, useUser } from '@clerk/clerk-react';
+import { AlertCircle, ArrowRight, Bell, FileText, LogOut, ShieldCheck, User } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody } from '../../components/ui/Card';
+import { apiUrl } from '../../lib/api';
+
+interface SettingsViewProps {
+  sellerId?: string;
+  onViewChange: (id: string) => void;
+}
 
 interface SettingsSectionProps {
   title: string;
@@ -10,29 +17,21 @@ interface SettingsSectionProps {
   children: React.ReactNode;
 }
 
-export function SettingsView() {
-  const [resetConfirm, setResetConfirm] = useState(false);
-
-  const handleReset = () => {
-    if (resetConfirm) {
-      // In a production app this would call an API to clear all runs/uploads.
-      setResetConfirm(false);
-    } else {
-      setResetConfirm(true);
-    }
-  };
+export function SettingsView({ sellerId, onViewChange }: SettingsViewProps) {
+  const { signOut } = useAuth();
+  const { user } = useUser();
 
   return (
     <div className="max-w-2xl space-y-6">
       <SettingsSection
         title="Account"
-        description="Manage your seller profile and organization settings."
+        description="Identity supplied by your verified Clerk session."
         icon={<User className="h-5 w-5" aria-hidden="true" />}
       >
-        <SettingRow label="Seller ID" value="SELLER-DEMO" type="text" />
-        <SettingRow label="Business Name" value="Demo Seller Account" type="text" />
-        <SettingRow label="Organization Slug" value="seller-demo" type="text" />
-        <SettingRow label="Primary Email" value="seller@demo.example.com" type="email" />
+        <SettingRow label="Signed in as" value={user?.primaryEmailAddress?.emailAddress ?? user?.username ?? user?.id ?? 'Signed-in user'} />
+        <SettingRow label="User ID" value={user?.id ?? '—'} />
+        <SettingRow label="Seller ID" value={sellerId ?? 'Set by your organization claim; appears in run results'} />
+        <SettingRow label="Account management" value="Use the avatar menu in the header" />
       </SettingsSection>
 
       <SettingsSection
@@ -40,56 +39,55 @@ export function SettingsView() {
         description="Authentication and access control for your workspace."
         icon={<ShieldCheck className="h-5 w-5" aria-hidden="true" />}
       >
-        <SettingRow label="Authentication Method" value="Clerk (OAuth)" type="text" />
-        <SettingRow label="Session Timeout" value="24 hours" type="text" />
-        <SettingRow label="Two-Factor Authentication" value="Not enabled" type="text" />
-        <SettingRow label="Allowed Origins" value="http://localhost:5173" type="text" />
+        <SettingRow label="Authentication" value="Clerk" />
+        <SettingRow label="Seller authorization" value="Verified from the session token on every request" />
+        <SettingRow label="Data access" value="Scoped to your seller identity" />
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-ink">End your session</p>
+            <p className="text-xs text-muted">Sign out of this workspace on this device.</p>
+          </div>
+          <Button variant="secondary" size="sm" leftIcon={<LogOut className="h-4 w-4" aria-hidden="true" />} onClick={() => void signOut()}>
+            Sign out
+          </Button>
+        </div>
       </SettingsSection>
 
       <SettingsSection
-        title="Notifications"
-        description="Configure alert preferences for analysis runs and exceptions."
-        icon={<Bell className="h-5 w-5" aria-hidden="true" />}
-      >
-        <SettingRow label="Analysis Complete" value="Enabled" type="text" />
-        <SettingRow label="New Exceptions" value="Enabled" type="text" />
-        <SettingRow label="Weekly Summary" value="Disabled" type="text" />
-        <SettingRow label="Email Notifications" value="seller@demo.example.com" type="text" />
-      </SettingsSection>
-
-      <SettingsSection
-        title="Data & Export"
-        description="Manage data retention, exports, and workspace preferences."
+        title="Workspace"
+        description="Live service configuration for this prototype."
         icon={<FileText className="h-5 w-5" aria-hidden="true" />}
       >
-        <SettingRow label="Data Retention Policy" value="90 days" type="text" />
-        <SettingRow label="Default Export Format" value="CSV" type="text" />
-        <SettingRow label="Auto-run Analysis on Upload" value="Enabled" type="text" />
-        <SettingRow label="Time Zone" value="Asia/Karachi (PKT)" type="text" />
+        <SettingRow label="API endpoint" value={apiUrl()} />
+        <SettingRow label="Exports" value="CSV (summary, exceptions, settlement evidence)" />
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3">
+          <div>
+            <p className="text-sm font-medium text-ink">Need help with your runs?</p>
+            <p className="text-xs text-muted">Open the workspace guide and file-format requirements.</p>
+          </div>
+          <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />} onClick={() => onViewChange('help')}>
+            Help &amp; Support
+          </Button>
+        </div>
       </SettingsSection>
 
       <Card>
         <CardBody>
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="font-medium text-ink">Reset Workspace</p>
-              <p className="text-sm text-muted">Clear all runs, uploads, and cached data. This action cannot be undone.</p>
-            </div>
-            <div className="flex items-center gap-2">
-              {resetConfirm ? (
-                <div className="flex items-center gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2">
-                  <AlertCircle className="h-4 w-4 text-danger" aria-hidden="true" />
-                  <span className="text-xs font-medium text-danger">Click again to confirm reset</span>
-                </div>
-              ) : (
-                <Button variant="danger" size="sm" onClick={handleReset}>
-                  Reset Workspace
-                </Button>
-              )}
-            </div>
+          <div className="flex items-start gap-3 rounded-lg border border-warn/30 bg-warn-soft/40 px-4 py-3 text-sm text-muted">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warn" aria-hidden="true" />
+            <p>
+              This academic prototype does not provide editable profile fields, notification preferences or a
+              workspace reset. Analysis runs and uploaded evidence are stored by the API; retention and deletion
+              policies are still pending.
+            </p>
           </div>
         </CardBody>
       </Card>
+
+      <p className="flex items-center gap-2 text-xs text-muted">
+        <Bell className="h-3.5 w-3.5" aria-hidden="true" />
+        Run status alerts appear in the notification menu in the header.
+      </p>
     </div>
   );
 }
@@ -106,22 +104,16 @@ function SettingsSection({ title, description, icon, children }: SettingsSection
           </div>
         </div>
       </div>
-      <CardBody>{children}</CardBody>
+      <CardBody className="space-y-3">{children}</CardBody>
     </Card>
   );
 }
 
-function SettingRow({ label, value, type }: { label: string; value: string; type: string }) {
+function SettingRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3 hover:bg-[#F5F8F7] transition">
-      <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-ink">{label}</span>
-        <span className="text-xs font-medium text-muted">{type}</span>
-      </div>
-      <div className="text-right">
-        <p className="text-sm font-medium text-ink truncate max-w-xs">{value}</p>
-        <button type="button" className="text-xs font-medium text-accent-ink hover:underline ml-2">Edit</button>
-      </div>
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3 transition hover:bg-[#F5F8F7]">
+      <span className="text-sm font-medium text-ink">{label}</span>
+      <p className="max-w-xs truncate text-right text-sm text-muted" title={value}>{value}</p>
     </div>
   );
 }

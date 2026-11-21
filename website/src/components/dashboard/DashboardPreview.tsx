@@ -18,12 +18,14 @@ type DashboardPreviewProps = {
   isDark: boolean;
   data?: DashboardData;
   embedded?: boolean;
+  onExport?: () => void;
 };
 
 export function DashboardPreview({
   isDark,
   data = sampleDashboardData,
   embedded = false,
+  onExport,
 }: DashboardPreviewProps) {
   const live = data.source === 'live';
   const rtoDefinition = data.rtoDefinition ?? sampleRtoDefinition;
@@ -51,7 +53,18 @@ export function DashboardPreview({
               <MetaChip icon={<Truck className="h-3.5 w-3.5" />} label={live ? (data.sellerId ? `Seller ${data.sellerId}` : 'Seller account') : 'All couriers'} />
             </div>
           </div>
-          {!live ? (
+          {live ? (
+            onExport ? (
+              <button
+                type="button"
+                onClick={onExport}
+                className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-accent-hover"
+              >
+                <Download className="h-4 w-4" />
+                Export summary CSV
+              </button>
+            ) : null
+          ) : (
             <span
               className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm"
               aria-hidden="true"
@@ -59,7 +72,7 @@ export function DashboardPreview({
               <Download className="h-4 w-4" />
               Export report
             </span>
-          ) : null}
+          )}
         </div>
       </header>
 
