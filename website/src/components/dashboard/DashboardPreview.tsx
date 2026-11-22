@@ -82,7 +82,7 @@ export function DashboardPreview({
         <SignalDot
           tone={(data.totalFindings ?? data.findings.length) > 0 ? 'warn' : 'good'}
           label="Exceptions"
-          value={`${data.totalFindings ?? data.findings.length} total · ${data.findings.length} loaded`}
+          value={`${data.totalFindings ?? data.findings.length} total · ${data.findings.length} findings loaded`}
         />
         <SignalDot tone={reconciliationTone(data.analysisQuality, data.findings.length, live)} label="Reconciliation" value={reconciliationLabel(data.analysisQuality, data.findings.length, live)} />
         <span className="ml-auto hidden font-medium text-muted sm:inline">{live ? 'Evidence-backed view' : 'Illustrative sample'}</span>
@@ -230,12 +230,10 @@ function reconciliationLabel(quality: string | undefined, findings: number, live
 
 function SectionIntro({ id, title, description }: { id: string; title: string; description: string }) {
   return (
-    <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-      <div className="min-w-0">
-        <h3 id={id} className="mt-0.5 font-display text-base font-semibold text-ink sm:text-lg">
-          {title}
-        </h3>
-      </div>
+    <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+      <h3 id={id} className="font-display text-base font-semibold text-ink sm:shrink-0 sm:text-lg">
+        {title}
+      </h3>
       <p className="max-w-xl text-xs leading-relaxed text-muted sm:text-right sm:text-sm">{description}</p>
     </div>
   );
@@ -249,7 +247,7 @@ function SignalDot({ tone, label, value }: { tone: SignalTone; label: string; va
     neutral: 'bg-slate-400 dark:bg-slate-500',
   };
   return (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+    <span className="inline-flex items-center gap-1.5">
       <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot[tone]}`} aria-hidden="true" />
       <span className="font-medium text-muted">{label}</span>
       <span className="font-semibold tabular-nums text-ink">{value}</span>

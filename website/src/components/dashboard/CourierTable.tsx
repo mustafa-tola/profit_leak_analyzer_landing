@@ -3,6 +3,10 @@ import { formatPKR } from '../../utils/currency';
 
 type EnrichedRow = CourierRow & { resolved: number; rto: number };
 
+function settlementTime(days?: number) {
+  return days === undefined ? 'Unavailable' : `${days.toFixed(1)} days`;
+}
+
 export function CourierTable({
   rows: inputRows = sampleRows,
   label = 'September 2026 cohort · RTO calculated on resolved parcels only',
@@ -70,7 +74,7 @@ export function CourierTable({
                       </div>
                     </td>
                     <td className="px-3 py-4 text-right tabular-nums text-ink money">{formatPKR(row.costPerDelivered)}</td>
-                    <td className="px-5 py-4 text-right tabular-nums text-muted sm:px-6">{row.avgSettleDays.toFixed(1)} days</td>
+                    <td className="px-5 py-4 text-right tabular-nums text-muted sm:px-6">{settlementTime(row.avgSettleDays)}</td>
                   </tr>
                 );
               })}
@@ -97,7 +101,7 @@ function SingleCourier({ row }: { row: EnrichedRow }) {
         <CourierStat label="Shipped" value={row.shipped.toLocaleString('en-US')} />
         <CourierStat label="In transit" value={row.inTransit.toLocaleString('en-US')} />
         <CourierStat label="Cost / delivered" value={formatPKR(row.costPerDelivered)} />
-        <CourierStat label="Avg. settlement" value={`${row.avgSettleDays.toFixed(1)} days`} />
+        <CourierStat label="Avg. settlement" value={settlementTime(row.avgSettleDays)} />
       </dl>
     </div>
   );

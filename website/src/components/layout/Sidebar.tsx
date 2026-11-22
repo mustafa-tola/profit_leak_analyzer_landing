@@ -37,7 +37,6 @@ interface SidebarProps {
   onViewChange: (id: string) => void;
   onClose?: () => void;
   isMobile?: boolean;
-  isOpen?: boolean;
 }
 
 export function Sidebar({
@@ -47,18 +46,12 @@ export function Sidebar({
   onViewChange,
   onClose,
   isMobile = false,
-  isOpen = true,
 }: SidebarProps) {
   const location = useLocation();
 
   const isActive = (id: string) => activeView === id || location.pathname === `/app/${id}`;
 
-  // Mobile sidebar: slide in from left with translate-x animation
-  const mobileClasses = isMobile
-    ? `fixed inset-y-0 left-0 z-[60] w-[224px] transform transition-transform duration-300 ease-in-out ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`
-    : '';
+  const mobileClasses = isMobile ? 'h-full max-w-full overflow-y-auto' : '';
 
   return (
     <aside className={`sidebar ${mobileClasses}`}>
@@ -67,7 +60,7 @@ export function Sidebar({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-md text-muted hover:text-ink hover:bg-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted hover:bg-subtle hover:text-ink"
             aria-label="Close navigation"
           >
             <X className="h-4 w-4" aria-hidden="true" />
@@ -77,7 +70,7 @@ export function Sidebar({
         <span className="font-display font-semibold text-lg tracking-tight text-ink dark:text-white">codvera</span>
       </div>
 
-      <nav className="sidebar-nav" aria-label="Main navigation">
+      <nav className="sidebar-nav p-2" aria-label="Main navigation">
         {SIDEBAR_ITEMS.map((item) => {
           const active = isActive(item.id);
           return (

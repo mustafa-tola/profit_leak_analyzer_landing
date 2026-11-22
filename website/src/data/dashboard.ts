@@ -56,7 +56,7 @@ export type CourierRow = {
   inTransit: number;
   returned: number;
   costPerDelivered: number;
-  avgSettleDays: number;
+  avgSettleDays?: number;
 };
 
 export const courierComparison: CourierRow[] = [

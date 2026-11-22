@@ -41,7 +41,7 @@ export function RunAnalytics({ findings, totalFindings, id = 'run-analytics-head
       <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">
         {loaded === totalFindings
           ? `Based on all ${totalFindings} exceptions in this run.`
-          : `Based on ${loaded} loaded findings out of ${totalFindings} total exceptions.`}
+          : `Charts show only the ${loaded} loaded findings. The full run flagged ${totalFindings} exceptions.`}
       </p>
 
       {findings.length === 0 ? (

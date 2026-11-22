@@ -34,3 +34,21 @@ export function findingPresentation(ruleId: string) {
     : ['Exception flagged', ''];
   return { name, description };
 }
+
+const referenceLabels = [
+  ['order_id', 'Order'],
+  ['shipment_id', 'Shipment'],
+  ['settlement_id', 'Settlement'],
+  ['tracking_number', 'Tracking'],
+] as const;
+
+export function findingReferences(evidence?: Record<string, unknown>) {
+  return referenceLabels.flatMap(([key, label]) => {
+    const value = evidence?.[key];
+    if (typeof value !== 'string' && typeof value !== 'number') return [];
+    const identifier = String(value).trim();
+    return identifier && identifier !== '\u2014' && identifier !== '-'
+      ? [{ label, identifier }]
+      : [];
+  });
+}
