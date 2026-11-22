@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Bell, Download, Menu, Share2, X } from 'lucide-react';
 import { UserButton } from '@clerk/clerk-react';
 import { Sidebar } from './Sidebar';
@@ -21,20 +21,36 @@ export function MobileMenu({
   activeView,
   onViewChange,
 }: MobileMenuProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useLayoutEffect(() => {
+    const dialog = dialogRef.current;
+    if (!isOpen || !dialog) return;
+
+    const opener = document.activeElement;
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      if (opener instanceof HTMLElement) opener.focus({ preventScroll: true });
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 lg:hidden"
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
+      id="workspace-navigation"
       aria-label="Navigation menu"
+      className="m-0 h-dvh max-h-none max-w-[100vw] overflow-hidden bg-surface p-0 backdrop:bg-black/40"
+      onCancel={(event) => {
+        event.preventDefault();
+        onClose();
+      }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
     >
-      <div
-        className="fixed inset-0 z-[55] bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
       <Sidebar
         accountLabel={accountLabel}
         orgLabel={orgLabel}
@@ -42,9 +58,8 @@ export function MobileMenu({
         onViewChange={onViewChange}
         onClose={onClose}
         isMobile
-        isOpen={isOpen}
       />
-    </div>
+    </dialog>
   );
 }
 
@@ -70,6 +85,7 @@ export function WorkspaceHeader({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [shareLabel, setShareLabel] = useState('Share');
   const notificationsRef = useRef<HTMLDivElement>(null);
+  const notificationsButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!notificationsOpen) return;
@@ -82,7 +98,10 @@ export function WorkspaceHeader({
       }
     };
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setNotificationsOpen(false);
+      if (event.key === 'Escape' && !isMobileMenuOpen) {
+        setNotificationsOpen(false);
+        notificationsButtonRef.current?.focus();
+      }
     };
     document.addEventListener('mousedown', onPointerDown);
     document.addEventListener('keydown', onKeyDown);
@@ -90,7 +109,7 @@ export function WorkspaceHeader({
       document.removeEventListener('mousedown', onPointerDown);
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [notificationsOpen]);
+  }, [isMobileMenuOpen, notificationsOpen]);
 
   const shareRun = async () => {
     const url = window.location.href;
@@ -137,33 +156,35 @@ export function WorkspaceHeader({
   const validationErrors = run?.counts?.validation_errors ?? 0;
 
   return (
-    <header className="page-header">
-      <div className="flex items-center gap-2 lg:ml-0">
+    <header className="page-header !grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-3 md:!flex md:gap-x-3">
+      <div className="flex items-center lg:hidden">
         {!isDesktop && (
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-[9px] text-[#B8CBD4] hover:text-[#F5F8F7] hover:bg-[#11564B]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DDF5EA]/50"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-[9px] text-muted hover:bg-subtle hover:text-ink"
             aria-label="Open navigation menu"
             aria-expanded={isMobileMenuOpen}
+            aria-haspopup="dialog"
+            aria-controls={isMobileMenuOpen ? 'workspace-navigation' : undefined}
           >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isMobileMenuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         )}
       </div>
-      <div className="flex flex-col gap-1 flex-1 lg:ml-4">
+      <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">
         <h1 className="font-display text-xl font-semibold text-ink tracking-tight">
           {viewLabels[view]}
         </h1>
         {view === 'dashboard' && run && (
-          <p className="text-xs font-medium text-muted">
-            Seller: <span className="text-ink">{run.seller_id}</span> &nbsp;·&nbsp; Run:
-            <span className="text-ink font-mono">{run.run_id.slice(0, 8)}</span> &nbsp;·&nbsp; As of:
-            <span className="text-ink">{run.as_of_date ?? '—'}</span>
+          <p className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs font-medium text-muted">
+            <span>Seller <span className="text-ink">{run.seller_id}</span></span>
+            <span>Run <span className="font-mono text-ink">{run.run_id.slice(0, 8)}</span></span>
+            <span className="whitespace-nowrap">As of <span className="text-ink">{run.as_of_date ?? '—'}</span></span>
           </p>
         )}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="col-span-2 flex flex-wrap items-center justify-end gap-2 md:shrink-0">
         {run && (
           <>
             <button
@@ -189,6 +210,7 @@ export function WorkspaceHeader({
           <div className="relative" ref={notificationsRef}>
             <button
               type="button"
+              ref={notificationsButtonRef}
               onClick={() => setNotificationsOpen((open) => !open)}
               className="relative flex h-8 w-8 items-center justify-center rounded-full border border-[#DCE7E3] bg-surface text-ink hover:bg-[#F5F8F7] transition"
               aria-label="Notifications"
@@ -206,7 +228,7 @@ export function WorkspaceHeader({
               <div
                 role="dialog"
                 aria-label="Notifications"
-                className="absolute right-0 top-10 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-xl border border-line bg-surface shadow-lift"
+                className="absolute right-0 top-10 z-50 w-[min(20rem,calc(100vw-6rem))] rounded-xl border border-line bg-surface shadow-lift"
               >
                 <div className="border-b border-line px-4 py-3 text-sm font-semibold text-ink">
                   Notifications

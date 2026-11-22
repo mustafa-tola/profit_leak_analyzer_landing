@@ -21,7 +21,7 @@ export function SettlementBreakdown({ slices = sampleSlices, label, progress }: 
   const other = Math.max(0, total - verified - outstanding);
 
   const groups: MoneyGroup[] = [
-    { label: 'Verified / settled', amount: verified, bar: 'bg-accent', dot: 'bg-accent' },
+    { label: 'Verified payments', amount: verified, bar: 'bg-accent', dot: 'bg-accent' },
     { label: 'Outstanding receivables', amount: outstanding, bar: 'bg-warn', dot: 'bg-warn' },
     ...(other > 0 ? [{ label: 'Other adjustments', amount: other, bar: 'bg-slate-400 dark:bg-slate-500', dot: 'bg-slate-400 dark:bg-slate-500' }] : []),
   ];
@@ -50,7 +50,7 @@ export function SettlementBreakdown({ slices = sampleSlices, label, progress }: 
             <h5 className="text-xs font-semibold text-muted">Settlement value</h5>
             <span className="text-[11px] font-medium text-muted">PKR</span>
           </div>
-          <p className="money mt-2 whitespace-nowrap font-display text-xl font-semibold leading-none tracking-tight text-ink">
+          <p className="money mt-2 [overflow-wrap:anywhere] font-display text-xl font-semibold leading-none tracking-tight text-ink">
             {formatPKR(total)}
           </p>
           <div
@@ -71,7 +71,7 @@ export function SettlementBreakdown({ slices = sampleSlices, label, progress }: 
               <li key={group.label} className="flex min-w-0 items-center gap-2 text-xs">
                 <span className={`h-2 w-2 shrink-0 rounded-full ${group.dot}`} aria-hidden="true" />
                 <span className="min-w-0 flex-1 text-muted">{group.label}</span>
-                <span className="shrink-0 whitespace-nowrap font-semibold tabular-nums text-ink">{formatPKR(group.amount)}</span>
+                <span className="max-w-[50%] text-right font-semibold tabular-nums text-ink [overflow-wrap:anywhere]">{formatPKR(group.amount)}</span>
                 <span className="w-11 shrink-0 text-right tabular-nums text-muted">
                   {formatPercent(group.amount, total, 0)}
                 </span>

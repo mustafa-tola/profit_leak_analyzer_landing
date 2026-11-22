@@ -3,7 +3,7 @@ import { ChevronDown, Info, Search } from 'lucide-react';
 import { findings as sampleFindings, type Finding, type FindingStatus } from '../../data/dashboard';
 import { formatPKR } from '../../utils/currency';
 import { FindingStatusPill } from './FindingStatusPill';
-import { findingPresentation } from './findingPresentation';
+import { findingPresentation, findingReferences } from './findingPresentation';
 
 const PAGE_SIZE = 6;
 const SEVERITY_RANK: Record<FindingStatus, number> = { Overdue: 0, 'Needs review': 1, Provisional: 2 };
@@ -27,9 +27,10 @@ export function FindingsList({
       .filter((finding) => {
         if (status !== 'All' && finding.status !== status) return false;
         if (!q) return true;
-        return [finding.ruleId, finding.title, finding.courier, finding.status, findingPresentation(finding.ruleId).name].some((value) =>
-          String(value).toLowerCase().includes(q),
-        );
+        const identifiers = findingReferences(finding.evidence).map(({ identifier }) => identifier);
+        const { name } = findingPresentation(finding.ruleId);
+        return [finding.ruleId, finding.title, finding.courier, finding.status, name, ...identifiers]
+          .some((value) => value.toLowerCase().includes(q));
       })
       .sort((a, b) => SEVERITY_RANK[a.status] - SEVERITY_RANK[b.status]);
   }, [items, query, status]);
@@ -71,7 +72,7 @@ export function FindingsList({
                     setQuery(event.target.value);
                     setPage(1);
                   }}
-                  placeholder="Search findings"
+                  placeholder="Search findings or IDs"
                   aria-controls="findings-results"
                   className="form-input min-h-9 border-muted/60 py-2 pl-9 text-xs placeholder:text-muted focus-visible:ring-accent sm:text-sm"
                 />
@@ -139,13 +140,18 @@ export function FindingsList({
                 <thead>
                   <tr className="border-b border-line bg-canvas/70 text-[11px] font-semibold uppercase tracking-wide text-muted">
                     <th scope="col" className="px-3 py-3 sm:px-5">Finding</th>
-                    <th scope="col" className="w-[5.25rem] px-2 py-3 text-right sm:w-36 sm:px-4">Amount</th>
-                    <th scope="col" className="w-[5rem] px-2 py-3 sm:w-36 sm:px-5">Status</th>
+                    <th scope="col" className="w-28 px-2 py-3 text-right sm:w-36 sm:px-4">
+                      Amount<span className="sm:hidden"> / status</span>
+                    </th>
+                    <th scope="col" className="hidden w-36 px-2 py-3 sm:table-cell sm:px-5">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {visible.map((finding, index) => {
                     const { name, description } = findingPresentation(finding.ruleId);
+                    const references = findingReferences(finding.evidence);
+                    const courier = finding.courier.trim();
+                    const hasCourier = courier && courier !== '\u2014' && courier !== '-';
                     return (
                       <tr
                         key={`${finding.ruleId}-${finding.title}-${start + index}`}
@@ -156,9 +162,16 @@ export function FindingsList({
                           <p className={`mt-1 text-xs leading-relaxed text-muted ${description ? '' : 'line-clamp-2'}`}>
                             {description || finding.title}
                           </p>
-                          <p className="mt-1 text-xs tabular-nums text-muted">
-                            {finding.courier} · {finding.orders} item{finding.orders === 1 ? '' : 's'}
-                          </p>
+                          {references.length > 0 ? (
+                            <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs tabular-nums text-muted" aria-label="Finding references">
+                              {references.map(({ label, identifier }) => (
+                                <li key={label} className="min-w-0">{label} <span className="font-medium text-ink">{identifier}</span></li>
+                              ))}
+                            </ul>
+                          ) : null}
+                          {hasCourier ? (
+                            <p className="mt-1 text-xs text-muted">{courier}{finding.orders > 1 ? ` \u00b7 ${finding.orders} items` : ''}</p>
+                          ) : null}
                           <details className="group mt-1">
                             <summary className="inline-flex min-h-8 cursor-pointer list-none items-center gap-1.5 rounded-md text-xs font-semibold text-accent-ink hover:underline [&::-webkit-details-marker]:hidden">
                               <ChevronDown className="h-3.5 w-3.5 shrink-0 motion-safe:transition-transform group-open:rotate-180" aria-hidden="true" />
@@ -182,8 +195,9 @@ export function FindingsList({
                         </td>
                         <td className="money px-2 py-3 text-right text-xs font-semibold tabular-nums text-ink [overflow-wrap:anywhere] sm:px-4 sm:text-sm">
                           {formatPKR(finding.amount)}
+                          <div className="mt-2 sm:hidden"><FindingStatusPill status={finding.status} /></div>
                         </td>
-                        <td className="px-2 py-3 sm:px-5">
+                        <td className="hidden px-2 py-3 sm:table-cell sm:px-5">
                           <FindingStatusPill status={finding.status} />
                         </td>
                       </tr>

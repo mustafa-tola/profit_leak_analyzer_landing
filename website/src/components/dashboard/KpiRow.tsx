@@ -58,7 +58,7 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
               </Badge>
             </dt>
             <dd
-              className="money mt-5 whitespace-nowrap font-display font-semibold leading-none tracking-[-0.035em] text-ink text-[clamp(1.25rem,4.4vw,1.6rem)]"
+              className="money mt-5 [overflow-wrap:anywhere] font-display font-semibold leading-tight tracking-[-0.035em] text-ink text-[clamp(1.25rem,4.4vw,1.6rem)]"
               title={k.value}
             >
               {k.value}

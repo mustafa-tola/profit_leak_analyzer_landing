@@ -114,9 +114,8 @@ function buildCourierRows(result: Record<string, unknown> | undefined): CourierR
       inTransit: s.inTransit,
       returned: s.returned,
       costPerDelivered: s.delivered > 0 ? Math.round(s.feeTotal / s.delivered) : Math.round(s.feeTotal),
-      avgSettleDays: 0,
     }));
-  return mapped.length > 0 ? mapped : sampleDashboardData.courierComparison;
+  return mapped;
 }
 
 function buildSettlementSlices(run: PublicAnalysisRun): {
