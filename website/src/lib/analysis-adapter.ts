@@ -140,12 +140,12 @@ function buildSettlementSlices(run: PublicAnalysisRun): {
 
   const slices: SettlementSlice[] = [
     { label: 'Verified paid', amount: Math.max(0, Math.round(paidR)), colorClass: 'bg-accent' },
-    { label: 'Outstanding', amount: Math.max(0, Math.round(outstandingR)), colorClass: 'bg-amber-500' },
+    { label: 'Outstanding receivables', amount: Math.max(0, Math.round(outstandingR)), colorClass: 'bg-amber-500' },
     { label: 'Overpaid', amount: Math.max(0, Math.round(overpaidR)), colorClass: 'bg-orange-700 dark:bg-orange-400' },
   ].filter((s) => s.amount > 0 || s.label === 'Verified paid');
 
   if (slices.length === 0) slices.push({ label: 'No settlement amounts', amount: 1, colorClass: 'bg-slate-400' });
-  const label = `Settled ${settled} · Partially settled ${partial} · Oversettled ${oversettled} · Unsettled ${unsettled} · Overdue ${overdue} · Not due ${notDue} · Unknown/NA ${unknown}`;
+  const label = `Shipment status counts · Settled ${settled} · Partially settled ${partial} · Oversettled ${oversettled} · Unsettled ${unsettled} · Overdue ${overdue} · Not due ${notDue} · Unknown/NA ${unknown}`;
   const progress = {
     settled,
     partial,
@@ -174,8 +174,10 @@ function buildFindings(result: Record<string, unknown> | undefined): {
     ]) {
       if (ex[key] !== undefined && ex[key] !== null && ex[key] !== '') evidence[key] = ex[key];
     }
+    const publicEvidence = asRecord(ex.evidence);
+    if (publicEvidence) evidence.evidence = publicEvidence;
     return {
-      ruleId: String(ex.type ?? ex.exception_type ?? `EX-${index + 1}`).slice(0, 16),
+      ruleId: String(ex.type ?? ex.exception_type ?? `EX-${index + 1}`),
       title: String(ex.description ?? ex.message ?? ex.type ?? 'Exception flagged'),
       courier: String(ex.courier ?? '—'),
       orders: 1,

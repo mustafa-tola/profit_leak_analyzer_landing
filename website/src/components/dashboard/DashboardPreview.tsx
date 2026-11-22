@@ -39,7 +39,7 @@ export function DashboardPreview({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="font-display text-lg font-semibold text-ink sm:text-xl">
-                {live ? 'Reconciliation overview' : 'Reconciliation overview'}
+                Reconciliation overview
               </h2>
               {live && data.analysisQuality ? <QualityBadge quality={data.analysisQuality} /> : null}
               <SampleBadge label={live ? (data.runId ? `Run ${data.runId.slice(0, 8)}` : 'Live run') : 'All figures are sample data'} />
@@ -59,7 +59,7 @@ export function DashboardPreview({
               <button
                 type="button"
                 onClick={onExport}
-                className="inline-flex shrink-0 items-center gap-2 self-start rounded-[9px] bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+                className="inline-flex shrink-0 items-center gap-2 self-start rounded-[9px] bg-accent px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
                 <Download className="h-4 w-4" />
                 Export summary CSV
@@ -114,7 +114,7 @@ export function DashboardPreview({
           <SectionIntro
             id={live ? 'settlement-heading-live' : 'settlement-heading-sample'}
             title="Settlement health"
-            description="Shipment counts and settlement value are shown separately so operational status is never confused with money."
+            description="Shipment counts and settlement amounts for the selected cohort."
           />
           <SettlementBreakdown
             slices={data.settlementStatus}
@@ -127,15 +127,13 @@ export function DashboardPreview({
           <SectionIntro
             id={live ? 'operations-heading-live' : 'operations-heading-sample'}
             title="Operational insights"
-            description="Where the exceptions sit, and how the carriers behind this run performed."
+            description="Exception patterns and courier performance for the selected cohort."
           />
-          <div className="grid min-w-0 gap-4 lg:grid-cols-2 sm:gap-5">
+          <div className="grid min-w-0 items-start gap-4 sm:gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
             {live ? (
               <RunAnalytics
-                couriers={data.courierComparison}
                 findings={data.findings}
                 totalFindings={data.totalFindings ?? data.findings.length}
-                live
                 id={embedded ? 'run-analytics-embedded' : 'run-analytics-live'}
               />
             ) : (
@@ -150,7 +148,7 @@ export function DashboardPreview({
           </div>
         </section>
 
-        <section aria-labelledby={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'} aria-label="Exceptions">
+        <section aria-labelledby={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'}>
           <SectionIntro
             id={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'}
             title="Exceptions"
@@ -163,7 +161,7 @@ export function DashboardPreview({
           />
         </section>
 
-        <section aria-label="Metric definitions" className="rounded-[14px] border border-dashed border-line bg-surface p-4 sm:p-5">
+        <aside aria-label="Metric definitions" className="rounded-[14px] border border-dashed border-line bg-surface p-4 sm:p-5">
           <h3 className="font-display text-base font-semibold text-ink">How metrics are calculated</h3>
           <dl className="mt-3 grid gap-4 text-sm leading-relaxed md:grid-cols-2">
             <div className="rounded-xl bg-canvas p-4 ring-1 ring-line/60">
@@ -175,7 +173,7 @@ export function DashboardPreview({
               <dd className="mt-1 text-muted">{costDefinition}</dd>
             </div>
           </dl>
-        </section>
+        </aside>
       </div>
     </article>
   );
@@ -276,7 +274,7 @@ function qualityMessageClass(quality?: string): string {
 function QualityBadge({ quality }: { quality: string }) {
   const cls =
     quality === 'CLEAN'
-      ? 'border-accent/30 bg-accent-soft text-accent-ink'
+      ? 'border-accent/30 bg-accent-soft text-ink'
       : quality === 'PARTIAL_DATA'
         ? 'border-warn/30 bg-warn-soft text-warn'
         : quality === 'NO_VALID_SETTLEMENTS'

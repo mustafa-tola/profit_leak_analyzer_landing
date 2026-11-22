@@ -14,16 +14,14 @@ export function CourierTable({
     const resolved = row.shipped - row.inTransit;
     return { ...row, resolved, rto: resolved > 0 ? row.returned / resolved : 0 };
   });
-  const maxRto = rows.length ? Math.max(...rows.map((row) => row.rto)) : 0;
 
   return (
     <section aria-labelledby="courier-heading" className="min-w-0 rounded-[14px] border border-line bg-surface shadow-sm">
       <div className="px-5 pt-5 sm:px-6 sm:pt-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Operational insights</p>
-        <h3 id="courier-heading" className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">
+        <h4 id="courier-heading" className="font-display text-base font-semibold text-ink sm:text-lg">
           {rows.length === 1 ? 'Courier performance' : 'Courier comparison'}
-        </h3>
-        <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{label}</p>
+        </h4>
+        {rows.length !== 1 && <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{label}</p>}
       </div>
 
       {rows.length === 0 ? (
@@ -53,7 +51,6 @@ export function CourierTable({
             </thead>
             <tbody className="divide-y divide-line">
               {rows.map((row) => {
-                const isHighest = maxRto > 0 && row.rto === maxRto;
                 return (
                   <tr key={row.courier} className="transition-colors duration-150 hover:bg-subtle/30">
                     <th scope="row" className="px-5 py-4 font-semibold text-ink sm:px-6">{row.courier}</th>
@@ -62,7 +59,7 @@ export function CourierTable({
                     <td className="px-3 py-4">
                       <div className="flex items-center gap-3">
                         <span
-                          className={`tabular-nums font-semibold ${isHighest ? 'text-warn' : 'text-ink'}`}
+                          className="tabular-nums font-semibold text-ink"
                           title={`${row.returned} returned of ${row.resolved} resolved parcels (${(row.rto * 100).toFixed(1)}% RTO rate)`}
                         >
                           {(row.rto * 100).toFixed(1)}%
@@ -87,43 +84,30 @@ export function CourierTable({
 
 function SingleCourier({ row }: { row: EnrichedRow }) {
   return (
-    <div className="p-5 sm:p-6">
-      <div className="flex min-w-0 flex-wrap items-start justify-between gap-3 rounded-[12px] bg-canvas p-4 ring-1 ring-line/70 sm:p-5">
-        <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Only carrier in this run</p>
-          <p className="mt-1 font-display text-xl font-semibold text-ink">{row.courier}</p>
-          <p className="mt-1 text-xs text-muted">
-            {row.returned} returned of {row.resolved} resolved parcels
-          </p>
-        </div>
-        <span className="rounded-full border border-accent/25 bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-ink">
-          {(row.rto * 100).toFixed(1)}% RTO
-        </span>
-      </div>
-      <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div className="px-5 pb-5 pt-3 sm:px-6 sm:pb-6">
+      <dl className="rounded-lg bg-canvas px-3 py-2.5">
+        <dt className="font-semibold text-ink [overflow-wrap:anywhere]">{row.courier}</dt>
+        <dd className="mt-1 text-xs leading-relaxed text-muted">
+          {row.resolved > 0
+            ? `Return to origin (RTO) · ${row.returned} of ${row.resolved} resolved parcels (${(row.rto * 100).toFixed(1)}%)`
+            : `Return to origin (RTO) · ${row.resolved} resolved parcels`}
+        </dd>
+      </dl>
+      <dl className="mt-3 grid gap-x-4 gap-y-3 border-t border-line pt-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,6rem),1fr))]">
         <CourierStat label="Shipped" value={row.shipped.toLocaleString('en-US')} />
-        <CourierStat label="In transit" value={row.inTransit.toLocaleString('en-US')} tone="warn" />
+        <CourierStat label="In transit" value={row.inTransit.toLocaleString('en-US')} />
         <CourierStat label="Cost / delivered" value={formatPKR(row.costPerDelivered)} />
         <CourierStat label="Avg. settlement" value={`${row.avgSettleDays.toFixed(1)} days`} />
       </dl>
-      <div className="mt-4">
-        <div className="flex items-baseline justify-between text-xs">
-          <span className="font-medium text-muted">Resolved parcel outcome</span>
-          <span className="tabular-nums font-semibold text-ink">{row.resolved.toLocaleString('en-US')}</span>
-        </div>
-        <p className="mt-1 text-xs text-muted" title="RTO rate = returned parcels ÷ resolved parcels">
-          {row.returned} returned ÷ {row.resolved} resolved = {(row.rto * 100).toFixed(1)}% RTO
-        </p>
-      </div>
     </div>
   );
 }
 
-function CourierStat({ label, value, tone = 'default' }: { label: string; value: string; tone?: 'default' | 'warn' }) {
+function CourierStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 rounded-lg bg-canvas px-3 py-3 ring-1 ring-line/60">
-      <dt className="truncate text-[10px] font-semibold uppercase tracking-wide text-muted">{label}</dt>
-      <dd className={`money mt-1.5 whitespace-nowrap font-display text-sm font-semibold tabular-nums sm:text-base ${tone === 'warn' ? 'text-warn' : 'text-ink'}`}>
+    <div className="min-w-0">
+      <dt className="text-xs font-medium text-muted">{label}</dt>
+      <dd className="money mt-1 text-sm font-semibold tabular-nums text-ink [overflow-wrap:anywhere]">
         {value}
       </dd>
     </div>
