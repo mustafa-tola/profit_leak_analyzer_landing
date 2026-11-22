@@ -140,10 +140,12 @@ export interface DashboardData {
   settlementProgress?: {
     settled: number;
     partial: number;
+    oversettled: number;
     unsettled: number;
     unknown: number;
   };
   findings: Finding[];
+  totalFindings?: number;
   findingsLabel?: string;
   rtoDefinition?: string;
   costDefinition?: string;
@@ -159,6 +161,7 @@ export const sampleDashboardData: DashboardData = {
   settlementStatus,
   settlementLabel: 'PKR 3,520,640 across 1,152 delivered orders',
   findings,
+  totalFindings: findings.length,
   findingsLabel: '47 orders · provisional until verified',
   rtoDefinition,
   costDefinition,

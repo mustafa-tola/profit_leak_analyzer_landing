@@ -9,9 +9,11 @@ const SEVERITY_RANK: Record<FindingStatus, number> = { Overdue: 0, 'Needs review
 
 export function FindingsList({
   items = sampleFindings,
+  totalFindings = items.length,
   label = '47 orders · provisional until verified',
 }: {
   items?: Finding[];
+  totalFindings?: number;
   label?: string;
 }) {
   const [query, setQuery] = useState('');
@@ -96,7 +98,11 @@ export function FindingsList({
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
           <p aria-live="polite">
-            {items.length === 0 ? 'No findings in this run' : `Showing ${filtered.length} of ${items.length} findings · highest severity first`}
+            {items.length === 0
+              ? 'No findings in this run'
+              : totalFindings !== items.length
+                ? `Showing ${filtered.length} of ${items.length} loaded findings (${totalFindings} total exceptions) · highest severity first`
+                : `Showing ${filtered.length} of ${items.length} findings · highest severity first`}
           </p>
           {hasFilters ? (
             <button

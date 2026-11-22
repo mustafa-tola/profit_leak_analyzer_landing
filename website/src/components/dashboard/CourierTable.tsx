@@ -60,18 +60,15 @@ export function CourierTable({
                     <td className="px-3 py-4 text-right tabular-nums text-ink">{row.shipped.toLocaleString('en-US')}</td>
                     <td className="px-3 py-4 text-right tabular-nums text-muted">{row.inTransit}</td>
                     <td className="px-3 py-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-1.5 w-16 overflow-hidden rounded-full bg-line" aria-hidden="true">
-                          <div
-                            className={`h-full rounded-full ${isHighest ? 'bg-warn' : 'bg-accent/60'}`}
-                            style={{ width: `${Math.min(100, (row.rto / 0.3) * 100)}%` }}
-                          />
-                        </div>
-                        <span className={`tabular-nums ${isHighest ? 'font-semibold text-warn' : 'text-ink'}`}>
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`tabular-nums font-semibold ${isHighest ? 'text-warn' : 'text-ink'}`}
+                          title={`${row.returned} returned of ${row.resolved} resolved parcels (${(row.rto * 100).toFixed(1)}% RTO rate)`}
+                        >
                           {(row.rto * 100).toFixed(1)}%
                         </span>
-                        <span className="text-xs tabular-nums text-muted">
-                          {row.returned}/{row.resolved} resolved
+                        <span className="text-xs tabular-nums text-muted" title="RTO rate = returned parcels ÷ resolved parcels">
+                          {row.returned} returned ÷ {row.resolved} resolved
                         </span>
                       </div>
                     </td>
@@ -114,9 +111,9 @@ function SingleCourier({ row }: { row: EnrichedRow }) {
           <span className="font-medium text-muted">Resolved parcel outcome</span>
           <span className="tabular-nums font-semibold text-ink">{row.resolved.toLocaleString('en-US')}</span>
         </div>
-        <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full bg-subtle ring-1 ring-inset ring-line/60" role="img" aria-label={`${row.courier} resolved parcel outcome: ${row.returned} returned of ${row.resolved}`}>
-          <div className="h-full bg-warn" style={{ width: `${row.resolved > 0 ? (row.returned / row.resolved) * 100 : 0}%` }} />
-        </div>
+        <p className="mt-1 text-xs text-muted" title="RTO rate = returned parcels ÷ resolved parcels">
+          {row.returned} returned ÷ {row.resolved} resolved = {(row.rto * 100).toFixed(1)}% RTO
+        </p>
       </div>
     </div>
   );

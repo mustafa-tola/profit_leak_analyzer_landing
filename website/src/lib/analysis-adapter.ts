@@ -122,15 +122,15 @@ function buildCourierRows(result: Record<string, unknown> | undefined): CourierR
 function buildSettlementSlices(run: PublicAnalysisRun): {
   slices: SettlementSlice[];
   label: string;
-  progress: { settled: number; partial: number; unsettled: number; unknown: number };
+  progress: { settled: number; partial: number; oversettled: number; unsettled: number; unknown: number };
 } {
   const kpis = asRecord(run.result?.kpis) ?? {};
   const counts = (kpis.counts_by_completeness as Record<string, number> | undefined) ?? {};
   const dueCounts = (kpis.counts_by_due_date_status as Record<string, number> | undefined) ?? {};
   const settled = num(counts.SETTLED);
   const partial = num(counts.PARTIALLY_SETTLED);
-  const unsettled = num(counts.UNSETTLED);
   const oversettled = num(counts.OVERSETTLED);
+  const unsettled = num(counts.UNSETTLED);
   const unknown = num(counts.UNKNOWN) + num(counts.NOT_APPLICABLE);
   const overdue = num(dueCounts.OVERDUE);
   const notDue = num(dueCounts.NOT_DUE);
@@ -145,17 +145,22 @@ function buildSettlementSlices(run: PublicAnalysisRun): {
   ].filter((s) => s.amount > 0 || s.label === 'Verified paid');
 
   if (slices.length === 0) slices.push({ label: 'No settlement amounts', amount: 1, colorClass: 'bg-slate-400' });
-  const label = `Settled ${settled} · Partial ${partial} · Unsettled ${unsettled} · Oversettled ${oversettled} · Overdue ${overdue} · Not due ${notDue} · Unknown/NA ${unknown}`;
+  const label = `Settled ${settled} · Partially settled ${partial} · Oversettled ${oversettled} · Unsettled ${unsettled} · Overdue ${overdue} · Not due ${notDue} · Unknown/NA ${unknown}`;
   const progress = {
     settled,
-    partial: partial + oversettled,
+    partial,
+    oversettled,
     unsettled,
     unknown,
   };
   return { slices, label, progress };
 }
 
-function buildFindings(result: Record<string, unknown> | undefined): { items: Finding[]; label: string } {
+function buildFindings(result: Record<string, unknown> | undefined): {
+  items: Finding[];
+  total: number;
+  label: string;
+} {
   const exceptions = asArray(result?.exceptions);
   const items: Finding[] = exceptions.slice(0, 12).map((raw, index) => {
     const ex = asRecord(raw) ?? {};
@@ -180,9 +185,13 @@ function buildFindings(result: Record<string, unknown> | undefined): { items: Fi
     };
   });
   if (items.length === 0) {
-    return { items: [], label: 'No exceptions flagged in this run' };
+    return { items: [], total: 0, label: 'No exceptions flagged in this run' };
   }
-  return { items, label: `${exceptions.length} exception${exceptions.length === 1 ? '' : 's'} flagged · provisional, verify before action` };
+  return {
+    items,
+    total: exceptions.length,
+    label: `${exceptions.length} exception${exceptions.length === 1 ? '' : 's'} flagged · ${items.length} loaded · provisional, verify before action`,
+  };
 }
 
 export function toDashboardData(run: PublicAnalysisRun): DashboardData {
@@ -205,6 +214,7 @@ export function toDashboardData(run: PublicAnalysisRun): DashboardData {
     settlementLabel: settlement.label,
     settlementProgress: settlement.progress,
     findings: findings.items,
+    totalFindings: findings.total,
     findingsLabel: findings.label,
     rtoDefinition: 'Live RTO metrics are derived from shipment statuses in the analyzed run. Returned/RTO rows are compared to resolved rows where available.',
     costDefinition: 'Live cost figures are derived from charged delivery/fee fields present in the analyzed run.',

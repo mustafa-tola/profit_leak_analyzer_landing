@@ -79,7 +79,11 @@ export function DashboardPreview({
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-canvas/40 px-4 py-2.5 text-xs sm:px-6">
         <SignalDot tone={qualityTone(data.analysisQuality, live)} label="Data quality" value={qualityShortLabel(data.analysisQuality, live)} />
-        <SignalDot tone={data.findings.length > 0 ? 'warn' : 'good'} label="Exceptions" value={`${data.findings.length} provisional`} />
+        <SignalDot
+          tone={(data.totalFindings ?? data.findings.length) > 0 ? 'warn' : 'good'}
+          label="Exceptions"
+          value={`${data.totalFindings ?? data.findings.length} total · ${data.findings.length} loaded`}
+        />
         <SignalDot tone={reconciliationTone(data.analysisQuality, data.findings.length, live)} label="Reconciliation" value={reconciliationLabel(data.analysisQuality, data.findings.length, live)} />
         <span className="ml-auto hidden font-medium text-muted sm:inline">{live ? 'Evidence-backed view' : 'Illustrative sample'}</span>
       </div>
@@ -100,7 +104,6 @@ export function DashboardPreview({
         <section aria-labelledby={live ? 'financial-heading-live' : 'financial-heading-sample'}>
           <SectionIntro
             id={live ? 'financial-heading-live' : 'financial-heading-sample'}
-            step="01"
             title="Financial overview"
             description="Expected, verified, and outstanding amounts first; provisional discrepancies are shown separately."
           />
@@ -110,7 +113,6 @@ export function DashboardPreview({
         <section aria-labelledby={live ? 'settlement-heading-live' : 'settlement-heading-sample'}>
           <SectionIntro
             id={live ? 'settlement-heading-live' : 'settlement-heading-sample'}
-            step="02"
             title="Settlement health"
             description="Shipment counts and settlement value are shown separately so operational status is never confused with money."
           />
@@ -124,7 +126,6 @@ export function DashboardPreview({
         <section aria-labelledby={live ? 'operations-heading-live' : 'operations-heading-sample'}>
           <SectionIntro
             id={live ? 'operations-heading-live' : 'operations-heading-sample'}
-            step="03"
             title="Operational insights"
             description="Where the exceptions sit, and how the carriers behind this run performed."
           />
@@ -133,6 +134,7 @@ export function DashboardPreview({
               <RunAnalytics
                 couriers={data.courierComparison}
                 findings={data.findings}
+                totalFindings={data.totalFindings ?? data.findings.length}
                 live
                 id={embedded ? 'run-analytics-embedded' : 'run-analytics-live'}
               />
@@ -151,11 +153,14 @@ export function DashboardPreview({
         <section aria-labelledby={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'} aria-label="Exceptions">
           <SectionIntro
             id={live ? 'exceptions-heading-live' : 'exceptions-heading-sample'}
-            step="04"
             title="Exceptions"
             description="Review evidence-backed items in severity order before raising a claim."
           />
-          <FindingsList items={data.findings} label={data.findingsLabel} />
+          <FindingsList
+            items={data.findings}
+            totalFindings={data.totalFindings ?? data.findings.length}
+            label={data.findingsLabel}
+          />
         </section>
 
         <section aria-label="Metric definitions" className="rounded-[14px] border border-dashed border-line bg-surface p-4 sm:p-5">
@@ -225,15 +230,11 @@ function reconciliationLabel(quality: string | undefined, findings: number, live
   return 'Review required';
 }
 
-function SectionIntro({ id, step, title, description }: { id: string; step: string; title: string; description: string }) {
+function SectionIntro({ id, title, description }: { id: string; title: string; description: string }) {
   return (
     <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="rounded-md bg-accent-soft px-1.5 py-0.5 font-mono text-[10px] font-semibold text-accent-ink">{step}</span>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Dashboard section</p>
-        </div>
-        <h3 id={id} className="mt-1.5 font-display text-base font-semibold text-ink sm:text-lg">
+        <h3 id={id} className="mt-0.5 font-display text-base font-semibold text-ink sm:text-lg">
           {title}
         </h3>
       </div>
