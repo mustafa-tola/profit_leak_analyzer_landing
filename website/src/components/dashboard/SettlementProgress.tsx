@@ -4,15 +4,17 @@ import { formatPercent } from '../../utils/currency';
 export type SettlementProgressCounts = {
   settled: number;
   partial: number;
+  oversettled: number;
   unsettled: number;
   unknown: number;
 };
 
 const SEGMENTS: Array<{ key: keyof SettlementProgressCounts; label: string; stroke: string; dot: string }> = [
   { key: 'settled', label: 'Settled', stroke: 'stroke-[rgb(var(--accent))]', dot: 'bg-accent' },
-  { key: 'partial', label: 'Partial / overpaid', stroke: 'stroke-[rgb(var(--warn))]', dot: 'bg-warn' },
-  { key: 'unsettled', label: 'Unsettled', stroke: 'stroke-[rgb(var(--danger))]', dot: 'bg-danger' },
-  { key: 'unknown', label: 'Unknown / N/A', stroke: 'stroke-[rgb(var(--muted))]', dot: 'bg-slate-400 dark:bg-slate-500' },
+  { key: 'partial', label: 'Partially settled', stroke: 'stroke-[rgb(var(--warn))]', dot: 'bg-warn' },
+  { key: 'oversettled', label: 'Oversettled', stroke: 'stroke-[rgb(var(--danger))]', dot: 'bg-danger' },
+  { key: 'unsettled', label: 'Unsettled', stroke: 'stroke-[rgb(var(--muted))]', dot: 'bg-slate-400 dark:bg-slate-500' },
+  { key: 'unknown', label: 'Unknown / N/A', stroke: 'stroke-[rgb(var(--muted))]', dot: 'bg-slate-500 dark:bg-slate-600' },
 ];
 
 export function SettlementProgress({ progress }: { progress?: SettlementProgressCounts }) {

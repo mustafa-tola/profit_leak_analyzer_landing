@@ -24,9 +24,8 @@ const iconByKpi: Record<string, ReactNode> = {
 export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
   return (
     <dl className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 2xl:grid-cols-4">
-      {items.map((k, index) => {
+      {items.map((k) => {
         const provisional = Boolean(k.emphasis);
-        const featured = index === 0;
         const progress = k.progress;
         const barTone =
           progress?.tone === 'danger'
@@ -43,9 +42,7 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
         return (
           <div
             key={k.id}
-            className={`min-w-0 rounded-[14px] border p-5 shadow-sm transition-colors duration-150 hover:bg-subtle/30 sm:p-6 ${
-              featured ? 'sm:col-span-2 border-accent/20 bg-accent-soft/35 2xl:col-span-2' : 'border-line bg-surface'
-            } ${provisional ? 'border-warn/25 bg-warn-soft/45' : ''}`}
+            className={`min-w-0 rounded-[14px] border p-5 shadow-sm transition-colors duration-150 hover:bg-subtle/30 sm:p-6 border-line bg-surface ${provisional ? 'border-warn/25 bg-warn-soft/45' : ''}`}
           >
             <dt className="flex min-w-0 items-start justify-between gap-3">
               <span className="flex min-w-0 items-start gap-2.5">
@@ -61,11 +58,7 @@ export function KpiRow({ items = sampleKpis }: { items?: Kpi[] }) {
               </Badge>
             </dt>
             <dd
-              className={`money mt-5 whitespace-nowrap font-display font-semibold leading-none tracking-[-0.035em] text-ink ${
-                featured
-                  ? 'text-[clamp(1.6rem,5vw,2.25rem)]'
-                  : 'text-[clamp(1.25rem,4.4vw,1.6rem)]'
-              }`}
+              className="money mt-5 whitespace-nowrap font-display font-semibold leading-none tracking-[-0.035em] text-ink text-[clamp(1.25rem,4.4vw,1.6rem)]"
               title={k.value}
             >
               {k.value}
