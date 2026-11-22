@@ -51,10 +51,10 @@ export function SettlementProgress({ progress }: { progress?: SettlementProgress
   return (
     <div className="min-w-0">
       <div className="flex items-baseline justify-between gap-3">
-        <h4 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">Shipment completeness</h4>
-        <span className="text-[11px] font-medium text-muted">Counts, not value</span>
+        <h5 className="text-xs font-semibold text-muted">Shipment completeness</h5>
+        <span className="text-[11px] font-medium text-muted">Shipment counts</span>
       </div>
-      <div className="mt-3 flex min-w-0 items-center gap-5">
+      <div className="mt-3 flex min-w-0 flex-wrap items-center justify-center gap-x-5 gap-y-3">
         <div className="relative h-28 w-28 shrink-0 sm:h-32 sm:w-32">
           <svg viewBox="0 0 42 42" className="h-full w-full -rotate-90" aria-hidden="true">
             <circle cx="21" cy="21" r="15.9155" fill="none" strokeWidth="5" className="stroke-subtle" />
@@ -78,13 +78,13 @@ export function SettlementProgress({ progress }: { progress?: SettlementProgress
             <span className="mt-1 text-[10px] font-medium uppercase tracking-wide text-muted">shipments</span>
           </div>
         </div>
-        <ul className="min-w-0 flex-1 space-y-2">
+        <ul className="min-w-0 flex-[1_1_12rem] space-y-2">
           {SEGMENTS.map((segment) => {
             const count = progress[segment.key];
             return (
               <li key={segment.key} className="flex min-w-0 items-center gap-2 text-xs">
                 <span className={`h-2 w-2 shrink-0 rounded-full ${segment.dot}`} aria-hidden="true" />
-                <span className="min-w-0 flex-1 truncate text-muted">{segment.label}</span>
+                <span className="min-w-0 flex-1 text-muted">{segment.label}</span>
                 <span className="shrink-0 font-semibold tabular-nums text-ink">{count.toLocaleString('en-US')}</span>
                 <span className="w-11 shrink-0 text-right tabular-nums text-muted">
                   {formatPercent(count, total, 0)}

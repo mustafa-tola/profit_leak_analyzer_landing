@@ -35,24 +35,20 @@ export function SettlementBreakdown({ slices = sampleSlices, label, progress }: 
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-accent-ink">Settlement health</p>
-          <h3 id="settlement-heading" className="mt-1 font-display text-base font-semibold text-ink sm:text-lg">
+          <h4 id="settlement-heading" className="font-display text-base font-semibold text-ink sm:text-lg">
             Settlement breakdown
-          </h3>
-          <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{label ?? `${formatPKR(total)} total`}</p>
+          </h4>
+          {label && <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">{label}</p>}
         </div>
-        <span className="rounded-full bg-subtle px-2.5 py-1 text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60">
-          Counts vs value
-        </span>
       </div>
 
-      <div className="mt-5 grid min-w-0 gap-6 lg:grid-cols-2 lg:gap-8">
+      <div className="mt-5 grid min-w-0 gap-6 xl:grid-cols-2 xl:gap-8">
         <SettlementProgress progress={progress} />
 
-        <div className="min-w-0 border-t border-line pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+        <div className="min-w-0 border-t border-line pt-5 xl:border-l xl:border-t-0 xl:pl-8 xl:pt-0">
           <div className="flex items-baseline justify-between gap-3">
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">Settlement value</h4>
-            <span className="text-[11px] font-medium text-muted">Money, not counts</span>
+            <h5 className="text-xs font-semibold text-muted">Settlement value</h5>
+            <span className="text-[11px] font-medium text-muted">PKR</span>
           </div>
           <p className="money mt-2 whitespace-nowrap font-display text-xl font-semibold leading-none tracking-tight text-ink">
             {formatPKR(total)}
@@ -74,7 +70,7 @@ export function SettlementBreakdown({ slices = sampleSlices, label, progress }: 
             {groups.map((group) => (
               <li key={group.label} className="flex min-w-0 items-center gap-2 text-xs">
                 <span className={`h-2 w-2 shrink-0 rounded-full ${group.dot}`} aria-hidden="true" />
-                <span className="min-w-0 flex-1 truncate text-muted">{group.label}</span>
+                <span className="min-w-0 flex-1 text-muted">{group.label}</span>
                 <span className="shrink-0 whitespace-nowrap font-semibold tabular-nums text-ink">{formatPKR(group.amount)}</span>
                 <span className="w-11 shrink-0 text-right tabular-nums text-muted">
                   {formatPercent(group.amount, total, 0)}
