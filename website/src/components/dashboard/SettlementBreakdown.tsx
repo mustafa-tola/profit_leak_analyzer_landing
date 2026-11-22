@@ -22,7 +22,7 @@ export function SettlementBreakdown({ slices = sampleSlices, label, progress }: 
 
   const groups: MoneyGroup[] = [
     { label: 'Verified / settled', amount: verified, bar: 'bg-accent', dot: 'bg-accent' },
-    { label: 'Outstanding / at risk', amount: outstanding, bar: 'bg-warn', dot: 'bg-warn' },
+    { label: 'Outstanding receivables', amount: outstanding, bar: 'bg-warn', dot: 'bg-warn' },
     ...(other > 0 ? [{ label: 'Other adjustments', amount: other, bar: 'bg-slate-400 dark:bg-slate-500', dot: 'bg-slate-400 dark:bg-slate-500' }] : []),
   ];
 

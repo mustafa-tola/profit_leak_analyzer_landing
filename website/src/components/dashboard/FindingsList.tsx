@@ -138,8 +138,8 @@ export function FindingsList({
               <caption className="sr-only">Exception findings ordered by severity, including rule, description, amount, and status.</caption>
               <thead>
                 <tr className="border-b border-line bg-canvas/70 text-[11px] font-semibold uppercase tracking-wide text-muted">
+                  <th scope="col" className="px-4 py-3 sm:px-5">Finding</th>
                   <th scope="col" className="px-5 py-3 sm:px-6">Rule / source</th>
-                  <th scope="col" className="px-4 py-3">Finding</th>
                   <th scope="col" className="px-4 py-3 text-right">Amount</th>
                   <th scope="col" className="px-5 py-3 sm:px-6">Status</th>
                 </tr>
@@ -152,25 +152,19 @@ export function FindingsList({
                       key={`${finding.ruleId}-${finding.title}-${start + index}`}
                       className="align-top transition-colors duration-150 hover:bg-subtle/30 focus-within:bg-subtle/30"
                     >
-                      <td className="px-5 py-4 sm:px-6">
-                        <span className="inline-flex rounded-md bg-subtle px-2 py-1 font-mono text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60">
-                          {finding.ruleId}
-                        </span>
-                        <p className="mt-2 text-xs font-medium text-ink">{finding.courier}</p>
-                        <p className="text-[11px] tabular-nums text-muted">
-                          {finding.orders} item{finding.orders === 1 ? '' : 's'}
+                      <td className="px-4 py-4 sm:px-5 min-w-0">
+                        <p className="font-medium leading-snug text-ink [overflow-wrap:anywhere]">{finding.title}</p>
+                        <p className="mt-0.5 text-[11px] tabular-nums text-muted">
+                          {finding.courier} · {finding.orders} item{finding.orders === 1 ? '' : 's'}
                         </p>
-                      </td>
-                      <td className="max-w-xl px-4 py-4">
-                        <p className="line-clamp-2 font-medium leading-snug text-ink [overflow-wrap:anywhere]">{finding.title}</p>
                         {evidenceCount > 0 ? (
                           <details className="group mt-2">
                             <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md text-[11px] font-semibold text-accent-ink hover:underline [&::-webkit-details-marker]:hidden">
                               <ChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" aria-hidden="true" />
-                              Evidence · {evidenceCount} field{evidenceCount === 1 ? '' : 's'}
+                              Show evidence · {evidenceCount} field{evidenceCount === 1 ? '' : 's'}
                             </summary>
                             <pre
-                              className="mt-2 max-h-52 overflow-auto rounded-lg bg-canvas p-3 text-[11px] leading-relaxed text-muted ring-1 ring-line"
+                              className="mt-2 max-h-48 overflow-auto rounded-lg bg-canvas p-3 text-[11px] leading-relaxed text-muted ring-1 ring-line"
                               role="region"
                               aria-label={`Evidence for ${finding.ruleId}`}
                               tabIndex={0}
@@ -181,6 +175,16 @@ export function FindingsList({
                         ) : (
                           <p className="mt-1 text-[11px] text-muted">No evidence fields available.</p>
                         )}
+                      </td>
+                      <td className="px-5 py-4 sm:px-6 min-w-[120px]">
+                        <button
+                          type="button"
+                          className="flex items-center gap-1.5 shrink-0 rounded-md bg-subtle px-2.5 py-1 font-mono text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60 hover:bg-subtle/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                          title={finding.ruleId}
+                        >
+                          {finding.ruleId}
+                          <span className="sr-only">Rule code {finding.ruleId}</span>
+                        </button>
                       </td>
                       <td className="whitespace-nowrap px-4 py-4 text-right text-sm font-semibold tabular-nums text-ink money">
                         {formatPKR(finding.amount)}

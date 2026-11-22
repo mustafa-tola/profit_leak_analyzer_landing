@@ -14,7 +14,6 @@ export function CourierTable({
     const resolved = row.shipped - row.inTransit;
     return { ...row, resolved, rto: resolved > 0 ? row.returned / resolved : 0 };
   });
-  const maxRto = rows.length ? Math.max(...rows.map((row) => row.rto)) : 0;
 
   return (
     <section aria-labelledby="courier-heading" className="min-w-0 rounded-[14px] border border-line bg-surface shadow-sm">
@@ -53,7 +52,6 @@ export function CourierTable({
             </thead>
             <tbody className="divide-y divide-line">
               {rows.map((row) => {
-                const isHighest = maxRto > 0 && row.rto === maxRto;
                 return (
                   <tr key={row.courier} className="transition-colors duration-150 hover:bg-subtle/30">
                     <th scope="row" className="px-5 py-4 font-semibold text-ink sm:px-6">{row.courier}</th>
@@ -62,7 +60,7 @@ export function CourierTable({
                     <td className="px-3 py-4">
                       <div className="flex items-center gap-3">
                         <span
-                          className={`tabular-nums font-semibold ${isHighest ? 'text-warn' : 'text-ink'}`}
+                          className="tabular-nums font-semibold text-ink"
                           title={`${row.returned} returned of ${row.resolved} resolved parcels (${(row.rto * 100).toFixed(1)}% RTO rate)`}
                         >
                           {(row.rto * 100).toFixed(1)}%
@@ -92,11 +90,11 @@ function SingleCourier({ row }: { row: EnrichedRow }) {
         <div className="min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Only carrier in this run</p>
           <p className="mt-1 font-display text-xl font-semibold text-ink">{row.courier}</p>
-          <p className="mt-1 text-xs text-muted">
-            {row.returned} returned of {row.resolved} resolved parcels
+          <p className="mt-1 text-xs text-muted" title="RTO rate = returned parcels ÷ resolved parcels">
+            {row.returned} of {row.resolved} resolved parcels returned ({(row.rto * 100).toFixed(1)}% RTO)
           </p>
         </div>
-        <span className="rounded-full border border-accent/25 bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-ink">
+        <span className="rounded-full border border-line bg-surface px-2.5 py-1 text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60">
           {(row.rto * 100).toFixed(1)}% RTO
         </span>
       </div>

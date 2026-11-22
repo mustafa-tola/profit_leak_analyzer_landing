@@ -68,12 +68,14 @@ export function RunAnalytics({ couriers, findings, totalFindings, live, id = 'ru
           <div className="min-w-0">
             <div className="flex items-baseline justify-between gap-3">
               <h4 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">By severity</h4>
-              <span className="text-xs font-semibold tabular-nums text-ink">{totalFindings} total</span>
+              <span className="text-xs font-semibold tabular-nums text-ink">
+                {totalFindings} total exceptions · {findings.length} loaded
+              </span>
             </div>
             <div
               className="mt-3 flex h-2.5 w-full overflow-hidden rounded-full bg-subtle ring-1 ring-inset ring-line/60"
               role="img"
-              aria-label={`Exception severity distribution. ${described}.`}
+              aria-label={`Exception severity distribution across ${findings.length} loaded findings. ${described}.`}
             >
               {distribution.map((item) =>
                 item.count > 0 ? (
@@ -81,6 +83,7 @@ export function RunAnalytics({ couriers, findings, totalFindings, live, id = 'ru
                     key={item.status}
                     className={`${item.bar} h-full first:rounded-l-full last:rounded-r-full`}
                     style={{ width: `${(item.count / findings.length) * 100}%` }}
+                    title={`${item.label}: ${item.count} of ${findings.length} loaded findings`}
                   />
                 ) : null,
               )}
@@ -92,11 +95,14 @@ export function RunAnalytics({ couriers, findings, totalFindings, live, id = 'ru
                   <span className="min-w-0 flex-1 truncate text-muted">{item.label}</span>
                   <span className="shrink-0 font-semibold tabular-nums text-ink">{item.count}</span>
                   <span className="w-10 shrink-0 text-right tabular-nums text-muted">
-                    {Math.round((item.count / findings.length) * 100)}%
+                    {Math.round((item.count / findings.length) * 100)}% of loaded
                   </span>
                 </li>
               ))}
             </ul>
+            <p className="mt-2 text-[10px] leading-relaxed text-muted">
+              Severity breakdown is based on the {findings.length} findings loaded in this view. {totalFindings} total exceptions were flagged across the full run.
+            </p>
           </div>
 
           <div className="min-w-0 border-t border-line pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
@@ -107,12 +113,14 @@ export function RunAnalytics({ couriers, findings, totalFindings, live, id = 'ru
                 const finding = findings.find((f) => f.ruleId === rule);
                 return (
                   <li key={rule} className="flex min-w-0 items-center gap-3">
-                    <span
-                      className="shrink-0 rounded-md bg-subtle px-2.5 py-1 font-mono text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60"
+                    <button
+                      type="button"
+                      className="flex items-center gap-2 shrink-0 rounded-md bg-subtle px-2.5 py-1 font-mono text-[11px] font-semibold text-muted ring-1 ring-inset ring-line/60 hover:bg-subtle/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                       title={rule}
                     >
                       {humanLabel}
-                    </span>
+                      <span className="sr-only">Rule code: {rule}</span>
+                    </button>
                     <span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-subtle" aria-hidden="true">
                       <span
                         className="block h-full rounded-full bg-accent/60"

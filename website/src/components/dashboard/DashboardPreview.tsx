@@ -100,7 +100,7 @@ export function DashboardPreview({
         </div>
       ) : null}
 
-      <div className="min-w-0 space-y-6 bg-canvas p-4 sm:p-5 lg:p-6">
+      <div className="min-w-0 space-y-5 bg-canvas p-4 sm:p-5 lg:p-6">
         <section aria-labelledby={live ? 'financial-heading-live' : 'financial-heading-sample'}>
           <SectionIntro
             id={live ? 'financial-heading-live' : 'financial-heading-sample'}
