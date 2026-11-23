@@ -38,11 +38,18 @@ loadLocalEnv();
 
 const host = process.env.HOST?.trim() || '127.0.0.1';
 const port = Number(process.env.PORT ?? 8787);
+const production = process.env.NODE_ENV === 'production';
 
 // ── Rate limiting (in-memory, per seller + IP) ──────────────────────────────
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX_REQUESTS = 60; // 60 requests per minute per key
 const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of rateLimitStore) {
+    if (now >= entry.resetAt) rateLimitStore.delete(key);
+  }
+}, RATE_LIMIT_WINDOW_MS).unref();
 
 function rateLimit(key: string): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
@@ -66,6 +73,16 @@ function parseList(value: string | undefined): string[] | undefined {
   return items && items.length > 0 ? items : undefined;
 }
 
+function productionOrigins(name: string, origins: string[] | undefined): void {
+  if (!production) return;
+  if (!origins?.length || !origins.every((origin) => {
+    const url = URL.canParse(origin) ? new URL(origin) : null;
+    return url?.protocol === 'https:' && url.origin === origin;
+  })) {
+    throw new Error(`${name} must contain explicit HTTPS origins in production`);
+  }
+}
+
 function sellerClaim(value: string | undefined): ClerkSellerClaim {
   if (value === undefined || value.trim() === '') return 'org_slug';
   if (value === 'org_slug' || value === 'org_id' || value === 'sub') return value;
@@ -75,6 +92,9 @@ function sellerClaim(value: string | undefined): ClerkSellerClaim {
 function createRepository(): AnalysisRepository {
   const configured = process.env.PLA_REPOSITORY?.trim().toLowerCase();
   const mode = configured ?? (process.env.DATABASE_URL ? 'prisma' : 'memory');
+  if (production && mode !== 'prisma') {
+    throw new Error('Production requires PostgreSQL persistence');
+  }
 
   if (mode === 'memory') {
     console.log('Persistence: in-memory (development only)');
@@ -96,6 +116,7 @@ function createRepository(): AnalysisRepository {
 
 function createAuthenticator(): Authenticator {
   if (process.env.PLA_DEV_HEADER_AUTH === '1') {
+    if (production) throw new Error('Development header authentication is disabled in production');
     console.log('Authentication: development x-seller-id adapter');
     return createDevHeaderAuthenticator(true);
   }
@@ -107,15 +128,23 @@ function createAuthenticator(): Authenticator {
     );
   }
 
+  const authorizedParties = parseList(process.env.CLERK_AUTHORIZED_PARTIES);
+  productionOrigins('CLERK_AUTHORIZED_PARTIES', authorizedParties);
+  const claim = sellerClaim(process.env.CLERK_SELLER_CLAIM);
+  if (production && claim === 'org_slug') {
+    throw new Error('Production requires CLERK_SELLER_CLAIM=org_id or sub');
+  }
   console.log('Authentication: Clerk bearer tokens');
   return createClerkAuthenticator({
     secretKey,
-    authorizedParties: parseList(process.env.CLERK_AUTHORIZED_PARTIES),
-    sellerClaim: sellerClaim(process.env.CLERK_SELLER_CLAIM),
+    authorizedParties,
+    sellerClaim: claim,
   });
 }
 
-const allowedOrigins = parseList(process.env.PLA_CORS_ORIGINS) ?? ['http://localhost:5173'];
+const configuredOrigins = parseList(process.env.PLA_CORS_ORIGINS);
+productionOrigins('PLA_CORS_ORIGINS', configuredOrigins);
+const allowedOrigins = configuredOrigins ?? ['http://localhost:5173'];
 const repository = createRepository();
 const authenticator = createAuthenticator();
 const service = new AnalysisService({ repository });
@@ -141,33 +170,40 @@ function toWebRequest(request: IncomingMessage, url: URL): Request {
 }
 
 const server = createServer(async (request, response) => {
-  const url = new URL(
-    request.url ?? '/',
-    `http://${request.headers.host ?? `localhost:${port}`}`,
-  );
+  const target = request.url ?? '/';
+  const base = `http://localhost:${port}`;
+  if (!URL.canParse(target, base)) {
+    response.writeHead(400, { 'cache-control': 'no-store' }).end();
+    return;
+  }
 
+  const url = new URL(target, base);
   const origin = Array.isArray(request.headers.origin)
     ? request.headers.origin[0]
     : request.headers.origin ?? null;
   const corsHeaders = resolveCorsHeaders(origin, { allowedOrigins });
   Object.entries(corsHeaders).forEach(([key, value]) => response.setHeader(key, value));
 
-  // Rate limit per client IP (fallback to 'unknown')
-  const clientIp = request.headers['x-forwarded-for'] ?? request.headers['x-real-ip'] ?? 'unknown';
-  const clientKey = Array.isArray(clientIp) ? clientIp[0] : clientIp;
-  const rate = rateLimit(String(clientKey));
-  response.setHeader('ratelimit-limit', String(RATE_LIMIT_MAX_REQUESTS));
-  response.setHeader('ratelimit-remaining', String(rate.remaining));
-  response.setHeader('ratelimit-reset', String(Math.ceil(rate.resetAt / 1000)));
-  if (!rate.allowed) {
-    response.statusCode = 429;
-    response.setHeader('content-type', 'application/json; charset=utf-8');
-    response.end(
-      JSON.stringify({
-        error: { code: 'RATE_LIMITED', message: 'Too many requests. Please try again later.' },
-      }),
-    );
-    return;
+  // Forwarded headers are caller-controlled unless a trusted ingress rewrites them.
+  const rate = url.pathname === '/health'
+    ? null
+    : rateLimit(request.socket.remoteAddress ?? 'unknown');
+  if (rate) {
+    response.setHeader('ratelimit-limit', String(RATE_LIMIT_MAX_REQUESTS));
+    response.setHeader('ratelimit-remaining', String(rate.remaining));
+    response.setHeader('ratelimit-reset', String(Math.ceil(rate.resetAt / 1000)));
+    if (!rate.allowed) {
+      response.statusCode = 429;
+      response.setHeader('retry-after', String(Math.max(1, Math.ceil((rate.resetAt - Date.now()) / 1000))));
+      response.setHeader('cache-control', 'no-store');
+      response.setHeader('content-type', 'application/json; charset=utf-8');
+      response.end(
+        JSON.stringify({
+          error: { code: 'RATE_LIMITED', message: 'Too many requests. Please try again later.' },
+        }),
+      );
+      return;
+    }
   }
 
   if (request.method === 'OPTIONS') {
@@ -201,12 +237,14 @@ const server = createServer(async (request, response) => {
     }
 
     response.statusCode = webResponse.status;
+    if (webResponse.status >= 500) console.error('API handler returned a server error');
     webResponse.headers.forEach((value, key) => {
       response.setHeader(key, value);
     });
     const body = await webResponse.arrayBuffer();
     response.end(Buffer.from(body));
   } catch {
+    console.error('API request processing failed');
     response.statusCode = 500;
     response.setHeader('content-type', 'application/json; charset=utf-8');
     response.end(

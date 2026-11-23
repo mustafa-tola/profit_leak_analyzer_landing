@@ -185,6 +185,9 @@ export class AnalysisService {
     };
 
     run.verification = verifyPersistedCounts(run);
+    if (!run.verification.persisted_counts_match) {
+      throw new ApiError(500, 'PERSISTENCE_VERIFICATION_FAILED', 'The analysis could not be saved');
+    }
     await this.repository.save(run);
 
     const stored = await this.repository.findById(sellerId, runId);
@@ -199,7 +202,6 @@ export class AnalysisService {
         500,
         'PERSISTENCE_VERIFICATION_FAILED',
         'Stored analysis did not match the engine output',
-        { verification, hash_matches: hashMatches },
       );
     }
 

@@ -28,7 +28,7 @@ function cellText(value: unknown): string {
 
 export function csvCell(value: unknown): string {
   let text = cellText(value);
-  if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+  if (/^[\t\r\n]|^\s*[=+\-@]/.test(text)) text = `'${text}`;
   return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 

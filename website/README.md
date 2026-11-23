@@ -2,7 +2,7 @@
 
 An academic prototype of a financial analytics product for Pakistani cash-on-delivery sellers. It presents a static marketing site and a sample reconciliation dashboard that illustrate how hidden courier costs, RTO losses and settlement gaps could be traced back to source rows.
 
-The repository now also contains a Phase 3 backend core: strict CSV ingestion, the migrated financial engine, a seller-scoped PostgreSQL/Prisma repository, Clerk bearer-token authentication, and a read/write API. The Vite UI is not yet wired to that API.
+The React and Vite workspace uses a separate Node API with Clerk bearer-token authentication, strict CSV ingestion, the TypeScript reconciliation engine, and seller-scoped PostgreSQL persistence through Prisma.
 
 ## Run the website locally
 
@@ -46,6 +46,15 @@ npm.cmd run build:all
 npm.cmd run api:start
 ```
 
+## Staging and production checklist
+
+1. Use separate staging and production configuration and PostgreSQL databases. Build the Vite frontend with the environment's Clerk publishable key and HTTPS API URL. Set the matching Clerk secret and database URL only on the API host. Keep secrets in the hosting platform's secret store and out of frontend variables, artifacts, and logs.
+2. Run the API with `NODE_ENV=production` and `PLA_REPOSITORY=prisma`. Set `CLERK_AUTHORIZED_PARTIES` and `PLA_CORS_ORIGINS` to explicit HTTPS frontend origins. Configure Clerk's allowed origins and sign-in and sign-out redirects for that environment. Leave development header authentication disabled.
+3. Select `CLERK_SELLER_CLAIM=org_id` for organization accounts or `sub` for personal accounts. The normalized verified claim must match the seller ID in the CSV and persisted records. For existing slug-keyed data, approve and verify a tenant mapping and migration before production cutover. Switching the setting alone will not move historical runs.
+4. Back up the target database, run the existing migration deployment step, and confirm the API account has the required database privileges. Configure TLS, a request timeout, and a gateway body limit no greater than the API's 40 MiB multipart limit. Deny direct public access to the API origin when using a gateway. The application limiter uses the socket peer and is per instance; configure client-aware throttling at the gateway and validate the aggregate limit for shared proxy connections.
+5. Probe `GET /health` for process liveness. Use a separate database connectivity check and an authenticated synthetic seller workflow for readiness. Monitor 5xx/429 responses, latency, database health and backup age. Keep uploaded records, tokens and financial data out of operational logs. Configure retention and practice restoring a backup before accepting live seller data.
+6. In staging, use two real Clerk tenants and check uploads, list and detail isolation, organization switching, exports, redirects, and restart durability. Run the opt-in PostgreSQL integration test against a disposable database with `PLA_TEST_DATABASE=1`. Confirm retry behavior before enabling gateway retries on analysis POST requests. Deliberate repeat uploads still create separate runs.
+
 Phase 3 smoke checks:
 
 ```powershell
@@ -63,8 +72,7 @@ npm.cmd run api:smoke
 
 ## Prototype scope
 
-- The marketing site and dashboard are still a React + TypeScript + Vite demonstration. They use fictional sample data.
-- The backend API exists, but the current UI does not upload files, sign users in, or display live runs.
+- The public marketing dashboard uses fictional sample data. The signed-in workspace displays the seller's uploaded runs.
 - The demo request form validates entries in the browser only. It does not transmit or store anything.
 - The API stores source rows as audit evidence in PostgreSQL. A retention/deletion policy is still pending.
 - A potential discrepancy in the dashboard is not a confirmed loss.
