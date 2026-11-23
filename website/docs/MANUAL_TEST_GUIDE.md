@@ -256,6 +256,7 @@ Open `/app`.
 | 2 | Sign in with a user in the correct organization | Redirects/stays on `/app`; shows signed-in email/id and org |
 | 3 | Observe initial state | “No runs yet” or existing seller runs load; no auth error if token valid |
 | 4 | Upload without required files | UI error: orders, shipments, settlements required |
+| 4a | Select a `.txt` file in any CSV field using the file picker's all-files option, then select another field's valid CSV and try to analyze | The affected field displays “Choose a file ending in .csv.” The message stays visible until that field is corrected or the form is reset. No upload request, stack trace, or new run appears. |
 | 5 | Select `orders.csv`, `shipments.csv`, `settlements.csv`, `allocations.csv` from fixtures; set as-of date if desired; click **Run analysis** | Button shows analyzing state; on success dashboard/report appears; run appears in “Previous runs” |
 | 6 | Validate live dashboard | KPIs/quality/counts render; monthly trend labeled as sample/not available for single live run (MVP behavior); no raw `source_rows` data displayed |
 | 7 | Expand **Report details** | JSON shows `run_id`, `seller_id`, `counts`, `kpis_pkr`, `verification`, `output_hash`, `source_files`; **no raw `source_rows` data** (`counts.source_rows` count is OK) |
