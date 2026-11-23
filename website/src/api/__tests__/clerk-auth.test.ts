@@ -54,6 +54,20 @@ describe('createClerkAuthenticator', () => {
     });
   });
 
+  it('requires a verified organization ID when organization ID mode is selected', async () => {
+    const verifyToken: ClerkTokenVerifier = async (token) => ({
+      sub: 'user_123',
+      o: token === 'without-org' ? { slg: 'seller-demo' } : { id: 'org_123', slg: 'seller-demo' },
+    });
+    const authenticate = createClerkAuthenticator({
+      secretKey: 'sk_test',
+      sellerClaim: 'org_id',
+      verifyToken,
+    });
+    await expect(authenticate(request('Bearer without-org'))).resolves.toBeNull();
+    await expect(authenticate(request('Bearer with-org'))).resolves.toMatchObject({ seller_id: 'org_123' });
+  });
+
   it('rejects missing, malformed, and unverifiable tokens', async () => {
     const verifyToken: ClerkTokenVerifier = async () => {
       throw new Error('invalid token');

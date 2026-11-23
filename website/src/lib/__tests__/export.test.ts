@@ -63,6 +63,8 @@ describe('CSV exports', () => {
     expect(csvCell('line1\nline2')).toBe('"line1\nline2"');
     expect(csvCell('=SUM(A1:A2)')).toBe("'=SUM(A1:A2)");
     expect(csvCell('@cmd')).toBe("'@cmd");
+    expect(csvCell('  =1+1')).toBe("'  =1+1");
+    expect(csvCell('\n=1+1')).toBe("\"'\n=1+1\"");
   });
 
   it('writes CRLF rows with a trailing newline', () => {

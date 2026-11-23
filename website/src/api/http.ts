@@ -21,6 +21,7 @@ export interface AnalyzeHandlerDeps {
 export type AnalyzeHandler = (request: Request) => Promise<Response>;
 
 const DEFAULT_MAX_TOTAL_BYTES = 40 * 1024 * 1024;
+const CSV_MEDIA_TYPES = new Set(['text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel']);
 const JSON_HEADERS = {
   'content-type': 'application/json; charset=utf-8',
   'cache-control': 'no-store',
@@ -125,8 +126,8 @@ export function createAnalyzeHandler(deps: AnalyzeHandlerDeps): AnalyzeHandler {
       return json(401, errorBody('UNAUTHORIZED', 'Authentication is required'));
     }
 
-    const contentType = (request.headers.get('content-type') ?? '').toLowerCase();
-    if (!contentType.startsWith('multipart/form-data')) {
+    const contentType = request.headers.get('content-type') ?? '';
+    if (contentType.split(';', 1)[0].trim().toLowerCase() !== 'multipart/form-data') {
       return json(
         415,
         errorBody('UNSUPPORTED_MEDIA_TYPE', 'Use multipart/form-data for CSV uploads'),
@@ -139,9 +140,23 @@ export function createAnalyzeHandler(deps: AnalyzeHandlerDeps): AnalyzeHandler {
     }
 
     let formData: FormData;
+    let bytesRead = 0;
+    const body = request.body?.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
+      transform(chunk, controller) {
+        bytesRead += chunk.byteLength;
+        if (bytesRead > maxTotalBytes) {
+          controller.error(new Error('Upload exceeds byte limit'));
+          return;
+        }
+        controller.enqueue(chunk);
+      },
+    }), { preventCancel: true });
     try {
-      formData = await request.formData();
+      formData = await new Response(body, { headers: { 'content-type': contentType } }).formData();
     } catch {
+      if (bytesRead > maxTotalBytes) {
+        return json(413, errorBody('UPLOAD_TOO_LARGE', 'The combined upload exceeds the size limit'));
+      }
       return json(400, errorBody('INVALID_FORM_DATA', 'The uploaded form could not be parsed'));
     }
 
@@ -163,7 +178,7 @@ export function createAnalyzeHandler(deps: AnalyzeHandlerDeps): AnalyzeHandler {
             { path: FILE_FIELDS[source], message: 'File must have a .csv extension' },
           ]);
         }
-        if (file.type && !file.type.includes('csv') && !file.type.includes('text/plain')) {
+        if (file.type && !CSV_MEDIA_TYPES.has(file.type.split(';', 1)[0].trim().toLowerCase())) {
           throw new RequestValidationError(`${FILE_FIELDS[source]} must be a CSV file`, [
             { path: FILE_FIELDS[source], message: 'Invalid file type. Expected text/csv.' },
           ]);

@@ -20,6 +20,7 @@ const SLOTS: Array<{ key: SlotKey; label: string; required: boolean; hint: strin
 export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
   const [files, setFiles] = useState<Partial<Record<SlotKey, File>>>({});
   const [error, setError] = useState<string | null>(null);
+  const submitting = useRef(false);
   const inputs = {
     orders_file: useRef<HTMLInputElement>(null),
     shipments_file: useRef<HTMLInputElement>(null),
@@ -48,6 +49,7 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (uploading || submitting.current) return;
     const missing = SLOTS.filter((s) => s.required && !files[s.key]).map((s) => s.label);
     if (missing.length) {
       setError(`Please select required file(s): ${missing.join(', ')}.`);
@@ -58,6 +60,7 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
       const f = files[k];
       if (f) form.set(k, f);
     });
+    submitting.current = true;
     try {
       await onAnalyze(form);
       setFiles({});
@@ -68,11 +71,13 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Analysis failed. Please check your files and try again.');
+    } finally {
+      submitting.current = false;
     }
   };
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_340px] lg:gap-6">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-6">
       <div className="space-y-5">
         <div className="flex flex-col gap-1 border-b border-line pb-4">
           <ol className="flex items-center gap-4 text-xs font-medium text-muted sm:gap-8">

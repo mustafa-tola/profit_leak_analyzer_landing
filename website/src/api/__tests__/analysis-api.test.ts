@@ -93,6 +93,25 @@ function readRequest(seller: string | null = 'SELLER-DEMO'): Request {
 }
 
 describe('POST /api/analyses', () => {
+  it('rejects an oversized multipart body without a Content-Length before saving', async () => {
+    const { handler, repository } = setup({ maxTotalBytes: 1024 });
+    const request = analyzeRequest(await fixtureForm());
+    expect(request.headers.has('content-length')).toBe(false);
+    const response = await handler(request);
+    expect(response.status).toBe(413);
+    expect(await repository.list('SELLER-DEMO')).toEqual([]);
+  });
+
+  it('rejects unsupported upload media types before saving', async () => {
+    const { handler, repository } = setup();
+    const form = await fixtureForm({
+      orders: new File(['unsupported format'], 'orders.csv', { type: 'application/pdf' }),
+    });
+    const response = await handler(analyzeRequest(form));
+    expect(response.status).toBe(400);
+    expect(await repository.list('SELLER-DEMO')).toEqual([]);
+  });
+
   it('returns 201 and persists counts that match the engine output', async () => {
     const { handler, repository } = setup();
     const response = await handler(analyzeRequest(await fixtureForm()));

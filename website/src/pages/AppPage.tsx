@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SignedIn, SignedOut, SignIn, useAuth, useUser } from '@clerk/clerk-react';
 import { AlertCircle, FileSpreadsheet, LayoutDashboard, ShieldCheck } from 'lucide-react';
@@ -96,10 +96,15 @@ export function AppPage({ isDark, theme, setTheme }: { isDark: boolean; theme: '
         <Footer />
       </SignedOut>
       <SignedIn>
-        <LiveAnalysisApp isDark={isDark} />
+        <SellerWorkspace isDark={isDark} />
       </SignedIn>
     </main>
   );
+}
+
+function SellerWorkspace({ isDark }: { isDark: boolean }) {
+  const { sessionId, orgId, orgSlug } = useAuth();
+  return <LiveAnalysisApp key={JSON.stringify([sessionId, orgId, orgSlug])} isDark={isDark} />;
 }
 
 function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
@@ -115,6 +120,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
   const [loadingList, setLoadingList] = useState(false);
   const [loadingRun, setLoadingRun] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const uploadInProgress = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
@@ -193,6 +199,8 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
   };
 
   const onAnalyze = async (form: FormData) => {
+    if (uploadInProgress.current) return;
+    uploadInProgress.current = true;
     setUploading(true);
     setError(null);
     try {
@@ -206,6 +214,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
       setError(handleApiError(e));
       throw e;
     } finally {
+      uploadInProgress.current = false;
       setUploading(false);
     }
   };
