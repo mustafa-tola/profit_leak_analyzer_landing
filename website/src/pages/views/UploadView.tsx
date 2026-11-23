@@ -19,6 +19,7 @@ const SLOTS: Array<{ key: SlotKey; label: string; required: boolean; hint: strin
 
 export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
   const [files, setFiles] = useState<Partial<Record<SlotKey, File>>>({});
+  const [fileErrors, setFileErrors] = useState<Partial<Record<SlotKey, string>>>({});
   const [error, setError] = useState<string | null>(null);
   const submitting = useRef(false);
   const inputs = {
@@ -29,9 +30,13 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
   } as const;
 
   const setFile = (key: SlotKey, file: File | undefined) => {
+    const invalid = file && !file.name.toLowerCase().endsWith('.csv');
+    setFileErrors((previous) => ({ ...previous, [key]: invalid ? 'Choose a file ending in .csv.' : undefined }));
+    const input = inputs[key].current;
+    if ((!file || invalid) && input) input.value = '';
     setFiles((prev) => {
       const next = { ...prev };
-      if (file) next[key] = file;
+      if (file && !invalid) next[key] = file;
       else delete next[key];
       return next;
     });
@@ -40,6 +45,7 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
 
   const reset = () => {
     setFiles({});
+    setFileErrors({});
     setError(null);
     (Object.keys(inputs) as SlotKey[]).forEach((k) => {
       const el = inputs[k].current;
@@ -50,6 +56,10 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (uploading || submitting.current) return;
+    if (Object.values(fileErrors).some(Boolean)) {
+      setError('Replace the unsupported file with a CSV before starting analysis.');
+      return;
+    }
     const missing = SLOTS.filter((s) => s.required && !files[s.key]).map((s) => s.label);
     if (missing.length) {
       setError(`Please select required file(s): ${missing.join(', ')}.`);
@@ -104,6 +114,7 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
           <div className="space-y-3">
             {SLOTS.map((slot) => {
               const file = files[slot.key];
+              const fileError = fileErrors[slot.key];
               return (
                 <div key={slot.key} className="card p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -113,6 +124,7 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
                         {slot.required ? <span className="text-danger">*</span> : <span className="text-xs font-normal text-muted">(optional)</span>}
                       </p>
                       <p className="mt-0.5 text-sm text-muted">{slot.hint}</p>
+                      {fileError && <p id={`${slot.key}-error`} role="alert" className="mt-2 text-sm font-medium text-danger">{fileError}</p>}
                       {file && (
                         <p className="mt-2 flex items-center gap-2 text-sm text-ink">
                           <FileSpreadsheet className="h-4 w-4 text-accent-ink" aria-hidden="true" />
@@ -128,9 +140,11 @@ export function UploadView({ onAnalyze, uploading = false }: UploadViewProps) {
                         accept=".csv,text/csv"
                         className="sr-only"
                         aria-label={slot.label}
+                        aria-invalid={Boolean(fileError)}
+                        aria-describedby={fileError ? `${slot.key}-error` : undefined}
                         onChange={(e) => setFile(slot.key, e.target.files?.[0])}
                       />
-                      <Button type="button" variant="ghost" size="sm" leftIcon={<Upload className="h-4 w-4" aria-hidden="true" />} onClick={() => inputs[slot.key].current?.click()}>
+                      <Button type="button" variant="ghost" size="sm" aria-describedby={fileError ? `${slot.key}-error` : undefined} leftIcon={<Upload className="h-4 w-4" aria-hidden="true" />} onClick={() => inputs[slot.key].current?.click()}>
                         {file ? 'Change file' : 'Choose file'}
                       </Button>
                       {file && (

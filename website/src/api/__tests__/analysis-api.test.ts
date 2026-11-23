@@ -102,13 +102,22 @@ describe('POST /api/analyses', () => {
     expect(await repository.list('SELLER-DEMO')).toEqual([]);
   });
 
-  it('rejects unsupported upload media types before saving', async () => {
+  it.each([
+    ['orders.txt', 'text/plain'],
+    ['orders.csv', 'application/pdf'],
+  ])('rejects %s with media type %s before saving', async (filename, mediaType) => {
     const { handler, repository } = setup();
     const form = await fixtureForm({
-      orders: new File(['unsupported format'], 'orders.csv', { type: 'application/pdf' }),
+      orders: new File(['unsupported format'], filename, { type: mediaType }),
     });
     const response = await handler(analyzeRequest(form));
     expect(response.status).toBe(400);
+    const body = await response.json();
+    expect(body.error).toMatchObject({
+      code: 'VALIDATION_ERROR',
+      message: 'orders_file must be a CSV file',
+    });
+    expect(body.error).not.toHaveProperty('stack');
     expect(await repository.list('SELLER-DEMO')).toEqual([]);
   });
 
