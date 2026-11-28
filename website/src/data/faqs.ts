@@ -4,7 +4,7 @@ export const faqs: Faq[] = [
   {
     question: 'Which couriers are supported?',
     answer:
-      'Codvera is designed to work with COD settlement exports from major Pakistani couriers such as TCS, Leopards, PostEx, Trax, M&P, and Call Courier. If your export format differs, we can help map the required fields so your data reconciles correctly.',
+      'Marginovia is designed to work with COD settlement exports from major Pakistani couriers such as TCS, Leopards, PostEx, Trax, M&P, and Call Courier. If your export format differs, we can help map the required fields so your data reconciles correctly.',
   },
   {
     question: 'What files do I need to upload?',
@@ -24,11 +24,11 @@ export const faqs: Faq[] = [
   {
     question: 'How accurate are the reports?',
     answer:
-      'Codvera uses deterministic reconciliation logic, preserves amounts precisely, and labels run quality (such as clean or partial data) when inputs are incomplete or invalid. Each run surfaces evidence-backed exceptions so you can trace and verify outcomes.',
+      'Marginovia uses deterministic reconciliation logic, preserves amounts precisely, and labels run quality (such as clean or partial data) when inputs are incomplete or invalid. Each run surfaces evidence-backed exceptions so you can trace and verify outcomes.',
   },
   {
     question: 'Do I need to share courier logins or passwords?',
     answer:
-      'No. Codvera works from the CSV exports you upload. You do not need to share courier portal passwords or provide direct courier account access.',
+      'No. Marginovia works from the CSV exports you upload. You do not need to share courier portal passwords or provide direct courier account access.',
   },
 ];

@@ -20,7 +20,7 @@ interface HelpArticle {
 const articles: HelpArticle[] = [
   {
     id: 'getting-started',
-    title: 'Getting Started with Codvera',
+    title: 'Getting Started with Marginovia',
     description: 'Learn how to upload COD files, run reconciliation, and review results.',
     icon: <Upload className="h-4 w-4" aria-hidden="true" />,
     content: [
@@ -91,7 +91,7 @@ export function HelpView({ onViewChange, onExport }: HelpViewProps) {
         <div className="rounded-lg border border-line bg-surface shadow-soft p-5 sm:p-6">
           <h1 className="font-display text-2xl font-semibold text-ink sm:text-3xl">Help &amp; Support</h1>
           <p className="mt-2 text-sm leading-relaxed text-muted">
-            Find answers to common questions about Codvera, COD reconciliation, and using the workspace effectively.
+            Find answers to common questions about Marginovia, COD reconciliation, and using the workspace effectively.
           </p>
         </div>
 
@@ -145,7 +145,7 @@ export function HelpView({ onViewChange, onExport }: HelpViewProps) {
           <CardBody>
             <h2 className="font-display text-base font-semibold text-ink sm:text-lg">Platform Status</h2>
             <div className="mt-3 flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[#0A4236]" aria-hidden="true" />
+              <span className="h-2 w-2 rounded-full bg-[#0B1F44]" aria-hidden="true" />
               <span className="text-xs font-medium text-ink">Prototype workspace</span>
             </div>
             <p className="mt-2 text-xs text-muted">Live results are produced by the deterministic engine for each selected run. No scheduled analysis or alerting service is running.</p>
@@ -166,9 +166,9 @@ function ArticleCard({
   onToggle: () => void;
 }) {
   return (
-    <div id={`help-${article.id}`} className="rounded-lg border border-line bg-surface p-3 transition hover:bg-[#F5F8F7]">
+    <div id={`help-${article.id}`} className="rounded-lg border border-line bg-surface p-3 transition hover:bg-[#F1F5F9]">
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F0FBF7] text-[#0A4236]">{article.icon}</div>
+        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E2E8F0] text-[#0B1F44]">{article.icon}</div>
         <div className="min-w-0 flex-1">
           <h4 className="font-semibold text-ink">{article.title}</h4>
           <p className="mt-0.5 text-sm text-muted">{article.description}</p>
@@ -176,7 +176,7 @@ function ArticleCard({
         <button
           type="button"
           onClick={onToggle}
-          className="rounded-md p-1 text-[#B8CBD4] transition hover:text-[#0A4236] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+          className="rounded-md p-1 text-[#B8CBD4] transition hover:text-[#0B1F44] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
           aria-label={`${open ? 'Close' : 'Read'} ${article.title}`}
           aria-expanded={open}
           aria-controls={`help-content-${article.id}`}
@@ -208,9 +208,9 @@ function QuickAction({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-lg border border-line bg-surface p-3 text-left transition hover:bg-[#F5F8F7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
+      className="flex w-full items-center gap-3 rounded-lg border border-line bg-surface p-3 text-left transition hover:bg-[#F1F5F9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30"
     >
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F0FBF7] text-[#0A4236]">{icon}</div>
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E2E8F0] text-[#0B1F44]">{icon}</div>
       <div>
         <p className="text-sm font-medium text-ink">{label}</p>
         <p className="text-xs text-muted">{hint}</p>

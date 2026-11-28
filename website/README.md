@@ -1,4 +1,4 @@
-# Profit Leak Analyzer
+# Marginovia
 
 An academic prototype of a financial analytics product for Pakistani cash-on-delivery sellers. It presents a static marketing site and a sample reconciliation dashboard that illustrate how hidden courier costs, RTO losses and settlement gaps could be traced back to source rows.
 

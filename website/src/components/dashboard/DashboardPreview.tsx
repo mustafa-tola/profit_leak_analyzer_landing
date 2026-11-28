@@ -187,7 +187,7 @@ export function DashboardPreview({
           id="demo-heading"
           onDark
           title="Every rupee between checkout and payout"
-          description="A preview of the Profit Leak Analyzer dashboard. All figures shown are sample data for illustration only."
+          description="A preview of the Marginovia dashboard. All figures shown are sample data for illustration only."
           aside={<SampleBadge onDark label="All figures are sample data" />}
         />
         <div className="mt-12">{body}</div>

@@ -97,7 +97,7 @@ function SettingsSection({ title, description, icon, children }: SettingsSection
     <Card>
       <div className="px-5 py-4 sm:px-6 sm:py-4.5 border-b border-line">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#F0FBF7] text-[#0A4236]">{icon}</div>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#E2E8F0] text-[#0B1F44]">{icon}</div>
           <div>
             <h3 className="font-display text-base font-semibold text-ink sm:text-lg">{title}</h3>
             <p className="mt-0.5 text-sm text-muted">{description}</p>
@@ -111,7 +111,7 @@ function SettingsSection({ title, description, icon, children }: SettingsSection
 
 function SettingRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3 transition hover:bg-[#F5F8F7]">
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface px-4 py-3 transition hover:bg-[#F1F5F9]">
       <span className="text-sm font-medium text-ink">{label}</span>
       <p className="max-w-xs truncate text-right text-sm text-muted" title={value}>{value}</p>
     </div>

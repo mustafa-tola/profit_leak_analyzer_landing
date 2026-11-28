@@ -46,7 +46,7 @@ export function Alert({
       className={`flex items-start gap-3 rounded-[14px] border p-4 sm:px-5 text-sm ${variantStyles[variant]} ${textColor} ${className}`}
       {...props}
     >
-      <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[${variant === 'warn' ? '#E7A65B' : variant === 'error' ? '#B42318' : '#0A4236'}] bg-[${variant === 'warn' ? '#FFF4E5' : variant === 'error' ? '#FEF3F2' : '#DDF5EA'}] text-[${variant === 'warn' ? '#92400E' : variant === 'error' ? '#B42318' : '#0A4236'}]`}>
+      <div className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[${variant === 'warn' ? '#E7A65B' : variant === 'error' ? '#B42318' : '#0B1F44'}] bg-[${variant === 'warn' ? '#FFF4E5' : variant === 'error' ? '#FEF3F2' : '#E2E8F0'}] text-[${variant === 'warn' ? '#92400E' : variant === 'error' ? '#B42318' : '#0B1F44'}]`}>
         {icon ?? defaultIcons[variant]}
       </div>
       <div className="min-w-0 flex-1">

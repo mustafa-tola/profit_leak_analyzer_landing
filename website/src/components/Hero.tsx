@@ -16,7 +16,7 @@ export function Hero() {
             Every COD rupee, reconciled and accounted for.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Codvera matches your orders, shipments, and courier settlements to show expected receivables, verified payments,
+            Marginovia matches your orders, shipments, and courier settlements to show expected receivables, verified payments,
             outstanding balances, and evidence-backed exceptions — so you can act with clarity, not guesswork.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">

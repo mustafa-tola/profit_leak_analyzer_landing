@@ -167,7 +167,7 @@ export function buildRunCsv(run: PublicAnalysisRun, kind: RunExportKind): string
 }
 
 export function runExportFileName(run: PublicAnalysisRun, kind: RunExportKind): string {
-  return `codvera-${kind}-${run.run_id.slice(0, 8)}.csv`;
+  return `marginovia-${kind}-${run.run_id.slice(0, 8)}.csv`;
 }
 
 export function downloadRunCsv(run: PublicAnalysisRun, kind: RunExportKind): void {

@@ -67,7 +67,7 @@ export function Sidebar({
           </button>
         )}
         <LogoMark />
-        <span className="font-display font-semibold text-lg tracking-tight text-ink dark:text-white">codvera</span>
+        <span className="font-display font-semibold text-lg tracking-tight text-ink dark:text-white">marginovia</span>
       </div>
 
       <nav className="sidebar-nav p-2" aria-label="Main navigation">
@@ -150,9 +150,12 @@ export function Sidebar({
 
 function LogoMark() {
   return (
-    <svg width="24" height="24" viewBox="0 0 68 68" aria-hidden="true" className="shrink-0">
-      <path d="M43 16H27c-4 0-7 2-10 5L8 30c-3 3-3 8 0 11l9 9c3 3 8 3 11 0l8-8" fill="none" stroke="#087F62" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M24 47l10 10c3 3 8 3 11 0l15-17" fill="none" stroke="#103E36" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="24" height="24" viewBox="0 0 220 160" aria-hidden="true" className="shrink-0">
+      <g transform="translate(27 30)">
+        <path fill="#0B1F44" d="M0 100 L37 43 H65 L28 100 Z" />
+        <path fill="#14B8A6" d="M40 100 L83 24 H111 L68 100 Z" />
+        <path fill="#10B981" d="M80 100 L137 0 H165 L108 100 Z" />
+      </g>
     </svg>
   );
 }
