@@ -36,7 +36,7 @@ export function Footer() {
             Upload your order, shipment, and settlement CSVs to generate a reconciliation run with clear, auditable results.
           </p>
           <Link to="/app" className="mt-4 inline-block text-sm font-semibold text-accent-ink underline-offset-4 hover:underline">
-            Open Codvera workspace
+            Open Marginovia workspace
           </Link>
         </div>
 
@@ -59,7 +59,7 @@ export function Footer() {
 
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-[12px] text-muted sm:px-6 md:flex-row md:justify-between">
-          <p>© 2026 Codvera. All rights reserved.</p>
+          <p>© 2026 Marginovia. All rights reserved.</p>
           <p>Sample dashboard figures are illustrative. Flagged discrepancies are provisional and not confirmed losses.</p>
         </div>
       </div>

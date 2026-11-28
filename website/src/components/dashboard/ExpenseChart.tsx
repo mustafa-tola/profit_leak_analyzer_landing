@@ -18,8 +18,8 @@ export function ExpenseChart({
   sampleLabel = 'sample',
 }: ExpenseChartProps) {
   const c = isDark
-    ? { forward: '#5CBFA0', returns: '#34D399', grid: '#294842', tick: '#B0C7C0', cursor: 'rgba(255,255,255,0.04)' }
-    : { forward: '#103E36', returns: '#087F62', grid: '#DCE7E3', tick: '#334B5B', cursor: 'rgba(16,62,54,0.05)' };
+    ? { forward: '#10B981', returns: '#14B8A6', grid: '#1F2A44', tick: '#94A3B8', cursor: 'rgba(255,255,255,0.04)' }
+    : { forward: '#0B1F44', returns: '#10B981', grid: '#CBD5E1', tick: '#64748B', cursor: 'rgba(11,31,68,0.05)' };
 
   return (
     <section aria-labelledby="expenses-heading" className="min-w-0 rounded-[14px] border border-line bg-surface p-4 shadow-sm sm:p-5 lg:col-span-2">

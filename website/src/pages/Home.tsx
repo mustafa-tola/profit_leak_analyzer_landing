@@ -20,8 +20,8 @@ export function Home({ isDark }: HomeProps) {
   const [selectedPlan, setSelectedPlan] = useState<PlanId>('free');
 
   useDocumentMeta(
-    'Codvera — COD Reconciliation & Settlement Intelligence',
-    'Every COD rupee, accounted for. Reconcile courier settlements, track verified payments and outstanding receivables, and review evidence-backed exceptions in one workspace.'
+    'Marginovia — COD Reconciliation & Settlement Intelligence',
+    'Discover leaks. Recover revenue. Protect profits. Reconcile courier settlements, track verified payments and outstanding receivables, and review evidence-backed exceptions in one workspace.'
   );
 
   return (
@@ -45,7 +45,7 @@ function DashboardPreviewFallback() {
       id="demo"
       aria-busy="true"
       aria-label="Loading dashboard preview"
-      className="bg-[#F5F8F7] py-24 sm:py-28">
+      className="bg-[#F1F5F9] py-24 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="h-8 w-2/3 max-w-lg animate-pulse rounded-md bg-surface" />
         <div className="mt-4 h-4 w-full max-w-2xl animate-pulse rounded bg-subtle" />

@@ -34,11 +34,11 @@ export function LeadForm({ plan, onPlanChange }: LeadFormProps) {
     if (Object.keys(next).length > 0) {
       return;
     }
-    const subject = encodeURIComponent(`Codvera Demo Request – ${selectedTier.name}`);
+    const subject = encodeURIComponent(`Marginovia Demo Request – ${selectedTier.name}`);
     const body = encodeURIComponent(
-      `Email: ${email.trim()}\nPlan: ${selectedTier.name} (${selectedTier.price})\nMonthly order volume: ${volume}\n\nA potential customer has requested a demo of Codvera. Please follow up.`,
+      `Email: ${email.trim()}\nPlan: ${selectedTier.name} (${selectedTier.price})\nMonthly order volume: ${volume}\n\nA potential customer has requested a demo of Marginovia. Please follow up.`,
     );
-    window.location.href = `mailto:sales@codvera.example.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:sales@marginovia.example.com?subject=${subject}&body=${body}`;
     setStatus('submitted');
   };
 
@@ -52,17 +52,17 @@ export function LeadForm({ plan, onPlanChange }: LeadFormProps) {
   return (
     <section id="get-started" aria-labelledby="cta-heading" className="py-24 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="grid gap-10 overflow-hidden rounded-[14px] bg-[#103E36] p-7 sm:p-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:p-14">
+        <div className="grid gap-10 overflow-hidden rounded-[14px] bg-[#0B1F44] p-7 sm:p-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:p-14">
           <div>
-            <h2 id="cta-heading" className="font-display text-3xl font-bold tracking-tight text-[#F5F8F7] sm:text-4xl">
+            <h2 id="cta-heading" className="font-display text-3xl font-bold tracking-tight text-[#F1F5F9] sm:text-4xl">
               Ready to see where your COD money stands?
             </h2>
-            <p className="mt-4 max-w-lg text-lg leading-relaxed text-[#F5F8F7]/80">
-              Start with a free reconciliation run in the Codvera workspace, or request a demo and we’ll help you get set up for your volume and couriers.
+            <p className="mt-4 max-w-lg text-lg leading-relaxed text-[#F1F5F9]/80">
+              Start with a free reconciliation run in the Marginovia workspace, or request a demo and we’ll help you get set up for your volume and couriers.
             </p>
             <ul className="mt-8 space-y-3">
               {leadAssurances.map((a) => (
-                <li key={a} className="flex items-center gap-3 text-[15px] text-[#F5F8F7]/90">
+                <li key={a} className="flex items-center gap-3 text-[15px] text-[#F1F5F9]/90">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent">
                     <CheckIcon className="h-3 w-3 text-white" aria-hidden="true" />
                   </span>
@@ -98,7 +98,7 @@ export function LeadForm({ plan, onPlanChange }: LeadFormProps) {
                       to="/app"
                       className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-accent px-4 text-sm font-semibold text-white hover:bg-accent-hover"
                     >
-                      Open Codvera workspace
+                      Open Marginovia workspace
                       <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
                     </Link>
                     <button

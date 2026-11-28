@@ -10,13 +10,13 @@ type PricingProps = {
 
 const palette = {
   featured: {
-    card: 'bg-[#103E36] shadow-lift ring-1 ring-[#103E36] dark:ring-2 dark:ring-accent',
-    title: 'text-[#F5F8F7]',
-    body: 'text-[#F5F8F7]/85',
-    note: 'text-[#DDF5EA]',
-    divider: 'border-[#DDF5EA]/20',
-    check: 'text-[#34D399]',
-    feature: 'text-[#F5F8F7]/90',
+    card: 'bg-[#0B1F44] shadow-lift ring-1 ring-[#0B1F44] dark:ring-2 dark:ring-accent',
+    title: 'text-[#F1F5F9]',
+    body: 'text-[#F1F5F9]/85',
+    note: 'text-[#E2E8F0]',
+    divider: 'border-[#E2E8F0]/20',
+    check: 'text-[#10B981]',
+    feature: 'text-[#F1F5F9]/90',
   },
   standard: {
     card: 'border border-line bg-surface',

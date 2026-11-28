@@ -17,7 +17,7 @@ export const steps: Step[] = [
     icon: 'analyze',
     title: 'Validate and reconcile',
     description:
-      'Codvera checks required fields, matches records, and computes expected vs verified payment outcomes.',
+      'Marginovia checks required fields, matches records, and computes expected vs verified payment outcomes.',
   },
   {
     icon: 'identify',

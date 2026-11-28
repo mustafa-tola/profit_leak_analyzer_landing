@@ -25,7 +25,7 @@ export function LeaksSection() {
         <SectionHeader
           id="features-heading"
           title="Four places COD margin quietly disappears"
-          description="Courier costs, returns, delayed settlements, and payout gaps rarely live in one report. Codvera brings them together and shows the evidence behind every finding."
+          description="Courier costs, returns, delayed settlements, and payout gaps rarely live in one report. Marginovia brings them together and shows the evidence behind every finding."
         />
 
         <div className="mt-14 grid gap-px overflow-hidden rounded-[14px] border border-line bg-line shadow-soft md:grid-cols-2">
@@ -48,7 +48,7 @@ export function LeaksSection() {
                 <p className="mt-2.5 leading-relaxed text-muted">{leak.problem}</p>
                 <div className="mt-auto pt-6">
                   <div className="rounded-lg border border-line bg-canvas px-4 py-3.5">
-                    <p className="text-[13px] font-semibold text-accent-ink">How Codvera helps</p>
+                    <p className="text-[13px] font-semibold text-accent-ink">How Marginovia helps</p>
                     <p className="mt-1 text-sm leading-relaxed text-ink/80">{leak.detection}</p>
                   </div>
                 </div>

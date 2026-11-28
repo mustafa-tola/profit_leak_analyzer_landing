@@ -116,8 +116,8 @@ export function WorkspaceHeader({
     try {
       if (navigator.share) {
         await navigator.share({
-          title: `Codvera Run ${run?.run_id.slice(0, 8) ?? ''}`,
-          text: run ? `Seller ${run.seller_id} · ${run.analysis_quality}` : 'Codvera workspace',
+          title: `Marginovia Run ${run?.run_id.slice(0, 8) ?? ''}`,
+          text: run ? `Seller ${run.seller_id} · ${run.analysis_quality}` : 'Marginovia workspace',
           url,
         });
       } else if (navigator.clipboard?.writeText) {
@@ -190,7 +190,7 @@ export function WorkspaceHeader({
             <button
               type="button"
               onClick={onExport}
-              className="inline-flex items-center gap-2 rounded-[9px] border border-[#DCE7E3] bg-[#FDF2E3] px-3 py-2 text-xs font-medium text-[#92400E] hover:bg-[#FDE6C8] transition"
+              className="inline-flex items-center gap-2 rounded-[9px] border border-[#CBD5E1] bg-[#FDF2E3] px-3 py-2 text-xs font-medium text-[#92400E] hover:bg-[#FDE6C8] transition"
               aria-label="Export summary CSV"
             >
               <Download className="h-3 w-3" />
@@ -199,7 +199,7 @@ export function WorkspaceHeader({
             <button
               type="button"
               onClick={() => void shareRun()}
-              className="inline-flex items-center gap-2 rounded-[9px] border border-[#DCE7E3] bg-surface px-3 py-2 text-xs font-medium text-ink hover:bg-[#F5F8F7] transition"
+              className="inline-flex items-center gap-2 rounded-[9px] border border-[#CBD5E1] bg-surface px-3 py-2 text-xs font-medium text-ink hover:bg-[#F1F5F9] transition"
             >
               <Share2 className="h-3 w-3" />
               {shareLabel}
@@ -212,7 +212,7 @@ export function WorkspaceHeader({
               type="button"
               ref={notificationsButtonRef}
               onClick={() => setNotificationsOpen((open) => !open)}
-              className="relative flex h-8 w-8 items-center justify-center rounded-full border border-[#DCE7E3] bg-surface text-ink hover:bg-[#F5F8F7] transition"
+              className="relative flex h-8 w-8 items-center justify-center rounded-full border border-[#CBD5E1] bg-surface text-ink hover:bg-[#F1F5F9] transition"
               aria-label="Notifications"
               aria-haspopup="dialog"
               aria-expanded={notificationsOpen}
@@ -299,8 +299,8 @@ export function WorkspaceHeader({
               afterSignOutUrl="/"
               appearance={{
                 elements: {
-                  popover: 'bg-surface border border-[#DCE7E3] shadow-soft',
-                  dropdownItem: 'text-sm text-ink hover:bg-[#F5F8F7] hover:text-[#0A4236]',
+                  popover: 'bg-surface border border-[#CBD5E1] shadow-soft',
+                  dropdownItem: 'text-sm text-ink hover:bg-[#F1F5F9] hover:text-[#0B1F44]',
                 },
               }}
             />

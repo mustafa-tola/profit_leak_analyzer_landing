@@ -11,13 +11,13 @@ export const privacyPolicy: LegalDocument = {
   title: 'Privacy Policy',
   lastUpdated: 'October 25, 2026',
   intro:
-  'This policy describes how this academic prototype of Profit Leak Analyzer handles information. The current build is a static demonstration website: it does not offer accounts, file uploads, live analysis, payments or data storage. This policy must be replaced before any production service is launched.',
+  'This policy describes how this academic prototype of Marginovia handles information. The current build is a static demonstration website: it does not offer accounts, file uploads, live analysis, payments or data storage. This policy must be replaced before any production service is launched.',
   sections: [
   {
     id: 'scope',
     heading: 'Scope of this prototype',
     paragraphs: [
-    'Profit Leak Analyzer is an academic demonstration of a proposed financial analytics product for cash-on-delivery sellers in Pakistan. This site and its dashboard preview are for presentation and evaluation only. None of the production features described elsewhere on the site are active.']
+    'Marginovia is an academic demonstration of a proposed financial analytics product for cash-on-delivery sellers in Pakistan. This site and its dashboard preview are for presentation and evaluation only. None of the production features described elsewhere on the site are active.']
 
   },
   {
@@ -93,7 +93,7 @@ export const termsOfService: LegalDocument = {
   title: 'Terms of Service',
   lastUpdated: 'October 25, 2026',
   intro:
-  'These terms govern use of the Profit Leak Analyzer demonstration website. It is an academic prototype, not a commercial service, and no production functionality is offered.',
+  'These terms govern use of the Marginovia demonstration website. It is an academic prototype, not a commercial service, and no production functionality is offered.',
   sections: [
   {
     id: 'the-prototype',
@@ -145,7 +145,7 @@ export const termsOfService: LegalDocument = {
     id: 'intellectual-property',
     heading: 'Content and intellectual property',
     paragraphs: [
-    'The Profit Leak Analyzer name, written content, visual design and sample dashboard are presented for this academic demonstration. You may view and share the site for evaluation purposes, but you may not present it as a live commercial service.']
+    'The Marginovia name, written content, visual design and sample dashboard are presented for this academic demonstration. You may view and share the site for evaluation purposes, but you may not present it as a live commercial service.']
 
   },
   {

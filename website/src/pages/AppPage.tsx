@@ -56,7 +56,7 @@ export function AppPage({ isDark, theme, setTheme }: { isDark: boolean; theme: '
     return (
       <main className="mx-auto max-w-3xl px-5 py-16 sm:px-6">
         <div className="card p-6 sm:p-8">
-          <p className="text-sm font-semibold text-accent-ink">Codvera workspace</p>
+          <p className="text-sm font-semibold text-accent-ink">Marginovia workspace</p>
           <h1 className="mt-2 font-display text-2xl font-semibold text-ink sm:text-3xl">Live analysis setup required</h1>
           <p className="mt-3 text-sm leading-relaxed text-muted">
             Set <code className="rounded bg-subtle px-1.5 py-0.5 text-ink">VITE_CLERK_PUBLISHABLE_KEY</code> and{' '}
@@ -271,7 +271,7 @@ function LiveAnalysisApp({ isDark }: { isDark: boolean }) {
         <aside className="sidebar w-72">
           <div className="sidebar-brand">
             <LogoMark />
-            <span className="font-display text-xl font-semibold tracking-tight text-ink dark:text-white">codvera</span>
+            <span className="font-display text-xl font-semibold tracking-tight text-ink dark:text-white">marginovia</span>
           </div>
           <nav className="sidebar-nav" aria-label="Main navigation">
             {SIDEBAR_ITEMS.map((item) => {
@@ -386,9 +386,12 @@ function UserIcon({ className }: { className?: string }) {
 }
 function LogoMark() {
   return (
-    <svg width="28" height="28" viewBox="0 0 68 68" aria-hidden="true" className="shrink-0">
-      <path d="M43 16H27c-4 0-7 2-10 5L8 30c-3 3-3 8 0 11l9 9c3 3 8 3 11 0l8-8" fill="none" stroke="#087F62" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M24 47l10 10c3 3 8 3 11 0l15-17" fill="none" stroke="#103E36" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="28" height="28" viewBox="0 0 220 160" aria-hidden="true" className="shrink-0">
+      <g transform="translate(27 30)">
+        <path fill="#0B1F44" d="M0 100 L37 43 H65 L28 100 Z" />
+        <path fill="#14B8A6" d="M40 100 L83 24 H111 L68 100 Z" />
+        <path fill="#10B981" d="M80 100 L137 0 H165 L108 100 Z" />
+      </g>
     </svg>
   );
 }

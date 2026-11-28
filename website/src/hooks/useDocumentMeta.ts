@@ -4,9 +4,9 @@ export function useDocumentMeta(title: string, description: string) {
   useEffect(() => {
     document.title = title;
     setMeta('name', 'description', description);
-    setMeta('name', 'theme-color', '#11243A');
-    setMeta('name', 'application-name', 'Profit Leak Analyzer');
-    setMeta('property', 'og:site_name', 'Profit Leak Analyzer');
+    setMeta('name', 'theme-color', '#0B1F44');
+    setMeta('name', 'application-name', 'Marginovia');
+    setMeta('property', 'og:site_name', 'Marginovia');
     setMeta('property', 'og:title', title);
     setMeta('property', 'og:description', description);
     setMeta('property', 'og:type', 'website');
